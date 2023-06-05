@@ -26,7 +26,7 @@ class _AttendKor1State extends State<AttendKor1> {
     ctx = context;
 
     return  Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 1,widget.sUsertype),
+      bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
       backgroundColor: Clr().white,
       appBar: AppBar(
         elevation: 2,

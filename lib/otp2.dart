@@ -104,7 +104,7 @@ class _OTP2State extends State<OTP2> with TickerProviderStateMixin {
       'otp': otpCtrl.text,
     });
     //Output
-    var result = await STM().post(ctx, Str().verifying, widget.sUsertype == 'Teacher' ? 'reset_password_verify_otp' : "verifyotp", body);
+    var result = await STM().post(ctx, Str().verifying, widget.sUsertype == 'Teacher' ? 'reset_password_verify_otp' : "verifyotp", body,'');
     // if (!mounted) return;
     var message = result['message'];
     var success = result['success'];
@@ -123,7 +123,7 @@ class _OTP2State extends State<OTP2> with TickerProviderStateMixin {
       'mobile': widget.mobilenum,
     });
     //Output
-    var result = await STM().post(ctx, Str().verifying, "resent_otp", body);
+    var result = await STM().post(ctx, Str().verifying, "resent_otp", body,'');
     // if (!mounted) return;
     var message = result['message'];
     var success = result['success'];

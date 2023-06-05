@@ -153,7 +153,7 @@ class _TimeTable3State extends State<TimeTable3> with TickerProviderStateMixin {
     TabController _controller = TabController(length: 6, vsync: this);
 
     return Scaffold(
-        bottomNavigationBar: bottomBarLayout(ctx, 1, widget.sUsertype),
+        bottomNavigationBar: bottomBarLayout(ctx, 1,Color(0xff32334D)),
         // bottomNavigationBar: bottomBarLayout(ctx, 1),
         backgroundColor: Clr().white,
         appBar: AppBar(

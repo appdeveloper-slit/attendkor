@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
     ctx = context;
 
     return Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 0,''),
+      bottomNavigationBar: bottomBarLayout(ctx, 0,Color(0xff32334D)),
       backgroundColor: Clr().white,
       appBar: AppBar(
           toolbarHeight: 60,

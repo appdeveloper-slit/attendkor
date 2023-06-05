@@ -139,7 +139,7 @@ class _TimeTable2State extends State<TimeTable2> with TickerProviderStateMixin {
     );
 
     return Scaffold(
-        bottomNavigationBar: bottomBarLayout(ctx, 1, widget.sUsertype),
+        bottomNavigationBar: bottomBarLayout(ctx, 1,Color(0xff32334D)),
         // bottomNavigationBar: bottomBarLayout(ctx, 1),
         backgroundColor: Clr().white,
         appBar: AppBar(

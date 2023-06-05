@@ -41,7 +41,7 @@ class _StudentProfileState extends State<StudentProfile> {
     ctx = context;
 
     return Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 2,widget.sUsertype),
+      bottomNavigationBar: bottomBarLayout(ctx, 2,Color(0xff32334D)),
       backgroundColor: Clr().white,
       // appBar: AppBar(
       //   elevation: 0,

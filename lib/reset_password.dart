@@ -212,7 +212,7 @@ class _ResetPasswordState extends State<ResetPassword>
       'type': SelectedValue == 'Teacher' ? 'teacher' : 'student',
     });
     var result =
-        await STM().post(ctx, Str().sendingOtp, 'reset_password_otp', body);
+        await STM().post(ctx, Str().sendingOtp, 'reset_password_otp', body,'');
     var success = result['success'];
     var message = result['message'];
     if (success) {

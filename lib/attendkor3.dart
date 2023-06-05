@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      bottomNavigationBar: bottomBarLayout(ctx, 1, widget.sUsertype),
+      bottomNavigationBar: bottomBarLayout(ctx, 1,Color(0xff32334D)),
       backgroundColor: Clr().white,
       appBar: AppBar(
         title: Text(

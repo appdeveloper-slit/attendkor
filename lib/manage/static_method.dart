@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -9,14 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../values/colors.dart';
 import '../values/dimens.dart';
 import '../values/styles.dart';
 import 'app_url.dart';
-
+int _selectedIndex = 0;
 class STM {
   void redirect2page(BuildContext context, Widget widget) {
     Navigator.push(
@@ -327,20 +327,19 @@ class STM {
   List<BottomNavigationBarItem> getBottomList(index) {
     return [
       BottomNavigationBarItem(
-
         icon: SvgPicture.asset(
-            index == 0 ? "assets/gzodselected.svg" : "assets/gzodfinalunselected.svg"),
-        label: 'GZOD',
+            index == 0 ? "assets/GZOD.svg" : "assets/GZODunfilled.svg"),
+        label: '',
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
-            index == 1 ? "assets/attendkorselected.svg" : "assets/attendkorunselected.svg"),
-        label: 'AttendKor',
+            index == 1 ? "assets/attendkor.svg" : "assets/attendkorunfilled.svg"),
+        label: '',
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
-            index == 2 ? "assets/profileselected.svg" : "assets/profileunselected.svg"),
-        label: 'Profile',
+            index == 2 ? "assets/profile filled.svg" : "assets/profileunfilled.svg"),
+        label: '',
       ),
     ];
   }
@@ -463,7 +462,7 @@ class STM {
     return result;
   }
 
-  Future<dynamic> post(ctx, title, name, body) async {
+  Future<dynamic> post(ctx, title, name, body,Url) async {
     //Dialog
     AwesomeDialog dialog = STM.loadingDialog(ctx, title);
 
@@ -474,7 +473,7 @@ class STM {
         responseType: ResponseType.plain,
       ),
     );
-    String url = AppUrl.mainUrl + name;
+    String url = AppUrl.mainUrl + Url + name;
     dynamic result;
     try {
       Response response = await dio.post(url, data: body);
@@ -561,7 +560,7 @@ class STM {
     return result;
   }
 
-  Future<dynamic> postWithToken(ctx, title, name, body, token) async {
+  Future<dynamic> postWithToken(ctx, title, name, body, token,Url) async {
     //Dialog
     AwesomeDialog dialog = STM.loadingDialog(ctx, title);
     dialog.show();
@@ -574,7 +573,7 @@ class STM {
         },
       ),
     );
-    String url = AppUrl.mainUrl + name;
+    String url = AppUrl.mainUrl + Url + name;
     if (kDebugMode) {
       print("Url = $url\nBody = ${body.fields}");
     }
@@ -624,7 +623,7 @@ class STM {
   //   }
   //   return result;
   // }
-  Future<dynamic> get(ctx, title, name, token) async {
+  Future<dynamic> get(ctx, title, name, token,Url) async {
     Dio dio = Dio(
       BaseOptions(
         headers: {
@@ -634,7 +633,7 @@ class STM {
         },
       ),
     );
-    String url = AppUrl.mainUrl + name;
+    String url = AppUrl.mainUrl + Url + name;
     if (kDebugMode) {
       // print("Url = $url\nBody = ${body.fields}");
     }
@@ -785,10 +784,29 @@ class STM {
 
   Widget loadingPlaceHolder() {
     return Center(
-      child: CircularProgressIndicator(
-        strokeWidth: 0.6,
+      child: SpinKitCircle(
         color: Clr().primaryColor,
       ),
     );
   }
+
+  // // get camera
+  // _getFromCamera(source,cropstyle) async {
+  //   final pickedFile = await ImagePicker().getImage(
+  //     source: source,
+  //     maxWidth: 1800,
+  //     maxHeight: 1800,
+  //   );
+  //   if (pickedFile != null) {
+  //     CroppedFile? file = await ImageCropper().cropImage(
+  //         sourcePath: pickedFile.path,
+  //         compressFormat: ImageCompressFormat.jpg,
+  //         cropStyle: cropstyle);
+  //     setState(() {
+  //       imageFile = File(file!.path.toString());
+  //       var image = imageFile!.readAsBytesSync();
+  //       profile = base64Encode(image);
+  //     });
+  //   }
+  // }
 }

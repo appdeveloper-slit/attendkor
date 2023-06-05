@@ -38,7 +38,7 @@ class _Home_studentState extends State<Home_student> {
     ctx = context;
 
     return Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 0,widget.sUsertype),
+      bottomNavigationBar: bottomBarLayout(ctx, 0,Color(0xff32334D)),
       backgroundColor: Clr().white,
       appBar: AppBar(
         toolbarHeight: 60,

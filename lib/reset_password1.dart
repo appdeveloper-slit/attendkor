@@ -257,7 +257,7 @@ class _ResetPassword1State extends State<ResetPassword1> with TickerProviderStat
       'password': passwordCtrl.text,
       'password_confirmation': confirmpasswordCtrl.text,
     });
-    var result = await STM().post(ctx, Str().updating, 'update_password', body);
+    var result = await STM().post(ctx, Str().updating, 'update_password', body,'');
     var success = result['success'];
     var message = result['message'];
     if(success) {

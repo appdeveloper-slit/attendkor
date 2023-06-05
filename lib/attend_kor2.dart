@@ -117,7 +117,7 @@ class _AttendKor2State extends State<AttendKor2> with TickerProviderStateMixin {
     TabController _controller = TabController(length: 6, vsync: this);
 
     return Scaffold(
-        bottomNavigationBar: bottomBarLayout(ctx, 1, widget.sUsertype),
+        bottomNavigationBar: bottomBarLayout(ctx, 1,Color(0xff32334D)),
         backgroundColor: Clr().white,
         appBar: AppBar(
           title: Text(

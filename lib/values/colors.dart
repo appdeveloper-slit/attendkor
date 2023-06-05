@@ -19,6 +19,8 @@ class Clr {
   Color grey = const Color(0xFF787882);
   Color shimmerColor = const Color(0xFF838BA1);
   Color formColor = const Color(0xFFF7F8F9);
+  Color table1Color = const Color(0xFF111233);
+  Color textGoldenColor = const Color(0xFFD49A80);
 
   Color secondaryColor = const Color(0xFFFA983A);
   Color borderColor = const Color(0xFFE8ECF4);
