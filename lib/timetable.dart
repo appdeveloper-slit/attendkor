@@ -2,10 +2,12 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'attendance.dart';
 import 'attendkor3.dart';
 import 'timetable2.dart';
 import 'bottom_navigation/bottom_navigation.dart';
@@ -28,12 +30,9 @@ class _TimeTableState extends State<TimeTable> {
   late BuildContext ctx;
   String? SelectedValue;
   List<dynamic> selectedList = [];
-  List<Map<String, dynamic>> dataLectureList = [];
-  String t = "0";
   List<dynamic> dayTimeTableList = [];
   String? TeacherToken;
-  int position = 0;
-  var code;
+  var code, changeColor;
   bool selectweek = false;
   bool nextSelect = false;
 
@@ -61,31 +60,34 @@ class _TimeTableState extends State<TimeTable> {
   @override
   Widget build(BuildContext context) {
     ctx = context;
-    return DefaultTabController(
-      length: dayTimeTableList.length,
-      initialIndex: position,
-      child: Scaffold(
-          bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
-          backgroundColor: Clr().white,
-          appBar: appbarLayout(),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.all(Dim().d16),
-            child: Column(
-              children: [
-                WeekSelectionLayout(),
-                SizedBox(height: Dim().d16),
-                tabLayout(),
-                SizedBox(height: Dim().d12),
-                bodyLayout(),
-              ],
-            ),
-          )),
-    );
+    return dayTimeTableList.isEmpty
+        ? Container(color: Clr().white)
+        : DefaultTabController(
+            length: dayTimeTableList.length,
+            initialIndex: dayTimeTableList.indexWhere(
+                (e) => e['name'] == DateFormat.E().format(DateTime.now())),
+            child: Scaffold(
+                bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
+                backgroundColor: Clr().white,
+                appBar: appbarLayout(),
+                body: SingleChildScrollView(
+                  padding: EdgeInsets.all(Dim().d16),
+                  child: Column(
+                    children: [
+                      WeekSelectionLayout(),
+                      SizedBox(height: Dim().d16),
+                      tabLayout(),
+                      SizedBox(height: Dim().d12),
+                      bodyLayout(),
+                    ],
+                  ),
+                )),
+          );
   }
 
   //Pop Ups
   /// get code container dialog
-  _showClassDialog(ctx,timetableid,classroomid) {
+  _showClassDialog(ctx, timetableid, classroomid) {
     AwesomeDialog(
       width: double.infinity,
       isDense: true,
@@ -101,42 +103,97 @@ class _TimeTableState extends State<TimeTable> {
               SizedBox(
                 height: Dim().d8,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Clr().textcolor)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    value: SelectedValue,
-                    isExpanded: true,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 28,
-                      color: Clr().textcolor,
+              nextSelect
+                  ? Container()
+                  : Text(
+                      'Confirm Class',
+                      style: Sty().smallText.copyWith(
+                            fontFamily: '',
+                            fontWeight: FontWeight.w300,
+                            height: 1.2,
+                            color: Clr().black,
+                            // color: Color(0xff2D2D2D),
+                          ),
                     ),
-                    style: TextStyle(color: Color(0xff787882)),
-                    hint: Text('Select Classroom name',
-                        style:
-                            Sty().mediumText.copyWith(color: Clr().hintColor)),
-                    items: selectedList.map((string) {
-                      return DropdownMenuItem(
-                        value: string['name'].toString(),
-                        child: Text(
-                          string['name'],
-                          style:
-                              TextStyle(color: Clr().textcolor, fontSize: 14),
+              nextSelect ? Container() : SizedBox(height: Dim().d20),
+              nextSelect
+                  ? Text(
+                      'Show This Generated Code to students\n& Attend Lecture.',
+                      style: Sty().smallText.copyWith(
+                            fontFamily: '',
+                            fontWeight: FontWeight.w300,
+                            height: 1.2,
+                            color: Clr().black,
+                            // color: Color(0xff2D2D2D),
+                          ),
+                    )
+                  : Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Clr().textcolor)),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          value: SelectedValue,
+                          isExpanded: true,
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          hint: Text('Select Classroom name',
+                              style: Sty()
+                                  .mediumText
+                                  .copyWith(color: Clr().hintColor)),
+                          items: selectedList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'].toString(),
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (t) {
+                            setstate(() {
+                              SelectedValue = t.toString();
+                            });
+                          },
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (t) {
-                      setstate(() {
-                        SelectedValue = t.toString();
-                      });
-                    },
-                  ),
-                ),
-              ),
+                      ),
+                    ),
+              nextSelect ? SizedBox(height: Dim().d20) : Container(),
+              nextSelect
+                  ? Container(
+                      decoration: BoxDecoration(
+                          color: Color(0xfffcebe3),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      width: 220,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: DottedBorder(
+                        color: Clr().textcolor, //color of dotted/dash line
+                        strokeWidth: 1, //thickness of dash/dots
+                        dashPattern: [6, 4],
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          child: Center(
+                            child: Text(
+                              '${code}',
+                              style: Sty().largeText.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  color: Clr().textcolor),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
               SizedBox(
                 height: Dim().d20,
               ),
@@ -145,16 +202,28 @@ class _TimeTableState extends State<TimeTable> {
                 height: 50,
                 child: ElevatedButton(
                     onPressed: () {
-                      getTimeTable(apiname: 'update_actual_classroom', type: 'post',value: [
-                         timetableid,
-                         classroomid,
-                      ]);
+                      setstate(() {
+                        nextSelect
+                            ? getTimeTable(
+                                apiname: 'active_lecture',
+                                value: timetableid,
+                                type: 'post',
+                              )
+                            : getTimeTable(
+                                apiname: 'update_actual_classroom',
+                                type: 'post',
+                                value: [
+                                    timetableid,
+                                    classroomid,
+                                  ]);
+                        STM().back2Previous(ctx);
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Clr().textcolor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8))),
-                    child: Text(
+                    child: const Text(
                       'Next',
                       style: TextStyle(
                         // fontFamily: 'Merriweather',
@@ -162,32 +231,6 @@ class _TimeTableState extends State<TimeTable> {
                         fontSize: 16,
                       ),
                     )),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: Dim().d14),
-                //   child: SizedBox(
-                //     height: Dim().d56,
-                //     child: ElevatedButton(
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: Color(0xff991404),
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(10),
-                //         ),
-                //       ),
-                //       onPressed: () {
-                //         if (formkey.currentState!.validate()) {
-                //           // updateUser();
-                //           widget.sType == 'addAddress'? getaddAddress():getUpdateAddress();
-                //         }
-                //       },
-                //       child: Center(
-                //         child: Text(
-                //           'Save address',
-                //           style: Sty().mediumText.copyWith(color: Clr().white),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ),
               SizedBox(
                 height: Dim().d16,
@@ -196,103 +239,6 @@ class _TimeTableState extends State<TimeTable> {
           ),
         );
       }),
-    ).show();
-  }
-
-  _showCodeDialog(ctx) {
-    AwesomeDialog(
-      width: double.infinity,
-      isDense: true,
-      context: ctx,
-      dialogType: DialogType.NO_HEADER,
-      animType: AnimType.BOTTOMSLIDE,
-      alignment: Alignment.centerLeft,
-      body: Container(
-        padding: EdgeInsets.all(Dim().d16),
-        child: Column(
-          children: [
-            SizedBox(
-              height: Dim().d8,
-            ),
-            Text(
-              'Show This Generated Code to students\n& Attend Lecture.',
-              style: Sty().smallText.copyWith(
-                    fontFamily: '',
-                    fontWeight: FontWeight.w300,
-                    height: 1.2,
-                    color: Clr().black,
-                    // color: Color(0xff2D2D2D),
-                  ),
-            ),
-            SizedBox(
-              height: Dim().d20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Color(0xfffcebe3),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              width: 220,
-              height: 50,
-              padding: EdgeInsets.symmetric(horizontal: 2),
-              child: DottedBorder(
-                color: Clr().textcolor, //color of dotted/dash line
-                strokeWidth: 1, //thickness of dash/dots
-                dashPattern: [6, 4],
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Center(
-                    child: Text(
-                      '872987',
-                      style: Sty().largeText.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Clr().textcolor),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: Dim().d24,
-            ),
-            SizedBox(
-              width: 220,
-              height: 50,
-              child: ElevatedButton(
-                  onPressed: () {
-                    STM().redirect2page(
-                        ctx,
-                        TimeTable2(
-                          sUsertype: '',
-                        ));
-                    // if (formKey.currentState!.validate()) {
-                    //   STM().checkInternet(context, widget).then((value) {
-                    //     if (value) {
-                    //       sendOTP();
-                    //     }
-                    //   });
-                    // }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Clr().textcolor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  child: Text(
-                    'Next',
-                    style: TextStyle(
-                      // fontFamily: 'Merriweather',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  )),
-            ),
-            SizedBox(
-              height: Dim().d16,
-            ),
-          ],
-        ),
-      ),
     ).show();
   }
 
@@ -364,7 +310,12 @@ class _TimeTableState extends State<TimeTable> {
                   physics: BouncingScrollPhysics(),
                   itemCount: e['data'].length,
                   itemBuilder: (context, index) {
-                    var Lecturestatus = e['data'][index]['status'];
+                    var Lecturestatus;
+                    if (e['data'][index]['code_status'] == "1") {
+                      Lecturestatus = e['data'][index]['code_status'];
+                    } else {
+                      Lecturestatus = e['data'][index]['status'];
+                    }
                     return Container(
                       margin: EdgeInsets.only(bottom: Dim().d14),
                       width: double.infinity,
@@ -446,8 +397,16 @@ class _TimeTableState extends State<TimeTable> {
                                       Lecturestatus == "0"
                                           ? InkWell(
                                               onTap: () {
-                                                cancelLecture(
-                                                    id: e['data'][index]['id']);
+                                                STM().canceldialog(
+                                                    context: ctx,
+                                                    funtion: () {
+                                                      cancelLecture(
+                                                          id: e['data'][index]
+                                                              ['id']);
+                                                      STM().back2Previous(ctx);
+                                                    },
+                                                    message:
+                                                        'Are you sure want to cancel lecture?');
                                               },
                                               child: SvgPicture.asset(
                                                   'assets/cancel.svg'))
@@ -553,14 +512,14 @@ class _TimeTableState extends State<TimeTable> {
                                 ),
                               ),
                               SizedBox(
-                                height: Dim().d4,
+                                height: Dim().d12,
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: Dim().d180,
+                                    width: Dim().d240,
                                     child: RichText(
                                       text: TextSpan(
                                         text: "Time : ",
@@ -587,45 +546,162 @@ class _TimeTableState extends State<TimeTable> {
                                       ),
                                     ),
                                   ),
-                                  Lecturestatus == "0"
-                                      ? SizedBox(
-                                          height: 35,
-                                          width: 120,
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  elevation: 0,
-                                                  // backgroundColor: Clr().accentColor,
-                                                  backgroundColor:
-                                                      Color(0xfffcebe3),
-                                                  shape: RoundedRectangleBorder(
-                                                      // side: BorderSide(color: Color(0xfff4f4f5)),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5))),
-                                              onPressed: () {
-                                                _showClassDialog(ctx,e['data'][index]['id'],e['data'][index]['classroom_id']);
-                                              },
-                                              child: Text(
-                                                'Get Code',
-                                                style: Sty().largeText.copyWith(
-                                                    color: e['data'][index]
-                                                                ['status'] ==
-                                                            "0"
-                                                        ? Clr().textcolor
-                                                        : Clr().textGoldenColor,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              )),
-                                        )
-                                      : Text(
-                                          Lecturestatus == "2"
-                                              ? 'Cancelled'
-                                              : 'Completed',
-                                          style: Sty().mediumText.copyWith(
-                                              color: Clr().textGoldenColor)),
                                 ],
                               ),
+                              SizedBox(height: Dim().d12),
+                              Lecturestatus == "0"
+                                  ? Align(
+                                      alignment: Alignment.centerRight,
+                                      child: SizedBox(
+                                        height: 35,
+                                        width: 120,
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                // backgroundColor: Clr().accentColor,
+                                                backgroundColor:
+                                                    Color(0xfffcebe3),
+                                                shape: RoundedRectangleBorder(
+                                                    // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5))),
+                                            onPressed: () {
+                                              _showClassDialog(
+                                                  ctx,
+                                                  e['data'][index]['id'],
+                                                  e['data'][index]
+                                                      ['classroom_id']);
+                                            },
+                                            child: Text(
+                                              'Get Code',
+                                              style: Sty().largeText.copyWith(
+                                                  color: e['data'][index]
+                                                              ['status'] ==
+                                                          "0"
+                                                      ? Clr().textcolor
+                                                      : Clr().textGoldenColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400),
+                                            )),
+                                      ),
+                                    )
+                                  : e['data'][index]['code_status'] == "1"
+                                      ? Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                Dim().d16))),
+                                                width: 100.0,
+                                                height: 30.0,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 2),
+                                                child: DottedBorder(
+                                                  color: Clr().white,
+                                                  //color of dotted/dash line
+                                                  strokeWidth: 1,
+                                                  //thickness of dash/dots
+                                                  dashPattern: [6, 4],
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${e['data'][index]['code'].toString()}',
+                                                      style: Sty()
+                                                          .largeText
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 10.0,
+                                                              color:
+                                                                  Clr().white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: Dim().d16),
+                                              SizedBox(
+                                                height: 35,
+                                                width: 120,
+                                                child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            elevation: 0,
+                                                            // backgroundColor: Clr().accentColor,
+                                                            backgroundColor:
+                                                                Color(
+                                                                    0xffFCEBE3),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                                    // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5))),
+                                                    onPressed: () {
+                                                      getTimeTable(
+                                                          value: e['data']
+                                                              [index]['id'],
+                                                          apiname:
+                                                              'inactive_lecture',
+                                                          type: 'post');
+                                                    },
+                                                    child: Text(
+                                                      'Inactive',
+                                                      style: Sty()
+                                                          .largeText
+                                                          .copyWith(
+                                                              color:
+                                                                  Clr().black,
+                                                              fontSize: 14.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                    )),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Lecturestatus == "1"
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      STM().redirect2page(
+                                                          ctx, Attendance(id: e['data'][index]['id'].toString(),));
+                                                    },
+                                                    child: Text('Attendance',
+                                                        style: Sty()
+                                                            .smallText
+                                                            .copyWith(
+                                                                color:
+                                                                    Clr().white,
+                                                                fontSize:
+                                                                    Dim().d12)),
+                                                  )
+                                                : Container(),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                  Lecturestatus == "2"
+                                                      ? 'Cancelled'
+                                                      : 'Completed',
+                                                  style: Sty()
+                                                      .mediumText
+                                                      .copyWith(
+                                                          color: Clr()
+                                                              .textGoldenColor,
+                                                          fontSize: Dim().d14)),
+                                            ),
+                                          ],
+                                        ),
                             ],
                           ),
                         ),
@@ -658,7 +734,7 @@ class _TimeTableState extends State<TimeTable> {
         tabs: dayTimeTableList.map((e) {
           return Tab(
             text: e['name'].toString(),
-            height: Dim().d20,
+            height: Dim().d28,
           );
         }).toList(),
       ),
@@ -719,10 +795,11 @@ class _TimeTableState extends State<TimeTable> {
   }
 
   /// get TimeTableList
-  void getTimeTable({value,type, apiname}) async {
+  void getTimeTable({value, type, apiname}) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
+
     /// required key's of every api using their api name
-    var data;
+    var data = FormData.fromMap({});
     switch (apiname) {
       case "get_timetable":
         data = FormData.fromMap({
@@ -731,27 +808,38 @@ class _TimeTableState extends State<TimeTable> {
         break;
       case "update_actual_classroom":
         data = FormData.fromMap({
-          'timetable_id': value['timetable_id'],
-          'classroom_id': value['classroom_id'],
+          'timetable_id': value[0],
+          'classroom_id': value[1],
+        });
+        break;
+      case "active_lecture":
+        data = FormData.fromMap({
+          'timetable_id': value,
+        });
+        break;
+      case "inactive_lecture":
+        data = FormData.fromMap({
+          'timetable_id': value,
         });
         break;
     }
+
     /// adding data to the dio body layout..
     FormData body = data;
+
     ///  response of get and post api in result using what type of api have...
     var result = type == 'get'
         ? await STM().get(ctx, Str().loading, apiname, TeacherToken, 'teacher/')
         : await STM().postWithToken(
             ctx, Str().loading, apiname, body, TeacherToken, 'teacher/');
     var success = result['success'];
+
     /// get response in list using apiname (get_timetable , "get_classroom" is api)
     setState(() {
       switch (apiname) {
         case "get_timetable":
           if (success) {
             dayTimeTableList = result['data'];
-            position = dayTimeTableList.indexWhere(
-                (e) => e['name'] == DateFormat.E().format(DateTime.now()));
           }
           break;
         case "get_classroom":
@@ -763,6 +851,17 @@ class _TimeTableState extends State<TimeTable> {
           if (success) {
             nextSelect = true;
             code = result['code'];
+            _showClassDialog(ctx, value[0], value[1]);
+          }
+          break;
+        case "active_lecture":
+          if (success) {
+            STM().successDialogWithReplace(ctx, "${result['message'].toString()}", widget);
+          }
+          break;
+        case "inactive_lecture":
+          if (success) {
+            STM().successDialogWithReplace(ctx, "${result['message'].toString()}", widget);
           }
           break;
       }

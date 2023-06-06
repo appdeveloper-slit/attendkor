@@ -300,45 +300,69 @@ class STM {
     );
   }
 
-  // List<BottomNavigationBarItem> getBottomList(index) {
-  //   return [
-  //     BottomNavigationBarItem(
-  //       icon: SvgPicture.asset(
-  //         "assets/bn_home.svg",
-  //         color: Clr().black,
-  //       ),
-  //       label: 'Home',
-  //     ),
-  //     BottomNavigationBarItem(
-  //       icon: SvgPicture.asset(
-  //         "assets/bn_add.svg",
-  //       ),
-  //       label: 'New order',
-  //     ),
-  //     BottomNavigationBarItem(
-  //       icon: SvgPicture.asset(
-  //         "assets/bn_my_profile.svg",
-  //       ),
-  //       label: 'Profile',
-  //     ),
-  //   ];
-  // }
+  Widget _buildIcon(iconData, String text, index) => Container(
+    width: double.infinity,
+    height: 56.0,
+    child: Material(
+      color: index == 0 ? Clr().primaryColor : Clr().white,
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+           index == 0 ? SvgPicture.asset(iconData) : SvgPicture.asset("assets/gzodfinalunselected.svg"),
+            Text(text, style: TextStyle(fontSize: 12, color: index == 0 ? Clr().textGoldenColor :  Clr().textcolor,)),
+          ],
+        ),
+      ),
+    ),
+  );
+  Widget _buildIcon1(iconData, String text, index) => Container(
+    width: double.infinity,
+    height: 56.0,
+    child: Material(
+      color: index == 1 ? Clr().primaryColor : Clr().white,
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+           index == 1 ? SvgPicture.asset(iconData) : SvgPicture.asset("assets/attendkorunselected.svg"),
+            Text(text, style: TextStyle(fontSize: 12, color: index == 1 ? Clr().textGoldenColor :  Clr().textcolor,)),
+          ],
+        ),
+      ),
+    ),
+  );
+  Widget _buildIcon2(iconData, String text, index) => Container(
+    width: double.infinity,
+    height: 56.0,
+    child: Material(
+      color: index == 2 ? Clr().primaryColor : Clr().white,
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            index == 2 ?  SvgPicture.asset(iconData) : SvgPicture.asset("assets/profileunselected.svg"),
+            Text(text, style: TextStyle(fontSize: 12, color: index == 2 ? Clr().textGoldenColor :  Clr().textcolor,)),
+          ],
+        ),
+      ),
+    ),
+  );
 
   List<BottomNavigationBarItem> getBottomList(index) {
     return [
       BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-            index == 0 ? "assets/GZOD.svg" : "assets/GZODunfilled.svg"),
+        icon: _buildIcon('assets/gzod logo.svg','home',index),
+          // SvgPicture.asset(
+          //   index == 0 ? "assets/GZOD.svg" : "assets/GZODunfilled.svg"),
         label: '',
       ),
       BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-            index == 1 ? "assets/attendkor.svg" : "assets/attendkorunfilled.svg"),
+        icon: _buildIcon1('assets/attend.svg','Attendcore',index),
         label: '',
       ),
       BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-            index == 2 ? "assets/profile filled.svg" : "assets/profileunfilled.svg"),
+        icon: _buildIcon2('assets/profile.svg','Profile',index),
         label: '',
       ),
     ];
@@ -809,4 +833,21 @@ class STM {
   //     });
   //   }
   // }
+
+  canceldialog({context, message,funtion}) {
+    return showDialog(context: context, builder: (index){
+      return AlertDialog(
+        content: Text(message,style: Sty().mediumText,),
+        actions: [
+          InkWell(onTap: funtion ,child: Text('Yes',style: Sty().smallText)),
+          SizedBox(width: Dim().d28),
+          InkWell(onTap: (){
+            STM().back2Previous(context);
+          },child: Text('No',style: Sty().smallText)),
+          SizedBox(width: Dim().d36),
+        ],
+      );
+    });
+  }
+
 }

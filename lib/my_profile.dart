@@ -21,9 +21,7 @@ import 'values/dimens.dart';
 import 'values/styles.dart';
 
 class MyProfile extends StatefulWidget {
-  final String sUsertype;
-
-  const MyProfile({super.key, required this.sUsertype});
+  const MyProfile({super.key});
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -62,7 +60,6 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     getSession();
-    print(widget.sUsertype);
   }
 
   String SelectedValue = 'Select Institution Type';
@@ -80,7 +77,7 @@ class _MyProfileState extends State<MyProfile> {
     ctx = context;
 
     return Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 2,Color(0xff32334D)),
+      bottomNavigationBar: bottomBarLayout(ctx, 2, Color(0xff32334D)),
       backgroundColor: Clr().white,
       body: SingleChildScrollView(
         child: data == null
@@ -417,9 +414,11 @@ class _MyProfileState extends State<MyProfile> {
                         ],
                       ),
                     ),
-                    InkWell(onTap: (){
-                      AlertBox(i: 0);
-                    },child: SvgPicture.asset('assets/edit.svg')),
+                    InkWell(
+                        onTap: () {
+                          AlertBox(i: 0);
+                        },
+                        child: SvgPicture.asset('assets/edit.svg')),
                   ],
                 ),
                 SizedBox(
@@ -531,9 +530,11 @@ class _MyProfileState extends State<MyProfile> {
                         ],
                       ),
                     ),
-                    InkWell(onTap: (){
-                      AlertBox(i: 1);
-                    },child: SvgPicture.asset('assets/edit pencil.svg')),
+                    InkWell(
+                        onTap: () {
+                          AlertBox(i: 1);
+                        },
+                        child: SvgPicture.asset('assets/edit pencil.svg')),
                   ],
                 ),
                 SizedBox(
@@ -563,9 +564,11 @@ class _MyProfileState extends State<MyProfile> {
                         ],
                       ),
                     ),
-                    InkWell(onTap: (){
-                      AlertBox();
-                    },child: SvgPicture.asset('assets/edit pencil.svg')),
+                    InkWell(
+                        onTap: () {
+                          AlertBox();
+                        },
+                        child: SvgPicture.asset('assets/edit pencil.svg')),
                   ],
                 ),
                 SizedBox(
@@ -907,6 +910,7 @@ class _MyProfileState extends State<MyProfile> {
         var image = imageFile!.readAsBytesSync();
         profile = base64Encode(image);
       });
+      getUpdateProfile(profile);
     }
   }
 
@@ -963,14 +967,24 @@ class _MyProfileState extends State<MyProfile> {
                                 : {
                                     'qualification': qualCtrl.text,
                                   });
-                        var result = await STM().postWithToken(ctx, Str().updating, i == 0 ? 'update_name' : i == 1 ? 'update_bio' : 'update_qualification', body, TeacherToken ,'teacher/');
+                        var result = await STM().postWithToken(
+                            ctx,
+                            Str().updating,
+                            i == 0
+                                ? 'update_name'
+                                : i == 1
+                                    ? 'update_bio'
+                                    : 'update_qualification',
+                            body,
+                            TeacherToken,
+                            'teacher/');
                         var success = result['success'];
                         var message = result['message'];
-                        if(success){
+                        if (success) {
                           STM().back2Previous(ctx);
                           getProfile();
                           STM().displayToast(message);
-                        }else{
+                        } else {
                           STM().back2Previous(ctx);
                           STM().errorDialog(ctx, message);
                         }
@@ -1217,6 +1231,23 @@ class _MyProfileState extends State<MyProfile> {
     if (success) {
       STM().displayToast(message);
       STM().finishAffinity(ctx, SignIn());
+    } else {
+      STM().errorDialog(ctx, message);
+    }
+  }
+
+  /// get Profile
+  void getUpdateProfile(profile) async {
+    FormData body = FormData.fromMap({
+      'profile_photo': profile,
+    });
+    var result = await STM()
+        .postWithToken(ctx, Str().processing, 'update_profile_photo', body, TeacherToken,'teacher/');
+    var success = result['success'];
+    var message = result['message'];
+    if (success) {
+      STM().displayToast(message);
+      getProfile();
     } else {
       STM().errorDialog(ctx, message);
     }

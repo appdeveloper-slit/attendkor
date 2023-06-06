@@ -14,8 +14,8 @@ Widget bottomBarLayout(ctx, index,color) {
     elevation:50,
     selectedItemColor: Clr().grey,
     unselectedItemColor: Clr().grey,
-    showSelectedLabels: false,
-    showUnselectedLabels: false,
+    selectedFontSize: 0.0,
+    unselectedFontSize: 0.0,
     currentIndex: index,
     onTap: (i) async {
       SharedPreferences sp = await SharedPreferences.getInstance();
@@ -25,11 +25,11 @@ Widget bottomBarLayout(ctx, index,color) {
           // STM().replacePage(ctx, Home());
           break;
         case 1:
-        index == 1 ?  STM().redirect2page(ctx, TimeTable()) : STM().replacePage(ctx, TimeTable());
+        index == 1 ?  STM().replacePage(ctx, TimeTable()) : STM().redirect2page(ctx, TimeTable());
           // STM().replacePage(ctx,  TimeTable());
           break;
         case 2:
-         index == 2 ? STM().redirect2page(ctx, MyProfile(sUsertype: 'Teacher')) : STM().replacePage(ctx, MyProfile(sUsertype: 'Teacher'));
+         index == 2 ? STM().replacePage(ctx, MyProfile()) : STM().redirect2page(ctx, MyProfile());
           // STM().replacePage(ctx,  MyProfile());
           break;
       }

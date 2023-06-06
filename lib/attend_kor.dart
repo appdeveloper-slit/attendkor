@@ -24,7 +24,6 @@ class _AttendKor1State extends State<AttendKor1> {
   @override
   Widget build(BuildContext context) {
     ctx = context;
-
     return  Scaffold(
       bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
       backgroundColor: Clr().white,
