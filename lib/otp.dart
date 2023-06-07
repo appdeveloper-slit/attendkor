@@ -24,7 +24,7 @@ class OTP extends StatefulWidget {
   State<OTP> createState() => _OTPState();
 }
 
-class _OTPState extends State<OTP> with TickerProviderStateMixin {
+class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
   late BuildContext ctx;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -35,9 +35,10 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
   bool againemail = false;
   String? sUsertypeid;
   bool checkverifybutton = false;
+
   //Animation fade in
   late Animation animation;
-  late AnimationController animationController;
+   late AnimationController animationController;
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -54,23 +55,20 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    print('${sUsertypeid}+ddsgwdsgdsw');
     getSession();
-    super.initState();
     animationController = AnimationController(
       duration: Duration(seconds: 2, milliseconds: 30),
       vsync: this,
     );
-
     animation = Tween(begin: 4.0, end: 2.5).animate(
         CurvedAnimation(parent: animationController, curve: Curves.easeIn));
     animationController.forward();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     ctx = context;
-
     return Scaffold(
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: true,
@@ -80,7 +78,6 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
             children: [
               // Image.asset('assets/otp.png'),
               Lottie.asset('animations/resetpass.json',
-
                   // width: MediaQuery.of(ctx).size.width,
                   height: 320,
                   reverse: false,
@@ -98,11 +95,11 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                       Text(
                         'OTP Verification',
                         style: Sty().largeText.copyWith(
-                              fontFamily: 'roboto',
-                              color: Clr().primaryColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 30,
-                            ),
+                          fontFamily: 'roboto',
+                          color: Clr().primaryColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 30,
+                        ),
                       ),
                       SizedBox(
                         height: Dim().d8,
@@ -111,10 +108,10 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                         'We’ve sent you the verification code\non  ${widget.value['mobile']}',
                         textAlign: TextAlign.center,
                         style: Sty().mediumText.copyWith(
-                              fontFamily: 'roboto',
-                              color: Clr().textcolor,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          fontFamily: 'roboto',
+                          color: Clr().textcolor,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       SizedBox(
                         height: Dim().d20,
@@ -163,19 +160,20 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                       SizedBox(
                         height: Dim().d16,
                       ),
-                      SizedBox(
+                      checkverifybutton
+                          ? Container()
+                          : SizedBox(
                         width: 200,
                         height: 50,
                         child: ElevatedButton(
-                            onPressed: () async {
-                              setState(() {
+                            onPressed: () {
 
-                              });
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8))),
+                                    borderRadius:
+                                    BorderRadius.circular(8))),
                             child: Text(
                               'Verify',
                               style: TextStyle(
@@ -188,7 +186,9 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                       SizedBox(
                         height: Dim().d12,
                       ),
-                      Center(
+                      checkverifybutton
+                          ? Container()
+                          : Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -224,9 +224,13 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                                           children: <TextSpan>[
                                             TextSpan(
                                               text: '$minutes:$seconds',
-                                              style: Sty().mediumText.copyWith(
-                                                  color: Clr().textcolor,
-                                                  fontWeight: FontWeight.w400,
+                                              style: Sty()
+                                                  .mediumText
+                                                  .copyWith(
+                                                  color:
+                                                  Clr().textcolor,
+                                                  fontWeight:
+                                                  FontWeight.w400,
                                                   fontSize: 16,
                                                   fontFamily: ''),
                                             ),
@@ -239,7 +243,9 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      Center(
+                      checkverifybutton
+                          ? Container()
+                          : Center(
                         child: Visibility(
                           visible: againmob,
                           child: GestureDetector(
@@ -288,10 +294,10 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                         'We’ve sent you the verification code\non ${widget.value['email']}',
                         textAlign: TextAlign.center,
                         style: Sty().mediumText.copyWith(
-                              fontFamily: 'roboto',
-                              color: Clr().textcolor,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          fontFamily: 'roboto',
+                          color: Clr().textcolor,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       SizedBox(
                         height: Dim().d20,
@@ -340,27 +346,19 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                       SizedBox(
                         height: Dim().d16,
                       ),
-                      SizedBox(
+                      checkverifybutton
+                          ? SizedBox(
                         width: 200,
                         height: 50,
                         child: ElevatedButton(
-                            onPressed: () async {
-                              // // permissionHandle();
-                              // STM().redirect2page(ctx, Home());
-                              // // if (formKey.currentState!.validate()) {
-                              // //   STM().checkInternet(context, widget).then((value) {
-                              // //     if (value) {
-                              // //       sendOTP();
-                              // //     }
-                              // //   });
-                              // // }
-                              // SharedPreferences sp = await SharedPreferences.getInstance();
-                              // sp.setString('UserType', widget.sUsertype.toString());
+                            onPressed: () {
+                              VerifyOTP();
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8))),
+                                    borderRadius:
+                                    BorderRadius.circular(8))),
                             child: Text(
                               'Verify',
                               style: TextStyle(
@@ -369,11 +367,13 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                                 fontSize: 16,
                               ),
                             )),
-                      ),
+                      )
+                          : Container(),
                       SizedBox(
                         height: Dim().d12,
                       ),
-                      Center(
+                      checkverifybutton
+                          ? Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -409,9 +409,13 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                                           children: <TextSpan>[
                                             TextSpan(
                                               text: '$minutes:$seconds',
-                                              style: Sty().mediumText.copyWith(
-                                                  color: Clr().textcolor,
-                                                  fontWeight: FontWeight.w400,
+                                              style: Sty()
+                                                  .mediumText
+                                                  .copyWith(
+                                                  color:
+                                                  Clr().textcolor,
+                                                  fontWeight:
+                                                  FontWeight.w400,
                                                   fontSize: 16,
                                                   fontFamily: ''),
                                             ),
@@ -423,8 +427,10 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                      ),
-                      Center(
+                      )
+                          : Container(),
+                      checkverifybutton
+                          ? Center(
                         child: Visibility(
                           visible: againemail,
                           child: GestureDetector(
@@ -465,7 +471,8 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                      ),
+                      )
+                          : Container(),
                       Align(
                           alignment: Alignment.centerRight,
                           child: SvgPicture.asset('assets/end.svg')),
@@ -500,29 +507,28 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
     var message = result['message'];
     var success = result['success'];
     if (success) {
-      setState(() {
-
-      });
+      setState(() {});
     } else {
       STM().errorDialog(ctx, message);
     }
   }
 
-void resendOTP() async {
-  //Input
-  FormData body = FormData.fromMap({
-    'mobile':widget.value['mobile'],
-    'type':'student',
-  });
-  //Output
-  var result = await STM().post(ctx, Str().verifying, "resent_otp", body,'');
-  // if (!mounted) return;
-  var message = result['message'];
-  var success = result['success'];
-  if (success) {
-    STM().displayToast(message);
-  } else {
-    STM().errorDialog(ctx, message);
+  void resendOTP() async {
+    //Input
+    FormData body = FormData.fromMap({
+      'mobile': widget.value['mobile'],
+      'type': 'student',
+    });
+    //Output
+    var result = await STM().post(ctx, Str().verifying, "resent_otp", body, '');
+    // if (!mounted) return;
+    var message = result['message'];
+    var success = result['success'];
+    if (success) {
+      STM().displayToast(message);
+    } else {
+      STM().errorDialog(ctx, message);
+    }
   }
-}
+
 }
