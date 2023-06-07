@@ -35,6 +35,7 @@ class _TimeTableState extends State<TimeTable> {
   var code, changeColor;
   bool selectweek = false;
   bool nextSelect = false;
+  List daylist = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -60,34 +61,38 @@ class _TimeTableState extends State<TimeTable> {
   @override
   Widget build(BuildContext context) {
     ctx = context;
-    return dayTimeTableList.isEmpty
-        ? Container(color: Clr().white)
-        : DefaultTabController(
+    return WillPopScope(
+      onWillPop: () async {
+        STM().back2Previous(ctx);
+        return false;
+      },
+      child: Scaffold(
+          bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
+          backgroundColor: Clr().white,
+          appBar: appbarLayout(),
+          body: dayTimeTableList.isEmpty ? Container() : DefaultTabController(
             length: dayTimeTableList.length,
-            initialIndex: dayTimeTableList.indexWhere(
-                (e) => e['name'] == DateFormat.E().format(DateTime.now())),
-            child: Scaffold(
-                bottomNavigationBar: bottomBarLayout(ctx, 1, Color(0xff32334D)),
-                backgroundColor: Clr().white,
-                appBar: appbarLayout(),
-                body: SingleChildScrollView(
-                  padding: EdgeInsets.all(Dim().d16),
-                  child: Column(
-                    children: [
-                      WeekSelectionLayout(),
-                      SizedBox(height: Dim().d16),
-                      tabLayout(),
-                      SizedBox(height: Dim().d12),
-                      bodyLayout(),
-                    ],
-                  ),
-                )),
-          );
+            initialIndex: dayTimeTableList.indexWhere((e) => e['name'] == DateFormat.E().format(DateTime.now())),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(Dim().d16),
+              child: Column(
+                children: [
+                  WeekSelectionLayout(),
+                  SizedBox(height: Dim().d16),
+                  tabLayout(),
+                  SizedBox(height: Dim().d12),
+                  bodyLayout(),
+                ],
+              ),
+            ),
+          )),
+    );
   }
 
   //Pop Ups
   /// get code container dialog
-  _showClassDialog(ctx, timetableid, classroomid) {
+  _showClassDialog({ctx, timetableid, classroomid}) {
+    int? position1;
     AwesomeDialog(
       width: double.infinity,
       isDense: true,
@@ -160,6 +165,10 @@ class _TimeTableState extends State<TimeTable> {
                           onChanged: (t) {
                             setstate(() {
                               SelectedValue = t.toString();
+                              int position = selectedList.indexWhere(
+                                  (e) => e['name'].toString() == t.toString());
+                              position1 = selectedList[position]['id'];
+                              print(position1);
                             });
                           },
                         ),
@@ -214,7 +223,7 @@ class _TimeTableState extends State<TimeTable> {
                                 type: 'post',
                                 value: [
                                     timetableid,
-                                    classroomid,
+                                    position1!,
                                   ]);
                         STM().back2Previous(ctx);
                       });
@@ -568,10 +577,10 @@ class _TimeTableState extends State<TimeTable> {
                                                             5))),
                                             onPressed: () {
                                               _showClassDialog(
-                                                  ctx,
-                                                  e['data'][index]['id'],
-                                                  e['data'][index]
-                                                      ['classroom_id']);
+                                                ctx: ctx,
+                                                timetableid: e['data'][index]
+                                                    ['id'],
+                                              );
                                             },
                                             child: Text(
                                               'Get Code',
@@ -675,7 +684,12 @@ class _TimeTableState extends State<TimeTable> {
                                                 ? InkWell(
                                                     onTap: () {
                                                       STM().redirect2page(
-                                                          ctx, Attendance(id: e['data'][index]['id'].toString(),));
+                                                          ctx,
+                                                          Attendance(
+                                                            id: e['data'][index]
+                                                                    ['id']
+                                                                .toString(),
+                                                          ));
                                                     },
                                                     child: Text('Attendance',
                                                         style: Sty()
@@ -851,17 +865,33 @@ class _TimeTableState extends State<TimeTable> {
           if (success) {
             nextSelect = true;
             code = result['code'];
-            _showClassDialog(ctx, value[0], value[1]);
+            _showClassDialog(
+                ctx: ctx, timetableid: value[0], classroomid: value[1]);
           }
           break;
         case "active_lecture":
           if (success) {
-            STM().successDialogWithReplace(ctx, "${result['message'].toString()}", widget);
+            setState(() {
+              nextSelect = false;
+              SelectedValue = null;
+            });
+            STM().displayToast("${result['message'].toString()}");
+            getTimeTable(apiname: 'get_timetable', type: 'post');
           }
           break;
         case "inactive_lecture":
           if (success) {
-            STM().successDialogWithReplace(ctx, "${result['message'].toString()}", widget);
+            setState(() {
+              nextSelect = false;
+              SelectedValue = null;
+            });
+            getTimeTable(apiname: 'get_timetable', type: 'post');
+            summerylayout(value: {
+              'totalstudent': result['total_student'].toString(),
+              'presentstudents': result['total_present'].toString(),
+              'abscentstudents': result['total_absent'].toString(),
+              'tableid': value,
+            });
           }
           break;
       }
@@ -883,5 +913,120 @@ class _TimeTableState extends State<TimeTable> {
     } else {
       STM().errorDialog(ctx, message);
     }
+  }
+
+  /// awsome dialog for summery student after inactive lecture
+  summerylayout({value}) {
+    var select;
+    AwesomeDialog(
+        width: double.infinity,
+        isDense: true,
+        context: ctx,
+        dialogType: DialogType.NO_HEADER,
+        animType: AnimType.BOTTOMSLIDE,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Summary',
+                style: Sty().mediumText.copyWith(
+                    fontSize: Dim().d20, fontWeight: FontWeight.w600)),
+            SizedBox(height: Dim().d14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Total Students:-',
+                      style: Sty().smallText,
+                    ),
+                    Text(
+                      'Absent Students:-',
+                      style: Sty().smallText,
+                    ),
+                    Text(
+                      'Present Students:-',
+                      style: Sty().smallText,
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('${value['totalstudent']}',
+                        style: Sty()
+                            .smallText
+                            .copyWith(fontWeight: FontWeight.w400)),
+                    Text('${value['abscentstudents']}',
+                        style: Sty()
+                            .smallText
+                            .copyWith(fontWeight: FontWeight.w400)),
+                    Text('${value['presentstudents']}',
+                        style: Sty()
+                            .smallText
+                            .copyWith(fontWeight: FontWeight.w400))
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: Dim().d32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        select = true;
+                      });
+                      STM().back2Previous(ctx);
+                    },
+                    child: Container(
+                        height: Dim().d56,
+                        decoration: BoxDecoration(
+                            color: Clr().primaryColor,
+                            borderRadius: BorderRadius.circular(Dim().d12)),
+                        child: Center(
+                          child: Text('Done',
+                              style:
+                                  Sty().smallText.copyWith(color: Clr().white)),
+                        )),
+                  ),
+                ),
+                SizedBox(width: Dim().d16),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        select = false;
+                      });
+                      STM().back2Previous(ctx);
+                      STM().redirect2page(
+                          ctx,
+                          Attendance(
+                            id: value['tableid'].toString(),
+                          ));
+                    },
+                    child: Container(
+                        height: Dim().d56,
+                        decoration: BoxDecoration(
+                            color: Clr().primaryColor,
+                            borderRadius: BorderRadius.circular(Dim().d12)),
+                        child: Center(
+                          child: Text('View Attendance',
+                              style:
+                                  Sty().smallText.copyWith(color: Clr().white)),
+                        )),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: Dim().d20),
+          ],
+        )).show();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -849,5 +850,28 @@ class STM {
       );
     });
   }
+
+  imageDisplay({list, url, h, w}) {
+    return SizedBox(
+        height: h,
+        width: w,
+        child: list.contains('jpg') ||
+            list.contains('jpeg') ||
+            list.contains('png')
+            ? CachedNetworkImage(
+          fit: BoxFit.cover,
+          imageUrl: url ??
+              'https://www.famunews.com/wp-content/themes/newsgamer/images/dummy.png',
+          placeholder: (context, url) => STM().loadingPlaceHolder(),
+        )
+            : SizedBox(
+          height: h,
+          width: w,
+          child: Image.network(
+              'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg',
+              fit: BoxFit.cover),
+        ));
+  }
+
 
 }

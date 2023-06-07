@@ -229,9 +229,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 sUsertype == 'Student'
                                     ? STM().redirect2page(
                                         ctx,
-                                        OTP(
-                                          sUsertype: sUsertype!,
-                                        ))
+                                        OTP())
                                     : verifyTeacher();
                               }
                             },
