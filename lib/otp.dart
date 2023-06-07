@@ -34,7 +34,7 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
   bool againmob = false;
   bool againemail = false;
   String? sUsertypeid;
-
+  bool checkverifybutton = false;
   //Animation fade in
   late Animation animation;
   late AnimationController animationController;
@@ -108,7 +108,7 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                         height: Dim().d8,
                       ),
                       Text(
-                        'We’ve sent you the verification code\non  91632147854',
+                        'We’ve sent you the verification code\non  ${widget.value['mobile']}',
                         textAlign: TextAlign.center,
                         style: Sty().mediumText.copyWith(
                               fontFamily: 'roboto',
@@ -168,17 +168,9 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                         height: 50,
                         child: ElevatedButton(
                             onPressed: () async {
-                              // permissionHandle();
-                              // widget.sUsertype == 'Teacher' ? STM().redirect2page(ctx, Home()): STM().redirect2page(ctx,  Home_student(sUsertype: 'Student'));
-                              // // if (formKey.currentState!.validate()) {
-                              // //   STM().checkInternet(context, widget).then((value) {
-                              // //     if (value) {
-                              // //       sendOTP();
-                              // //     }
-                              // //   });
-                              // // }
-                              // SharedPreferences sp = await SharedPreferences.getInstance();
-                              // sp.setString('UserType', widget.sUsertype.toString());
+                              setState(() {
+
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
@@ -255,7 +247,7 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                               setState(() {
                                 againmob = false;
                               });
-                              // resendOTP();
+                              resendOTP();
                               // STM.checkInternet().then((value) {
                               //   if (value) {
                               //     sendOTP();
@@ -293,7 +285,7 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                         height: Dim().d40,
                       ),
                       Text(
-                        'We’ve sent you the verification code\non user@example.com',
+                        'We’ve sent you the verification code\non ${widget.value['email']}',
                         textAlign: TextAlign.center,
                         style: Sty().mediumText.copyWith(
                               fontFamily: 'roboto',
@@ -440,7 +432,7 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
                               setState(() {
                                 againemail = false;
                               });
-                              // resendOTP();
+                              resendOTP();
                               // STM.checkInternet().then((value) {
                               //   if (value) {
                               //     sendOTP();
@@ -516,26 +508,21 @@ class _OTPState extends State<OTP> with TickerProviderStateMixin {
     }
   }
 
-// void resendOTP() async {
-//   //Input
-//   FormData body = FormData.fromMap({
-//     'mobile': widget.smobileCtrl,
-//   });
-//   //Output
-//   var result = await STM().post(ctx, Str().verifying, "resend_otp", body);
-//   // if (!mounted) return;
-//   var message = result['message'];
-//   var success = result['success'];
-//   if (success) {
-//     // STM().redirect2page(ctx,
-//     //   // Verification("register", mobileCtrl.text.toString()),
-//     //   Verification(stypeValue!,mobileCtrl.text,
-//     //   ),
-//     // );
-//     STM().displayToast(message);
-//   } else {
-//     var message = result['message'];
-//     STM().errorDialog(ctx, message);
-//   }
-// }
+void resendOTP() async {
+  //Input
+  FormData body = FormData.fromMap({
+    'mobile':widget.value['mobile'],
+    'type':'student',
+  });
+  //Output
+  var result = await STM().post(ctx, Str().verifying, "resent_otp", body,'');
+  // if (!mounted) return;
+  var message = result['message'];
+  var success = result['success'];
+  if (success) {
+    STM().displayToast(message);
+  } else {
+    STM().errorDialog(ctx, message);
+  }
+}
 }
