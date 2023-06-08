@@ -40,7 +40,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
     if (picked != null) {
       setState(() {
-        String s = STM().dateFormat('dd-MM-yyyy', picked);
+        String s = STM().dateFormat('yyyy-MM-dd', picked);
         dobCtrl = TextEditingController(text: s);
       });
     }

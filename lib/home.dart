@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bottom_navigation/bottom_navigation.dart';
 import 'values/colors.dart';
@@ -42,12 +43,17 @@ class _HomeState extends State<Home> {
           centerTitle: true,
           leadingWidth: 40,
           leading: SvgPicture.asset('assets/appbar.svg'),
-          title: Text(
-            'GZOD',
-            style: Sty().mediumText.copyWith(
-                color: Color(0xff32334D),
-                fontSize: 20,
-                fontWeight: FontWeight.w600),
+          title: InkWell(onTap: ()async{
+            SharedPreferences sp = await SharedPreferences.getInstance();
+            sp.clear();
+          },
+            child: Text(
+              'GZOD',
+              style: Sty().mediumText.copyWith(
+                  color: Color(0xff32334D),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600),
+            ),
           )),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(Dim().d12),

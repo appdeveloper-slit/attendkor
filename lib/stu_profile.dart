@@ -533,7 +533,6 @@ class _StudentProfileState extends State<StudentProfile> {
         padding: EdgeInsets.all(Dim().d12),
         child: Column(
           children: [
-
             TextFormField(
                 // controller: mobileCtrl,
                 cursorColor: Clr().textcolor,

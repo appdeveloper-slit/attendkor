@@ -24,7 +24,7 @@ class OTP extends StatefulWidget {
   State<OTP> createState() => _OTPState();
 }
 
-class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
+class _OTPState extends State<OTP> with SingleTickerProviderStateMixin {
   late BuildContext ctx;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -34,11 +34,10 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
   bool againmob = false;
   bool againemail = false;
   String? sUsertypeid;
-  bool checkverifybutton = false;
 
   //Animation fade in
   late Animation animation;
-   late AnimationController animationController;
+  late AnimationController animationController;
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -95,24 +94,33 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                       Text(
                         'OTP Verification',
                         style: Sty().largeText.copyWith(
-                          fontFamily: 'roboto',
-                          color: Clr().primaryColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 30,
-                        ),
+                              fontFamily: 'roboto',
+                              color: Clr().primaryColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 30,
+                            ),
                       ),
                       SizedBox(
                         height: Dim().d8,
                       ),
-                      Text(
-                        'We’ve sent you the verification code\non  ${widget.value['mobile']}',
-                        textAlign: TextAlign.center,
-                        style: Sty().mediumText.copyWith(
-                          fontFamily: 'roboto',
-                          color: Clr().textcolor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                      RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              text:
+                              'We’ve sent you the verification code\non  ${widget.value['mobile']} ',
+                              style: Sty().mediumText.copyWith(
+                                fontFamily: 'roboto',
+                                color: Clr().textcolor,
+                                fontSize: Dim().d20,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                    child:
+                                    InkWell(onTap: (){
+                                      STM().back2Previous(ctx);
+                                    },child: SvgPicture.asset('assets/pencil.svg')))
+                              ])),
                       SizedBox(
                         height: Dim().d20,
                       ),
@@ -160,35 +168,31 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                       SizedBox(
                         height: Dim().d16,
                       ),
-                      checkverifybutton
-                          ? Container()
-                          : SizedBox(
-                        width: 200,
-                        height: 50,
-                        child: ElevatedButton(
-                            onPressed: () {
-
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Clr().textcolor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(8))),
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(
-                                // fontFamily: 'Merriweather',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                              ),
-                            )),
-                      ),
+                      // SizedBox(
+                      //   width: 200,
+                      //   height: 50,
+                      //   child: ElevatedButton(
+                      //       onPressed: () {
+                      //
+                      //       },
+                      //       style: ElevatedButton.styleFrom(
+                      //           backgroundColor: Clr().textcolor,
+                      //           shape: RoundedRectangleBorder(
+                      //               borderRadius:
+                      //               BorderRadius.circular(8))),
+                      //       child: Text(
+                      //         'Verify',
+                      //         style: TextStyle(
+                      //           // fontFamily: 'Merriweather',
+                      //           fontWeight: FontWeight.w500,
+                      //           fontSize: 16,
+                      //         ),
+                      //       )),
+                      // ),
                       SizedBox(
                         height: Dim().d12,
                       ),
-                      checkverifybutton
-                          ? Container()
-                          : Center(
+                      Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -224,13 +228,9 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                                           children: <TextSpan>[
                                             TextSpan(
                                               text: '$minutes:$seconds',
-                                              style: Sty()
-                                                  .mediumText
-                                                  .copyWith(
-                                                  color:
-                                                  Clr().textcolor,
-                                                  fontWeight:
-                                                  FontWeight.w400,
+                                              style: Sty().mediumText.copyWith(
+                                                  color: Clr().textcolor,
+                                                  fontWeight: FontWeight.w400,
                                                   fontSize: 16,
                                                   fontFamily: ''),
                                             ),
@@ -243,9 +243,7 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                           ],
                         ),
                       ),
-                      checkverifybutton
-                          ? Container()
-                          : Center(
+                      Center(
                         child: Visibility(
                           visible: againmob,
                           child: GestureDetector(
@@ -290,15 +288,24 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                       SizedBox(
                         height: Dim().d40,
                       ),
-                      Text(
-                        'We’ve sent you the verification code\non ${widget.value['email']}',
-                        textAlign: TextAlign.center,
-                        style: Sty().mediumText.copyWith(
-                          fontFamily: 'roboto',
-                          color: Clr().textcolor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                      RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                              text:
+                                  'We’ve sent you the verification code\non ${widget.value['email']} ',
+                              style: Sty().mediumText.copyWith(
+                                    fontFamily: 'roboto',
+                                    color: Clr().textcolor,
+                                    fontSize: Dim().d20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                              children: [
+                                WidgetSpan(
+                                    child:
+                                        InkWell(onTap: (){
+                                          STM().back2Previous(ctx);
+                                        },child: SvgPicture.asset('assets/pencil.svg')))
+                              ])),
                       SizedBox(
                         height: Dim().d20,
                       ),
@@ -346,8 +353,7 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                       SizedBox(
                         height: Dim().d16,
                       ),
-                      checkverifybutton
-                          ? SizedBox(
+                      SizedBox(
                         width: 200,
                         height: 50,
                         child: ElevatedButton(
@@ -357,8 +363,7 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(8))),
+                                    borderRadius: BorderRadius.circular(8))),
                             child: Text(
                               'Verify',
                               style: TextStyle(
@@ -367,13 +372,11 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                                 fontSize: 16,
                               ),
                             )),
-                      )
-                          : Container(),
+                      ),
                       SizedBox(
                         height: Dim().d12,
                       ),
-                      checkverifybutton
-                          ? Center(
+                      Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -409,13 +412,9 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                                           children: <TextSpan>[
                                             TextSpan(
                                               text: '$minutes:$seconds',
-                                              style: Sty()
-                                                  .mediumText
-                                                  .copyWith(
-                                                  color:
-                                                  Clr().textcolor,
-                                                  fontWeight:
-                                                  FontWeight.w400,
+                                              style: Sty().mediumText.copyWith(
+                                                  color: Clr().textcolor,
+                                                  fontWeight: FontWeight.w400,
                                                   fontSize: 16,
                                                   fontFamily: ''),
                                             ),
@@ -427,10 +426,8 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                             ),
                           ],
                         ),
-                      )
-                          : Container(),
-                      checkverifybutton
-                          ? Center(
+                      ),
+                      Center(
                         child: Visibility(
                           visible: againemail,
                           child: GestureDetector(
@@ -471,8 +468,7 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
                             ),
                           ),
                         ),
-                      )
-                          : Container(),
+                      ),
                       Align(
                           alignment: Alignment.centerRight,
                           child: SvgPicture.asset('assets/end.svg')),
@@ -487,6 +483,7 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
 
   //Api Method
   void VerifyOTP() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
     //Input
     FormData body = FormData.fromMap({
       'page_type': widget.type,
@@ -504,12 +501,15 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
     });
     //Output
     var result = await STM().post(ctx, Str().verifying, "verify_otp", body, '');
-    var message = result['message'];
     var success = result['success'];
     if (success) {
-      setState(() {});
+      setState(() {
+        sp.setBool('is_login', true);
+        sp.setString('studenttoken', result['student_token']);
+        STM().successDialogWithAffinity(ctx, result['message'], Home());
+      });
     } else {
-      STM().errorDialog(ctx, message);
+      STM().errorDialog(ctx, result['message']);
     }
   }
 
@@ -530,5 +530,4 @@ class _OTPState extends State<OTP> with SingleTickerProviderStateMixin{
       STM().errorDialog(ctx, message);
     }
   }
-
 }

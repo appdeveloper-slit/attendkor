@@ -192,7 +192,7 @@ class Sty {
       fontFamily: 'Roboto',
       letterSpacing: 0.5,
       color: Clr().errorRed,
-      fontSize: 14.0,
+      fontSize: 12.0,
     ),
   );
 

@@ -222,15 +222,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                         height: 50,
                         child: ElevatedButton(
                             onPressed: () async {
-                              SharedPreferences sp =
-                                  await SharedPreferences.getInstance();
-                              sp.setString('UserType', sUsertype.toString());
+                              SharedPreferences sp = await SharedPreferences.getInstance();;
                               if (formKey.currentState!.validate()) {
-                                sUsertype == 'Student'
-                                    ? STM().redirect2page(
-                                        ctx,
-                                        OTP())
-                                    : verifyTeacher();
+                                verifyTeacher(sUsertype == 'Student' ? 'student' : 'teacher');
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -317,12 +311,12 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   }
 
 // Api Method
-  void verifyTeacher() async {
+  void verifyTeacher(type) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     FormData body = FormData.fromMap({
       'email': emailCtrl.text,
       'password': passCtrl.text,
-      'type': 'teacher'
+      'type': type
     });
     //Output
     var result = await STM().post(ctx, Str().verifying, "login", body,'');
@@ -332,7 +326,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       setState(() {
         loading = false;
         STM().displayToast(message);
-        sp.setString('teacherToken', result['teacher_token'].toString());
+        result['teacher_token'] == null ? sp.setString('studenttoken', result['student_token'].toString()) : sp.setString('teacherToken', result['teacher_token'].toString());
         sp.setBool('is_login', true);
         STM().finishAffinity(ctx, Home());
       });
