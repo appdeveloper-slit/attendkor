@@ -55,43 +55,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   ];
 
   int? StateValue;
-  List<Map<String, dynamic>> stateList = [
-    {
-      "id": 1,
-      "name": "Andaman Nicobar",
-      "created_at": "2023-04-22T12:03:16.000000Z",
-      "updated_at": "2023-04-22T12:03:16.000000Z",
-      "city": [
-        {"id": 1, "name": "Nicobar", "state_id": 1},
-        {"id": 2, "name": "North Middle Andaman", "state_id": 1},
-        {"id": 3, "name": "South Andaman", "state_id": 1}
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Andhra Pradesh",
-      "created_at": "2023-04-22T12:03:16.000000Z",
-      "updated_at": "2023-04-22T12:03:16.000000Z",
-      "city": [
-        {"id": 4, "name": "Anantapur", "state_id": 2},
-        {"id": 5, "name": "Chittoor", "state_id": 2},
-        {"id": 6, "name": "East Godavari", "state_id": 2},
-        {"id": 7, "name": "Guntur", "state_id": 2},
-        {"id": 8, "name": "Kadapa", "state_id": 2},
-        {"id": 9, "name": "Krishna", "state_id": 2},
-        {"id": 10, "name": "Kurnool", "state_id": 2},
-        {"id": 11, "name": "Nellore", "state_id": 2},
-        {"id": 12, "name": "Prakasam", "state_id": 2},
-        {"id": 13, "name": "Srikakulam", "state_id": 2},
-        {"id": 14, "name": "Visakhapatnam", "state_id": 2},
-        {"id": 15, "name": "Vizianagaram", "state_id": 2},
-        {"id": 16, "name": "West Godavari", "state_id": 2}
-      ]
-    },
-  ];
+  List<dynamic> stateList = [];
 
   int? CityValue;
-  List<Map<String,dynamic>> cityList = [];
+  List<dynamic> cityList = [];
 
   String? sToken;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -108,9 +75,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Animation fade in
   late Animation animation;
   late AnimationController animationController;
+  getSession() async {
+    STM().checkInternet(context, widget).then((value) {
+      if (value) {
+        getCities();
+      }
+    });
+  }
 
   @override
   void initState() {
+    getSession();
     super.initState();
     animationController = AnimationController(
       duration: Duration(seconds: 2, milliseconds: 30),
@@ -346,7 +321,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   StateValue = v as int?;
                                   stateerror = null;
                                   int position = stateList.indexWhere((e) => e['id'] == StateValue);
-                                  cityList = stateList[position]['city'];
+                                  cityList = stateList[position]['cities'];
                                   CityValue = null;
                                 });
                               },
@@ -616,6 +591,19 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       ),
     );
   }
+
+
+  /// getCities
+  void getCities() async {
+    var result = await STM().get(ctx, 'loading cities', 'get_state', '', 'student/');
+    var success = result['success'];
+    if(success){
+      setState(() {
+        stateList = result['states'];
+      });
+    }
+  }
+
 
   // validation funtion
   _validateForm(ctx) async {

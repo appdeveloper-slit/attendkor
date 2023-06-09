@@ -16,17 +16,18 @@ class NoticeBoard extends StatefulWidget {
 class _NoticeBoardState extends State<NoticeBoard> {
   late BuildContext ctx;
   List<dynamic> noticeList = [];
-  String? TeacherToken;
+  String? TeacherToken,StudentToken;
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
-      TeacherToken = sp.getString('teacherToken') ?? '';
+      TeacherToken = sp.getString('teacherToken') ?? null;
+      StudentToken = sp.getString('studenttoken') ?? null;
     });
     STM().checkInternet(context, widget).then((value) {
       if (value) {
         getNotice();
-        print(TeacherToken);
+        print(StudentToken);
       }
     });
   }
@@ -76,7 +77,12 @@ class _NoticeBoardState extends State<NoticeBoard> {
           padding: EdgeInsets.all(Dim().d12),
           child: Column(
             children: [
-              ListView.builder(
+              noticeList.isEmpty ?  SizedBox(
+                height: MediaQuery.of(ctx).size.height/1.5,
+                child: Center(
+                  child: Text('No Notice',style: Sty().largeText,),
+                ),
+              ) : ListView.builder(
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 itemCount: noticeList.length,
@@ -161,7 +167,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
 
   void getNotice() async {
     var result = await STM()
-        .get(ctx, Str().loading, 'get_notice', TeacherToken, 'teacher/');
+        .get(ctx, Str().loading, 'get_notice', TeacherToken ?? StudentToken, TeacherToken != null ? 'teacher/' : 'student/');
     var success = result['success'];
     if (success) {
       setState(() {

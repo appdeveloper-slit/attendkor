@@ -16,7 +16,8 @@ import 'values/styles.dart';
 class OTP2 extends StatefulWidget {
   final String sUsertype;
   final String? mobilenum;
-  const OTP2({super.key, required this.sUsertype,this.mobilenum});
+  final String? type;
+  const OTP2({super.key, required this.sUsertype,this.mobilenum,this.type});
   @override
   State<OTP2> createState() => _OTP2State();
 }
@@ -104,7 +105,7 @@ class _OTP2State extends State<OTP2> with TickerProviderStateMixin {
       'otp': otpCtrl.text,
     });
     //Output
-    var result = await STM().post(ctx, Str().verifying, widget.sUsertype == 'Teacher' ? 'reset_password_verify_otp' : "verifyotp", body,'');
+    var result = await STM().post(ctx, Str().verifying, 'reset_password_verify_otp', body,'');
     // if (!mounted) return;
     var message = result['message'];
     var success = result['success'];
@@ -149,8 +150,8 @@ class _OTP2State extends State<OTP2> with TickerProviderStateMixin {
             children: [
               SizedBox(height: Dim().d8),
               mobileVerifyLayout(),
-              SizedBox(height: Dim().d40),
-              emailVerifyLayout(),
+              widget.type == 'reset'? Container()  :SizedBox(height: Dim().d40),
+            widget.type == 'reset'? Container()  :emailVerifyLayout(),
             ],
           );
   }

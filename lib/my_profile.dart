@@ -1453,7 +1453,7 @@ class _MyProfileState extends State<MyProfile> {
                 onPressed: () async {
                   SharedPreferences sp = await SharedPreferences.getInstance();
                   sp.clear();
-                  STM().redirect2page(ctx, SignIn());
+                  STM().finishAffinity(ctx, SignIn());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -147,6 +147,7 @@ class _PublishNoticeState extends State<PublishNotice> {
                             context: ctx,
                             message: 'Are you sure want to publish?',
                             funtion: () {
+                              STM().back2Previous(ctx);
                               publishNotice();
                             });
                       },
@@ -217,7 +218,7 @@ class _PublishNoticeState extends State<PublishNotice> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: Dim().d12, vertical: Dim().d20),
-                child: Text('Profile Photo', style: Sty().mediumBoldText),
+                child: Text('Notice Photo', style: Sty().mediumBoldText),
               ),
               SizedBox(height: Dim().d28),
               Row(

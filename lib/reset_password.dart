@@ -160,6 +160,7 @@ class _ResetPasswordState extends State<ResetPassword>
                             keyboardType: TextInputType.number,
                             decoration:
                                 Sty().TextFormFieldOutlineStyle.copyWith(
+                                    counterText: '',
                                     hintText: 'Registered Mobile Number',
                                     hintStyle: Sty().mediumText.copyWith(
                                           color: Clr().hintColor,
@@ -217,7 +218,7 @@ class _ResetPasswordState extends State<ResetPassword>
     var message = result['message'];
     if (success) {
       STM().displayToast(message);
-      STM().redirect2page(ctx, OTP2(sUsertype: SelectedValue!,mobilenum: mobileCtrl.text,));
+      STM().redirect2page(ctx, OTP2(sUsertype: SelectedValue!,mobilenum: mobileCtrl.text,type: 'reset',));
     } else {
       STM().errorDialog(ctx, message);
     }
