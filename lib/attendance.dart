@@ -27,7 +27,7 @@ class _AttendanceState extends State<Attendance> {
   var lectureDetails, studentdeatails;
   TextEditingController uniqueCtrl = TextEditingController();
   List<dynamic> studentList = [];
-  bool nextSelect = false;
+  bool nextSelect = true;
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -355,6 +355,8 @@ class _AttendanceState extends State<Attendance> {
       width: double.infinity,
       isDense: true,
       context: ctx,
+      dismissOnBackKeyPress: nextSelect,
+      dismissOnTouchOutside: nextSelect,
       dialogType: DialogType.NO_HEADER,
       animType: AnimType.BOTTOMSLIDE,
       alignment: Alignment.centerLeft,
@@ -363,7 +365,14 @@ class _AttendanceState extends State<Attendance> {
         child: Column(
           children: [
             nextSelect
-                ? Column(crossAxisAlignment: CrossAxisAlignment.start,
+                ? TextFormField(
+                controller: uniqueCtrl,
+                decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                    hintText: 'Enter Student Unique ID',
+                    hintStyle: Sty().mediumText.copyWith(
+                      color: Clr().hintColor,
+                      fontSize: 14,
+                    ))): Column(crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RichText(
                         text: TextSpan(
@@ -486,72 +495,88 @@ class _AttendanceState extends State<Attendance> {
                         height: Dim().d20,
                       ),
                     ],
-                  )
-                : TextFormField(
-                    controller: uniqueCtrl,
-                    decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                        hintText: 'Enter Student Unique ID',
-                        hintStyle: Sty().mediumText.copyWith(
-                              color: Clr().hintColor,
-                              fontSize: 14,
-                            ))),
+                  ),
             SizedBox(
               height: Dim().d20,
             ),
-            SizedBox(
-              width: 220,
+            nextSelect ? SizedBox(
+              width: Dim().d220,
               height: 50,
               child: ElevatedButton(
                   onPressed: () {
-                    nextSelect
-                        ? getattendance(value: [
-                      stiudentid,
-                            timetableid,
-                          ], apiname: 'update_attendance', type: 'post')
-                        : getattendance(
-                            type: 'post',
-                            apiname: 'get_student_details',
-                            value: uniqueCtrl.text);
+                     getattendance(
+                        type: 'post',
+                        apiname: 'get_student_details',
+                        value: uniqueCtrl.text);
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Clr().textcolor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5))),
                   child: Text(
-                    nextSelect ? 'Update' : 'Get Details',
+                     'Get Details',
                     style: TextStyle(
                       // fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                     ),
                   )),
+            ) :
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                        onPressed: () { getattendance(value: [
+                            stiudentid,
+                            timetableid,
+                          ], apiname: 'update_attendance', type: 'post');
 
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: Dim().d14),
-              //   child: SizedBox(
-              //     height: Dim().d56,
-              //     child: ElevatedButton(
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor: Color(0xff991404),
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(10),
-              //         ),
-              //       ),
-              //       onPressed: () {
-              //         if (formkey.currentState!.validate()) {
-              //           // updateUser();
-              //           widget.sType == 'addAddress'? getaddAddress():getUpdateAddress();
-              //         }
-              //       },
-              //       child: Center(
-              //         child: Text(
-              //           'Save address',
-              //           style: Sty().mediumText.copyWith(color: Clr().white),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Clr().textcolor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        child: Text(
+                           'Update',
+                          style: TextStyle(
+                            // fontFamily: 'Merriweather',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ),
+                ),
+                nextSelect == false ?  SizedBox(width: Dim().d20) : Container(),
+                nextSelect == false ?  Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            nextSelect = true;
+                            STM().back2Previous(ctx);
+
+
+
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Clr().textcolor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            // fontFamily: 'Merriweather',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ),
+                ) : Container()
+              ],
             ),
             SizedBox(
               height: Dim().d16,
@@ -621,13 +646,12 @@ class _AttendanceState extends State<Attendance> {
         case "get_student_details":
           if (success) {
             studentdeatails = result['data'];
-            nextSelect = true;
+            nextSelect = false;
             STM().back2Previous(ctx);
             _showEnterIDDialog(
                 ctx: ctx,
                 timetableid: lectureDetails['id'],
                 stiudentid: studentdeatails['student_id']);
-            uniqueCtrl.clear();
           }else{
             STM().back2Previous(ctx);
             uniqueCtrl.clear();
@@ -636,6 +660,7 @@ class _AttendanceState extends State<Attendance> {
           break;
         case "update_attendance":
           if (success) {
+            uniqueCtrl.clear();
             STM().back2Previous(ctx);
             STM().successDialogWithReplace(
                 ctx,
@@ -643,6 +668,8 @@ class _AttendanceState extends State<Attendance> {
                 Attendance(
                   id: widget.id,
                 ));
+          }else{
+            STM().errorDialog(ctx, '${result['message'].toString()}');
           }
           break;
       }
