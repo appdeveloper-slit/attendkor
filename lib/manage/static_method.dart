@@ -352,13 +352,13 @@ class STM {
   List<BottomNavigationBarItem> getBottomList(index) {
     return [
       BottomNavigationBarItem(
-        icon: _buildIcon('assets/gzod logo.svg','home',index),
+        icon: _buildIcon('assets/gzod logo.svg','GZOD',index),
           // SvgPicture.asset(
           //   index == 0 ? "assets/GZOD.svg" : "assets/GZODunfilled.svg"),
         label: '',
       ),
       BottomNavigationBarItem(
-        icon: _buildIcon1('assets/attend.svg','Attendcore',index),
+        icon: _buildIcon1('assets/attend.svg','AttendKor',index),
         label: '',
       ),
       BottomNavigationBarItem(
@@ -839,12 +839,15 @@ class STM {
       return AlertDialog(
         content: Text(message,style: Sty().mediumText,),
         actions: [
-          InkWell(onTap: funtion ,child: Text('Yes',style: Sty().smallText)),
-          SizedBox(width: Dim().d28),
-          InkWell(onTap: (){
-            STM().back2Previous(context);
-          },child: Text('No',style: Sty().smallText)),
-          SizedBox(width: Dim().d36),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              InkWell(onTap: funtion ,child: Text('Yes',style: Sty().smallText)),
+              InkWell(onTap: (){
+                STM().back2Previous(context);
+              },child: Text('No',style: Sty().smallText)),
+            ],
+          ),
+          SizedBox(height: Dim().d12,),
         ],
       );
     });

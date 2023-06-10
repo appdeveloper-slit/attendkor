@@ -1,11 +1,13 @@
 import 'package:attend_kor_teacher/values/dimens.dart';
 import 'package:attend_kor_teacher/values/strings.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'manage/static_method.dart';
+import 'timetable.dart';
 import 'values/colors.dart';
 import 'values/styles.dart';
 
@@ -17,21 +19,12 @@ class FreeLectures extends StatefulWidget {
 class _FreeLecturesState extends State<FreeLectures> {
   late BuildContext ctx;
   String? TeacherToken;
-  String SubjectValue = 'Select Subject';
-  List<String> selecteLlist = [
-    'Select Subject',
-    'English',
-    'Mathematics',
-    'Physics',
-    'Chemistry'
-  ];
-  String t = "0";
+  int? SubjectValue;
 
-  String classValue = '19D';
-  List<String> classLlist = ['19D', '19A', '19C', '19'];
-  String s = "0";
+  int? classValue;
 
   List<dynamic> timetableList = [];
+  List<dynamic> classroomList = [];
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
@@ -55,7 +48,7 @@ class _FreeLecturesState extends State<FreeLectures> {
   Widget build(BuildContext context) {
     ctx = context;
     return WillPopScope(onWillPop: () async {
-      STM().back2Previous(ctx);
+      STM().replacePage(ctx,TimeTable());
       return false;
     },
       child: Scaffold(
@@ -68,7 +61,7 @@ class _FreeLecturesState extends State<FreeLectures> {
           backgroundColor: Clr().white,
           leading: InkWell(
             onTap: () {
-              STM().back2Previous(ctx);
+              STM().replacePage(ctx,TimeTable());
             },
             child: Icon(
               Icons.arrow_back,
@@ -243,7 +236,7 @@ class _FreeLecturesState extends State<FreeLectures> {
                                                   BorderRadius.circular(5))),
                                       onPressed: () {
                                         // STM().redirect2page(ctx, Job());
-                                        _showClassDialog(ctx);
+                                        _showClassDialog(ctx: ctx,list: timetableList[index],classroomlist: classroomList,subjectlist: timetableList[index]['all_subject']);
                                       },
                                       child: Text(
                                         'Book',
@@ -270,7 +263,7 @@ class _FreeLecturesState extends State<FreeLectures> {
   }
 
   //Pop Ups
-  _showClassDialog(ctx) {
+  _showClassDialog({ctx,list,classroomlist,List? subjectlist}) {
     AwesomeDialog(
       width: double.infinity,
       isDense: true,
@@ -280,192 +273,187 @@ class _FreeLecturesState extends State<FreeLectures> {
       alignment: Alignment.centerLeft,
       body: Container(
         padding: EdgeInsets.all(Dim().d16),
-        child: Column(
-          children: [
-            SizedBox(
-              height: Dim().d8,
-            ),
-            TextFormField(
-                cursorColor: Clr().textcolor,
-                readOnly: true,
-                keyboardType: TextInputType.name,
-                decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                    hintText: 'EXTC',
-                    hintStyle: Sty().mediumText.copyWith(
-                          color: Clr().hintColor,
-                          fontSize: 14,
-                        ))),
-            SizedBox(
-              height: Dim().d20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    readOnly: true,
-                      cursorColor: Clr().textcolor,
-                      keyboardType: TextInputType.name,
-                      decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                          hintText: '1st Year',
-                          hintStyle: Sty().mediumText.copyWith(
-                            color: Clr().hintColor,
-                            fontSize: 14,
-                          ))),
-                ),
-                SizedBox(width: Dim().d16,),
-                Expanded(
-                  child: TextFormField(
-                    readOnly: true,
-                      cursorColor: Clr().textcolor,
-                      keyboardType: TextInputType.name,
-                      decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                          hintText: 'A',
-                          hintStyle: Sty().mediumText.copyWith(
-                            color: Clr().hintColor,
-                            fontSize: 14,
-                          ))),
-                ),
-              ],
-            ),
+        child: StatefulBuilder(builder: (context,setState){
+          return Column(
+            children: [
+              SizedBox(
+                height: Dim().d8,
+              ),
+              TextFormField(
+                  cursorColor: Clr().textcolor,
+                  readOnly: true,
+                  keyboardType: TextInputType.name,
+                  decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                      hintText: '${list['stream']['name']}',
+                      hintStyle: Sty().mediumText.copyWith(
+                        color: Clr().hintColor,
+                        fontSize: 14,
+                      ))),
+              SizedBox(
+                height: Dim().d20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                        readOnly: true,
+                        cursorColor: Clr().textcolor,
+                        keyboardType: TextInputType.name,
+                        decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                            hintText: '${list['year']['year']}',
+                            hintStyle: Sty().mediumText.copyWith(
+                              color: Clr().hintColor,
+                              fontSize: 14,
+                            ))),
+                  ),
+                  SizedBox(width: Dim().d16,),
+                  Expanded(
+                    child: TextFormField(
+                        readOnly: true,
+                        cursorColor: Clr().textcolor,
+                        keyboardType: TextInputType.name,
+                        decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                            hintText: '${list['division']['name']}',
+                            hintStyle: Sty().mediumText.copyWith(
+                              color: Clr().hintColor,
+                              fontSize: 14,
+                            ))),
+                  ),
+                ],
+              ),
 
-            SizedBox(
-              height: Dim().d20,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: Clr().textcolor)),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: SubjectValue,
-                  isExpanded: true,
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 28,
-                    color: Clr().textcolor,
-                  ),
-                  style: TextStyle(color: Color(0xff787882)),
-                  items: selecteLlist.map((String string) {
-                    return DropdownMenuItem<String>(
-                      value: string,
-                      child: Text(
-                        string,
-                        style: TextStyle(color: Clr().textcolor, fontSize: 14),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (t) {
-                    // STM().redirect2page(ctx, Home());
-                    setState(() {
-                      SubjectValue = t!;
-                    });
-                  },
-                ),
+              SizedBox(
+                height: Dim().d20,
               ),
-            ),
-            SizedBox(
-              height: Dim().d20,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: Clr().textcolor)),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: SubjectValue,
-                  isExpanded: true,
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 28,
-                    color: Clr().textcolor,
-                  ),
-                  style: TextStyle(color: Color(0xff787882)),
-                  items: selecteLlist.map((String string) {
-                    return DropdownMenuItem<String>(
-                      value: string,
-                      child: Text(
-                        string,
-                        style: TextStyle(color: Clr().textcolor, fontSize: 14),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (t) {
-                    // STM().redirect2page(ctx, Home());
-                    setState(() {
-                      SubjectValue = t!;
-                    });
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height: Dim().d20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                      cursorColor: Clr().textcolor,
-                      readOnly: true,
-                      keyboardType: TextInputType.name,
-                      decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                          hintText: '1 am',
-                          hintStyle: Sty().mediumText.copyWith(
-                            color: Clr().hintColor,
-                            fontSize: 14,
-                          ))),
-                ),
-                SizedBox(width: Dim().d16,),
-                Expanded(
-                  child: TextFormField(
-                    readOnly: true,
-                      cursorColor: Clr().textcolor,
-                      keyboardType: TextInputType.name,
-                      decoration: Sty().TextFormFieldOutlineStyle.copyWith(
-                          hintText: '2 am',
-                          hintStyle: Sty().mediumText.copyWith(
-                            color: Clr().hintColor,
-                            fontSize: 14,
-                          ))),
-                ),
-              ],
-            ),
-            SizedBox(height: Dim().d20,),
-            SizedBox(
-              width: 220,
-              height: 50,
-              child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    // STM().redirect2page(ctx, TeacherProfile());
-                    // if (formKey.currentState!.validate()) {
-                    //   STM().checkInternet(context, widget).then((value) {
-                    //     if (value) {
-                    //       sendOTP();
-                    //     }
-                    //   });
-                    // }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Clr().textcolor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  child: Text(
-                    'Add',
-                    style: TextStyle(
-                      // fontFamily: 'Merriweather',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Clr().textcolor)),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    value: SubjectValue,
+                    isExpanded: true,
+                    hint: Text('Enter the subject',style: Sty().smallText.copyWith(color: Clr().hintColor)),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 28,
+                      color: Clr().textcolor,
                     ),
-                  )),
-            ),
-            SizedBox(
-              height: Dim().d16,
-            ),
-          ],
-        ),
+                    style: TextStyle(color: Color(0xff787882)),
+                    items: subjectlist!.map((v) {
+                      return DropdownMenuItem(
+                        value: v['id'],
+                        child: Text(
+                          v['name'].toString(),
+                          style: TextStyle(color: Clr().textcolor, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (t) {
+                      setState(() {
+                        SubjectValue = t as int?;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: Dim().d20,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Clr().textcolor)),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    value: classValue,
+                    isExpanded: true,
+                    hint: Text('Enter the classroom',style: Sty().smallText.copyWith(color: Clr().hintColor)),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 28,
+                      color: Clr().textcolor,
+                    ),
+                    style: TextStyle(color: Color(0xff787882)),
+                    items: classroomList.map((string) {
+                      return DropdownMenuItem(
+                        value: string['id'],
+                        child: Text(
+                          string['name'].toString(),
+                          style: TextStyle(color: Clr().textcolor, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (t) {
+                      // STM().redirect2page(ctx, Home());
+                      setState(() {
+                        classValue = t as int?;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: Dim().d20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                        cursorColor: Clr().textcolor,
+                        readOnly: true,
+                        keyboardType: TextInputType.name,
+                        decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                            hintText: '${list['from_time']}',
+                            hintStyle: Sty().mediumText.copyWith(
+                              color: Clr().hintColor,
+                              fontSize: 14,
+                            ))),
+                  ),
+                  SizedBox(width: Dim().d16,),
+                  Expanded(
+                    child: TextFormField(
+                        readOnly: true,
+                        cursorColor: Clr().textcolor,
+                        keyboardType: TextInputType.name,
+                        decoration: Sty().TextFormFieldOutlineStyle.copyWith(
+                            hintText: '${list['to_time']}',
+                            hintStyle: Sty().mediumText.copyWith(
+                              color: Clr().hintColor,
+                              fontSize: 14,
+                            ))),
+                  ),
+                ],
+              ),
+              SizedBox(height: Dim().d20,),
+              SizedBox(
+                width: 220,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: () {
+                      resheduleLecture(list['id']);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Clr().textcolor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(
+                        // fontFamily: 'Merriweather',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    )),
+              ),
+              SizedBox(
+                height: Dim().d16,
+              ),
+            ],
+          );
+        }),
       ),
     ).show();
   }
@@ -476,8 +464,36 @@ class _FreeLecturesState extends State<FreeLectures> {
     if(success){
       setState(() {
         timetableList = result['data'];
+        getClassroom();
       });
     }
   }
+
+  void getClassroom() async {
+    var result = await STM().get(ctx, Str().loading, 'get_classroom', TeacherToken, 'teacher/');
+    var success = result['success'];
+    if(success){
+      setState(() {
+        classroomList = result['data'];
+      });
+    }
+  }
+
+  void resheduleLecture(id) async {
+    FormData body = FormData.fromMap({
+      'timetable_id': id,
+      'subject_id':  SubjectValue,
+      'classroom_id': classValue
+    });
+    var result = await STM().postWithToken(ctx, Str().processing, 'rescheduled_lecture', body, TeacherToken, 'teacher/');
+    var success = result['success'];
+    var messege = result['messege'];
+    if(success){
+      STM().successDialogWithReplace(ctx, messege, widget);
+    }else{
+      STM().errorDialog(ctx, messege);
+    }
+  }
+
 
 }

@@ -8,7 +8,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
-import 'home_student.dart';
 import 'manage/static_method.dart';
 import 'values/colors.dart';
 import 'values/dimens.dart';

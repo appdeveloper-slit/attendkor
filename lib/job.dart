@@ -3,8 +3,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'home_student.dart';
 import 'manage/static_method.dart';
 import 'values/colors.dart';
 import 'values/dimens.dart';
@@ -98,7 +96,6 @@ class _JobState extends State<Job> {
         backgroundColor: Clr().white,
         leading: InkWell(
           onTap: (){
-            STM().redirect2page(ctx, Home_student(sUsertype: ''));
           },
           child: Icon(
             Icons.arrow_back,

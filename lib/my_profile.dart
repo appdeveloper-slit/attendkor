@@ -17,12 +17,15 @@ import 'bottom_navigation/bottom_navigation.dart';
 import 'home.dart';
 import 'manage/static_method.dart';
 import 'publish_notice.dart';
+import 'timetable.dart';
 import 'values/colors.dart';
 import 'values/dimens.dart';
 import 'values/styles.dart';
 
 class MyProfile extends StatefulWidget {
-  const MyProfile({super.key});
+  final loop;
+
+  const MyProfile({super.key, this.loop});
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -32,7 +35,7 @@ class _MyProfileState extends State<MyProfile> {
   late BuildContext ctx;
 
   /// For Teacher variables
-  var data,instituteData;
+  var data, instituteData;
   String? TeacherToken, profile, pic, StudentToken;
   File? imageFile;
   List allAlertDialog = [];
@@ -82,18 +85,27 @@ class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     ctx = context;
-
-    return Scaffold(
-      bottomNavigationBar: bottomBarLayout(ctx, 2, Color(0xff32334D)),
-      backgroundColor: Clr().white,
-      body: SingleChildScrollView(
-        child: data == null
-            ? SizedBox(
-                height: MediaQuery.of(ctx).size.height / 1.5,
-                child: STM().loadingPlaceHolder())
-            : TeacherToken != null
-                ? TeacherBoxLayout()
-                : StudentboxLayout(),
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.loop == 'timetable') {
+          STM().replacePage(ctx, TimeTable(loop: 'profile'));
+        } else {
+          STM().back2Previous(ctx);
+        }
+        return false;
+      },
+      child: Scaffold(
+        bottomNavigationBar: bottomBarLayout(ctx, 2, Color(0xff32334D)),
+        backgroundColor: Clr().white,
+        body: SingleChildScrollView(
+          child: data == null
+              ? SizedBox(
+                  height: MediaQuery.of(ctx).size.height / 1.5,
+                  child: STM().loadingPlaceHolder())
+              : TeacherToken != null
+                  ? TeacherBoxLayout()
+                  : StudentboxLayout(),
+        ),
       ),
     );
   }
@@ -707,39 +719,43 @@ class _MyProfileState extends State<MyProfile> {
         SizedBox(
           height: Dim().d8,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-          child: Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(color: Color(0xfffdf0ea))),
-            child: Padding(
-              padding: EdgeInsets.all(Dim().d8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Wrap(
-                    children: [
-                      SvgPicture.asset('assets/privacy_policy.svg'),
-                      SizedBox(
-                        width: Dim().d12,
-                      ),
-                      Text(
-                        'Privacy Policy',
-                        style: Sty().mediumText.copyWith(
-                              color: Clr().textcolor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Clr().textcolor,
-                    size: 18,
-                  )
-                ],
+        InkWell(onTap: (){
+          STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
+        },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide(color: Color(0xfffdf0ea))),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Wrap(
+                      children: [
+                        SvgPicture.asset('assets/privacy_policy.svg'),
+                        SizedBox(
+                          width: Dim().d12,
+                        ),
+                        Text(
+                          'Privacy Policy',
+                          style: Sty().mediumText.copyWith(
+                                color: Clr().textcolor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Clr().textcolor,
+                      size: 18,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -752,6 +768,7 @@ class _MyProfileState extends State<MyProfile> {
           child: InkWell(
             onTap: () {
               // STM().redirect2page(ctx, SuperAdminMessage());
+              STM().openWeb('https://sonibro.com/attentkor/api/term_condition');
             },
             child: Card(
               elevation: 0,
@@ -861,7 +878,7 @@ class _MyProfileState extends State<MyProfile> {
                 onPressed: () async {
                   SharedPreferences sp = await SharedPreferences.getInstance();
                   sp.clear();
-                  STM().redirect2page(ctx, SignIn());
+                  STM().finishAffinity(ctx, SignIn());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1231,67 +1248,71 @@ class _MyProfileState extends State<MyProfile> {
         SizedBox(
           height: Dim().d28,
         ),
-        instituteData == false ? SizedBox(
-          height: 45,
-          width: 300,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  // backgroundColor: Clr().accentColor,
-                  backgroundColor: Clr().white,
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Clr().textcolor),
-                      borderRadius: BorderRadius.circular(5)
-                  )
-              ),
-              onPressed: () {
-                _showSuccessDialog(ctx);
-              },
-              child: Text(
-                '+ Add Institution/College',
-                style: Sty().smallText.copyWith(
-                  color: Clr().textcolor,
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
-        ) : instistuteDetails(details: instituteData[0]),
+        instituteData == false
+            ? SizedBox(
+                height: 45,
+                width: 300,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        // backgroundColor: Clr().accentColor,
+                        backgroundColor: Clr().white,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Clr().textcolor),
+                            borderRadius: BorderRadius.circular(5))),
+                    onPressed: () {
+                      _showSuccessDialog(ctx);
+                    },
+                    child: Text(
+                      '+ Add Institution/College',
+                      style: Sty().smallText.copyWith(
+                            color: Clr().textcolor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    )),
+              )
+            : instistuteDetails(details: instituteData[0]),
         SizedBox(
           height: Dim().d40,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-          child: Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(color: Color(0xfffdf0ea))),
-            child: Padding(
-              padding: EdgeInsets.all(Dim().d8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Wrap(
-                    children: [
-                      SvgPicture.asset('assets/privacy_policy.svg'),
-                      SizedBox(
-                        width: Dim().d12,
-                      ),
-                      Text(
-                        'Privacy Policy',
-                        style: Sty().mediumText.copyWith(
-                          color: Clr().textcolor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+        InkWell(onTap: (){
+          STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
+        },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide(color: Color(0xfffdf0ea))),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Wrap(
+                      children: [
+                        SvgPicture.asset('assets/privacy_policy.svg'),
+                        SizedBox(
+                          width: Dim().d12,
                         ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Clr().textcolor,
-                    size: 18,
-                  )
-                ],
+                        Text(
+                          'Privacy Policy',
+                          style: Sty().mediumText.copyWith(
+                                color: Clr().textcolor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Clr().textcolor,
+                      size: 18,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -1299,39 +1320,43 @@ class _MyProfileState extends State<MyProfile> {
         SizedBox(
           height: Dim().d8,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-          child: Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(color: Color(0xfffdf0ea))),
-            child: Padding(
-              padding: EdgeInsets.all(Dim().d8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Wrap(
-                    children: [
-                      SvgPicture.asset('assets/t&c.svg'),
-                      SizedBox(
-                        width: Dim().d12,
-                      ),
-                      Text(
-                        'Terms & Conditions',
-                        style: Sty().mediumText.copyWith(
-                          color: Clr().textcolor,
-                          fontWeight: FontWeight.w500,
+        InkWell(onTap: (){
+          STM().openWeb('https://sonibro.com/attentkor/api/term_condition');
+        },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide(color: Color(0xfffdf0ea))),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Wrap(
+                      children: [
+                        SvgPicture.asset('assets/t&c.svg'),
+                        SizedBox(
+                          width: Dim().d12,
                         ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Clr().textcolor,
-                    size: 18,
-                  )
-                ],
+                        Text(
+                          'Terms & Conditions',
+                          style: Sty().mediumText.copyWith(
+                                color: Clr().textcolor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Clr().textcolor,
+                      size: 18,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -1364,9 +1389,9 @@ class _MyProfileState extends State<MyProfile> {
                         Text(
                           'Super Admin Messages',
                           style: Sty().mediumText.copyWith(
-                            color: Clr().textcolor,
-                            fontWeight: FontWeight.w300,
-                          ),
+                                color: Clr().textcolor,
+                                fontWeight: FontWeight.w300,
+                              ),
                         ),
                       ],
                     ),
@@ -1405,9 +1430,9 @@ class _MyProfileState extends State<MyProfile> {
                       Text(
                         'Rate My App',
                         style: Sty().mediumText.copyWith(
-                          color: Clr().textcolor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: Clr().textcolor,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -1500,19 +1525,19 @@ class _MyProfileState extends State<MyProfile> {
     FormData body = FormData.fromMap({
       'institution_code': institutionCtrl.text,
     });
-    var result = await STM().postWithToken(ctx, Str().processing, 'add_college', body, StudentToken, 'student/');
+    var result = await STM().postWithToken(
+        ctx, Str().processing, 'add_college', body, StudentToken, 'student/');
     var success = result['success'];
-    var message = result['messege'];
-    if(success){
+    var message = result['message'];
+    if (success) {
+      getProfile();
       STM().back2Previous(ctx);
       STM().displayToast(message);
-      getProfile();
-    }else{
+    } else {
       STM().back2Previous(ctx);
       STM().errorDialog(ctx, message);
     }
   }
-
 
   /// get profile photo for Teacher
   _getProfile(source, cropstyle) async {
@@ -1548,7 +1573,8 @@ class _MyProfileState extends State<MyProfile> {
               ? AlertDialog(
                   content: Form(
                     key: passkey,
-                    child: Column(mainAxisSize: MainAxisSize.min,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -1557,6 +1583,12 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                         TextFormField(
                           controller: currentPassCtrl,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Current Password is required';
+                            }
+                            return null;
+                          },
                           decoration:
                               Sty().TextFormFieldOutlineDarkStyle.copyWith(
                                     hintStyle: Sty()
@@ -1607,58 +1639,61 @@ class _MyProfileState extends State<MyProfile> {
                           },
                           decoration:
                               Sty().TextFormFieldOutlineDarkStyle.copyWith(
-                                    hintStyle: Sty()
-                                        .smallText
-                                        .copyWith(color: Clr().hintColor,),
+                                    hintStyle: Sty().smallText.copyWith(
+                                          color: Clr().hintColor,
+                                        ),
                                     hintText: 'Enter Confirm Password',
                                   ),
                         ),
                       ],
                     ),
                   ),
-                  actions: [Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(onTap: (){
-                          if(passkey.currentState!.validate()) {
-                            UpdatePassword();
-                          }
-                        },
-                          child: Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                color: Clr().primaryColor,
-                              ),
-                              child: const Center(
-                                  child: Text(
-                                    "Update",
-                                    style: TextStyle(color: Colors.white),
-                                  ))),
+                  actions: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              if (passkey.currentState!.validate()) {
+                                UpdatePassword();
+                              }
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Clr().primaryColor,
+                                ),
+                                child: const Center(
+                                    child: Text(
+                                  "Update",
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: Dim().d12),
-                      Expanded(
-                        child: InkWell(
-                          onTap: (){
-                            STM().back2Previous(ctx);
-                            conPassCtrl.clear();
-                            newPassCtrl.clear();
-                            currentPassCtrl.clear();
-                          },
-                          child: Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                color: Clr().primaryColor,
-                              ),
-                              child: const Center(
-                                  child: Text(
-                                    "Cancel",
-                                    style: TextStyle(color: Colors.white),
-                                  ))),
+                        SizedBox(width: Dim().d12),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              STM().back2Previous(ctx);
+                              conPassCtrl.clear();
+                              newPassCtrl.clear();
+                              currentPassCtrl.clear();
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Clr().primaryColor,
+                                ),
+                                child: const Center(
+                                    child: Text(
+                                  "Cancel",
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                          ),
                         ),
-                      ),
-                    ],
-                  )],
+                      ],
+                    )
+                  ],
                 )
               : AlertDialog(
                   title: Text(
@@ -1678,6 +1713,9 @@ class _MyProfileState extends State<MyProfile> {
                             : i == 2
                                 ? emailCtrl
                                 : qualCtrl,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    maxLines: null,
                     decoration: Sty().TextFormFieldOutlineDarkStyle.copyWith(
                           hintStyle:
                               Sty().mediumText.copyWith(color: Clr().hintColor),
@@ -1755,8 +1793,8 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   /// student instituate details
-   instistuteDetails({details}){
-    return  Padding(
+  instistuteDetails({details}) {
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dim().d12),
       child: Card(
           shape: RoundedRectangleBorder(
@@ -1782,10 +1820,11 @@ class _MyProfileState extends State<MyProfile> {
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w300,
                           fontSize: 14.0,
-                          fontFamily: ''
-                      ),
+                          fontFamily: ''),
                     ),
-                    SizedBox(width: Dim().d4,),
+                    SizedBox(
+                      width: Dim().d4,
+                    ),
                     Expanded(
                       child: Text(
                         '${details['college_name'].toString()}',
@@ -1794,14 +1833,14 @@ class _MyProfileState extends State<MyProfile> {
                         style: Sty().largeText.copyWith(
                             color: Clr().textcolor,
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.0
-                        ),
+                            fontSize: 14.0),
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: Dim().d12,),
+                SizedBox(
+                  height: Dim().d12,
+                ),
                 Row(
                   children: [
                     Text(
@@ -1810,22 +1849,23 @@ class _MyProfileState extends State<MyProfile> {
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w300,
                           fontSize: 14.0,
-                          fontFamily: ''
-                      ),
+                          fontFamily: ''),
                     ),
-                    SizedBox(width: Dim().d4,),
+                    SizedBox(
+                      width: Dim().d4,
+                    ),
                     Text(
-                      '  ${details['unique_id'].toString()}',
+                        details['unique_id'] == null ? '' :  '  ${details['unique_id'].toString()}',
                       style: Sty().largeText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,
-                          fontSize: 14.0
-                      ),
+                          fontSize: 14.0),
                     ),
                   ],
                 ),
-
-                SizedBox(height: Dim().d12,),
+                SizedBox(
+                  height: Dim().d12,
+                ),
                 Row(
                   children: [
                     Text(
@@ -1834,22 +1874,23 @@ class _MyProfileState extends State<MyProfile> {
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w300,
                           fontSize: 14.0,
-                          fontFamily: ''
-                      ),
+                          fontFamily: ''),
                     ),
-                    SizedBox(width: Dim().d4,),
+                    SizedBox(
+                      width: Dim().d4,
+                    ),
                     Text(
                       '  ${details['stream_name'].toString()}',
                       style: Sty().largeText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,
-                          fontSize: 14.0
-                      ),
+                          fontSize: 14.0),
                     ),
                   ],
                 ),
-
-                SizedBox(height: Dim().d12,),
+                SizedBox(
+                  height: Dim().d12,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1859,24 +1900,25 @@ class _MyProfileState extends State<MyProfile> {
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w300,
                           fontSize: 14.0,
-                          fontFamily: ''
-                      ),
+                          fontFamily: ''),
                     ),
-                    SizedBox(width: Dim().d4,),
+                    SizedBox(
+                      width: Dim().d4,
+                    ),
                     Expanded(
                       child: Text(
                         '  ${details['year_name'].toString()}',
                         style: Sty().largeText.copyWith(
                             color: Clr().textcolor,
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.0
-                        ),
+                            fontSize: 14.0),
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: Dim().d12,),
+                SizedBox(
+                  height: Dim().d12,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1886,23 +1928,25 @@ class _MyProfileState extends State<MyProfile> {
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w300,
                           fontSize: 14.0,
-                          fontFamily: ''
-                      ),
+                          fontFamily: ''),
                     ),
-                    SizedBox(width: Dim().d4,),
+                    SizedBox(
+                      width: Dim().d4,
+                    ),
                     Expanded(
                       child: Text(
                         '  ${details['division_name'].toString()}',
                         style: Sty().largeText.copyWith(
                             color: Clr().textcolor,
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.0
-                        ),
+                            fontSize: 14.0),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: Dim().d4,),
+                SizedBox(
+                  height: Dim().d4,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1914,16 +1958,14 @@ class _MyProfileState extends State<MyProfile> {
                             color: Clr().textcolor,
                             fontWeight: FontWeight.w300,
                             fontSize: 14.0,
-                            fontFamily: ''
-                        ),
+                            fontFamily: ''),
                         children: <TextSpan>[
                           TextSpan(
-                            text: '  ${details['lab_group'].toString()}',
+                            text: details['lab_group'] == null ? '' : '  ${details['lab_group'].toString()}',
                             style: Sty().largeText.copyWith(
                                 color: Clr().textcolor,
                                 fontWeight: FontWeight.w400,
-                                fontSize: 14.0
-                            ),
+                                fontSize: 14.0),
                           ),
                         ],
                       ),
@@ -1951,9 +1993,9 @@ class _MyProfileState extends State<MyProfile> {
                               Text(
                                 'Admin',
                                 style: Sty().smallText.copyWith(
-                                  color: Color(0xfffcebe3),
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                               ),
                             ],
                           )),
@@ -1962,11 +2004,9 @@ class _MyProfileState extends State<MyProfile> {
                 ),
               ],
             ),
-          )
-      ),
+          )),
     );
-   }
-
+  }
 
 //Update mobile pop up
   /// use funtion for update student mobile number

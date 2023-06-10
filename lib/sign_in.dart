@@ -21,7 +21,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   late BuildContext ctx;
   final stype = 'stu';
-  String? sUsertype;
+  String? sUsertype, usererror;
   List<String> selectedList = ['Teacher', 'Student'];
   String t = "0";
   bool? loading;
@@ -132,18 +132,31 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 );
                               }).toList(),
                               onChanged: (t) async {
+                                setState(() {
+                                  sUsertype = t!;
+                                  usererror = null;
+                                });
                                 SharedPreferences sp =
                                     await SharedPreferences.getInstance();
                                 sp.setString('usertype_id', stype.toString());
-                                // STM().redirect2page(ctx, Home());
-                                setState(() {
-                                  sUsertype = t!;
-                                });
                               },
                             ),
                           ),
                         ),
                       ),
+                      usererror == null
+                          ? SizedBox.shrink()
+                          : Padding(
+                            padding:  EdgeInsets.symmetric(horizontal: Dim().d32,vertical: Dim().d8),
+                            child: Align(
+                        alignment: Alignment.topLeft,
+                              child: Text('${usererror}',
+                                  textAlign: TextAlign.start,
+                                  style: Sty()
+                                      .smallText
+                                      .copyWith(color: Clr().errorRed)),
+                            ),
+                          ),
                       SizedBox(
                         height: Dim().d16,
                       ),
@@ -221,11 +234,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                         width: 200,
                         height: 50,
                         child: ElevatedButton(
-                            onPressed: () async {
-                              SharedPreferences sp = await SharedPreferences.getInstance();;
-                              if (formKey.currentState!.validate()) {
-                                verifyTeacher(sUsertype == 'Student' ? 'student' : 'teacher');
-                              }
+                            onPressed: (){
+                                _validateForm(ctx);
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
@@ -310,23 +320,34 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     );
   }
 
+  _validateForm(ctx) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool isValid = formKey.currentState!.validate();
+    if (sUsertype == null) {
+      setState(() => usererror = "UserType is required");
+      isValid = false;
+    }
+    if (isValid) {
+      verifyTeacher(sUsertype == 'Student' ? 'student' : 'teacher');
+    }
+  }
+
 // Api Method
   void verifyTeacher(type) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    FormData body = FormData.fromMap({
-      'email': emailCtrl.text,
-      'password': passCtrl.text,
-      'type': type
-    });
+    FormData body = FormData.fromMap(
+        {'email': emailCtrl.text, 'password': passCtrl.text, 'type': type});
     //Output
-    var result = await STM().post(ctx, Str().verifying, "login", body,'');
+    var result = await STM().post(ctx, Str().verifying, "login", body, '');
     var message = result['message'];
     var success = result['success'];
     if (success) {
       setState(() {
         loading = false;
         STM().displayToast(message);
-        result['teacher_token'] == null ? sp.setString('studenttoken', result['student_token'].toString()) : sp.setString('teacherToken', result['teacher_token'].toString());
+        result['teacher_token'] == null
+            ? sp.setString('studenttoken', result['student_token'].toString())
+            : sp.setString('teacherToken', result['teacher_token'].toString());
         sp.setBool('is_login', true);
         STM().finishAffinity(ctx, Home());
       });

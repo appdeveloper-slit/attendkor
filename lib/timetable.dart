@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,9 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'attendance.dart';
-import 'attendkor3.dart';
+import 'home.dart';
 import 'teacher_profile.dart';
-import 'timetable2.dart';
 import 'bottom_navigation/bottom_navigation.dart';
 import 'free_lectures.dart';
 import 'manage/static_method.dart';
@@ -22,7 +22,9 @@ import 'values/strings.dart';
 import 'values/styles.dart';
 
 class TimeTable extends StatefulWidget {
-  const TimeTable({super.key});
+  final loop;
+
+  const TimeTable({super.key, this.loop});
 
   @override
   State<TimeTable> createState() => _TimeTableState();
@@ -70,7 +72,11 @@ class _TimeTableState extends State<TimeTable> {
     ctx = context;
     return WillPopScope(
       onWillPop: () async {
-        STM().back2Previous(ctx);
+        if (widget.loop == 'profile') {
+          STM().finishAffinity(ctx, Home());
+        } else {
+          STM().back2Previous(ctx);
+        }
         return false;
       },
       child: Scaffold(
@@ -283,6 +289,8 @@ class _TimeTableState extends State<TimeTable> {
       width: double.infinity,
       isDense: true,
       context: ctx,
+      dismissOnTouchOutside: nextSelect ? false : true,
+      dismissOnBackKeyPress: nextSelect ? false : true,
       dialogType: DialogType.NO_HEADER,
       animType: AnimType.BOTTOMSLIDE,
       alignment: Alignment.centerLeft,
@@ -501,7 +509,11 @@ class _TimeTableState extends State<TimeTable> {
       leading: TeacherToken != null
           ? InkWell(
               onTap: () {
-                STM().back2Previous(ctx);
+                if (widget.loop == 'profile') {
+                  STM().finishAffinity(ctx, Home());
+                } else {
+                  STM().back2Previous(ctx);
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -521,19 +533,10 @@ class _TimeTableState extends State<TimeTable> {
       centerTitle: true,
       title: StudentToken != null
           ? Container()
-          : InkWell(
-              onTap: () {
-                STM().redirect2page(
-                    ctx,
-                    HomePage(
-                      sUsertype: '',
-                    ));
-              },
-              child: Text(
-                'TimeTable',
-                style: Sty().largeText.copyWith(
-                    color: Clr().textcolor, fontWeight: FontWeight.w600),
-              ),
+          : Text(
+              'TimeTable',
+              style: Sty().largeText.copyWith(
+                  color: Clr().textcolor, fontWeight: FontWeight.w600),
             ),
       actions: [
         StudentToken != null
@@ -553,7 +556,9 @@ class _TimeTableState extends State<TimeTable> {
   /// tabbarview or boydLayout of lecturer details
   Widget bodyLayout() {
     return SizedBox(
-      height: MediaQuery.of(ctx).size.height / 1.5,
+      height: TeacherToken != null
+          ? MediaQuery.of(ctx).size.height / 1.5
+          : MediaQuery.of(ctx).size.height / 2.1,
       child: TabBarView(
         children: dayTimeTableList.map((e) {
           return e['data'].isEmpty
@@ -576,9 +581,14 @@ class _TimeTableState extends State<TimeTable> {
                       Lecturestatus = e['data'][index]['status'];
                     }
                     return InkWell(
-                      onTap: (){
+                      onTap: () {
                         TeacherToken != null
-                            ? null : STM().redirect2page(ctx, TeacherProfile(value: e['data'][index]['teacher'],));
+                            ? null
+                            : STM().redirect2page(
+                                ctx,
+                                TeacherProfile(
+                                  value: e['data'][index]['teacher'],
+                                ));
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: Dim().d14),
@@ -622,7 +632,9 @@ class _TimeTableState extends State<TimeTable> {
                                               child: RichText(
                                                 text: TextSpan(
                                                   text: "Stream :",
-                                                  style: Sty().smallText.copyWith(
+                                                  style: Sty()
+                                                      .smallText
+                                                      .copyWith(
                                                         fontFamily: '',
                                                         fontWeight:
                                                             FontWeight.w300,
@@ -645,10 +657,10 @@ class _TimeTableState extends State<TimeTable> {
                                                                           "0"
                                                                       ? Clr()
                                                                           .black
-                                                                      : Clr()
-                                                                          .white,
+                                                                      : Color(0xffFCEBE3),
                                                               fontWeight:
-                                                                  FontWeight.w400,
+                                                                  FontWeight
+                                                                      .w400,
                                                               fontFamily: '',
                                                               fontSize: 14),
                                                     ),
@@ -728,7 +740,7 @@ class _TimeTableState extends State<TimeTable> {
                                                 style: Sty().smallText.copyWith(
                                                     color: Lecturestatus == "0"
                                                         ? Clr().black
-                                                        : Clr().white,
+                                                        : Color(0xffFCEBE3),
                                                     fontWeight: FontWeight.w400,
                                                     fontFamily: '',
                                                     fontSize: 14),
@@ -758,11 +770,13 @@ class _TimeTableState extends State<TimeTable> {
                                                   color: Lecturestatus == "0"
                                                       ? Clr().textcolor
                                                       : TeacherToken != null
-                                                          ? Clr().textGoldenColor
+                                                          ? Clr()
+                                                              .textGoldenColor
                                                           : Lecturestatus == "1"
                                                               ? Clr()
                                                                   .textGoldenColor
-                                                              : Color(0xff32334D),
+                                                              : Color(
+                                                                  0xff32334D),
                                                   // color: Color(0xff2D2D2D),
                                                 ),
                                             children: <TextSpan>[
@@ -772,7 +786,13 @@ class _TimeTableState extends State<TimeTable> {
                                                 style: Sty().smallText.copyWith(
                                                     color: Lecturestatus == "0"
                                                         ? Clr().black
-                                                        : Clr().white,
+                                                        : Lecturestatus == "2"
+                                                            ? TeacherToken !=
+                                                                    null
+                                                                ? Color(0xffFCEBE3)
+                                                                : Color(
+                                                                    0xff111233)
+                                                            : Color(0xffFCEBE3),
                                                     fontWeight: FontWeight.w400,
                                                     fontFamily: '',
                                                     fontSize: 14),
@@ -800,11 +820,13 @@ class _TimeTableState extends State<TimeTable> {
                                                   color: Lecturestatus == "0"
                                                       ? Clr().textcolor
                                                       : TeacherToken != null
-                                                          ? Clr().textGoldenColor
+                                                          ? Clr()
+                                                              .textGoldenColor
                                                           : Lecturestatus == "1"
                                                               ? Clr()
                                                                   .textGoldenColor
-                                                              : Color(0xff32334D),
+                                                              : Color(
+                                                                  0xff32334D),
                                                   // color: Color(0xff2D2D2D),
                                                 ),
                                             children: <TextSpan>[
@@ -814,7 +836,13 @@ class _TimeTableState extends State<TimeTable> {
                                                 style: Sty().smallText.copyWith(
                                                     color: Lecturestatus == "0"
                                                         ? Clr().black
-                                                        : Clr().white,
+                                                        : Lecturestatus == "2"
+                                                            ? TeacherToken !=
+                                                                    null
+                                                                ? Color(0xffFCEBE3)
+                                                                : Color(
+                                                                    0xff111233)
+                                                            : Color(0xffFCEBE3),
                                                     fontWeight: FontWeight.w400,
                                                     fontFamily: '',
                                                     fontSize: 14),
@@ -852,7 +880,11 @@ class _TimeTableState extends State<TimeTable> {
                                           style: Sty().smallText.copyWith(
                                               color: Lecturestatus == "0"
                                                   ? Clr().black
-                                                  : Clr().white,
+                                                  : Lecturestatus == "2"
+                                                      ? TeacherToken != null
+                                                          ?Color(0xffFCEBE3)
+                                                          : Color(0xff111233)
+                                                      : Color(0xffFCEBE3),
                                               fontWeight: FontWeight.w400,
                                               fontFamily: '',
                                               fontSize: 14),
@@ -870,7 +902,6 @@ class _TimeTableState extends State<TimeTable> {
                                   children: [
                                     Expanded(
                                       child: SizedBox(
-                                        width: Dim().d240,
                                         child: RichText(
                                           text: TextSpan(
                                             text: "Time : ",
@@ -880,11 +911,13 @@ class _TimeTableState extends State<TimeTable> {
                                                   color: Lecturestatus == "0"
                                                       ? Clr().textcolor
                                                       : TeacherToken != null
-                                                          ? Clr().textGoldenColor
+                                                          ? Clr()
+                                                              .textGoldenColor
                                                           : Lecturestatus == "1"
                                                               ? Clr()
                                                                   .textGoldenColor
-                                                              : Color(0xff32334D),
+                                                              : Color(
+                                                                  0xff32334D),
                                                 ),
                                             children: <TextSpan>[
                                               TextSpan(
@@ -893,7 +926,13 @@ class _TimeTableState extends State<TimeTable> {
                                                 style: Sty().smallText.copyWith(
                                                     color: Lecturestatus == "0"
                                                         ? Clr().black
-                                                        : Clr().white,
+                                                        : Lecturestatus == "2"
+                                                            ? TeacherToken !=
+                                                                    null
+                                                                ? Color(0xffFCEBE3)
+                                                                : Color(
+                                                                    0xff111233)
+                                                            : Color(0xffFCEBE3),
                                                     fontWeight: FontWeight.w400,
                                                     fontFamily: '',
                                                     fontSize: Dim().d14),
@@ -903,50 +942,93 @@ class _TimeTableState extends State<TimeTable> {
                                         ),
                                       ),
                                     ),
+                                    if (Lecturestatus == '0')
+                                      TeacherToken != null
+                                          ? SizedBox(
+                                              height: 35,
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          elevation: 0,
+                                                          // backgroundColor: Clr().accentColor,
+                                                          backgroundColor:
+                                                              Color(0xfffcebe3),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                                  // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5))),
+                                                  onPressed: () {
+                                                    _showClassDialog(
+                                                      ctx: ctx,
+                                                      timetableid: e['data']
+                                                          [index]['id'],
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    'Get Code',
+                                                    style: Sty().largeText.copyWith(
+                                                        color: e['data'][index][
+                                                                    'status'] ==
+                                                                "0"
+                                                            ? Clr().textcolor
+                                                            : Clr()
+                                                                .textGoldenColor,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  )),
+                                            )
+                                          : e['data'][index]
+                                                  ['attendance_status']
+                                              ? Container()
+                                              : SizedBox(
+                                                  height: 35,
+                                                  child: ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              elevation: 0,
+                                                              // backgroundColor: Clr().accentColor,
+                                                              backgroundColor:
+                                                                  Color(
+                                                                      0xfffcebe3),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                      // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                      onPressed: () {
+                                                        addAttendance(
+                                                            studentid,
+                                                            e['data'][index]
+                                                                ['id']);
+                                                      },
+                                                      child: Text(
+                                                        'Enter Code',
+                                                        style: Sty().largeText.copyWith(
+                                                            color: e['data'][
+                                                                            index]
+                                                                        [
+                                                                        'status'] ==
+                                                                    "0"
+                                                                ? Clr()
+                                                                    .textcolor
+                                                                : Clr()
+                                                                    .textGoldenColor,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      )),
+                                                ),
                                   ],
                                 ),
                                 SizedBox(height: Dim().d12),
                                 Lecturestatus == "0"
-                                    ? Align(
-                                        alignment: Alignment.centerRight,
-                                        child: SizedBox(
-                                          height: 35,
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  elevation: 0,
-                                                  // backgroundColor: Clr().accentColor,
-                                                  backgroundColor:
-                                                      Color(0xfffcebe3),
-                                                  shape: RoundedRectangleBorder(
-                                                      // side: BorderSide(color: Color(0xfff4f4f5)),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5))),
-                                              onPressed: () {
-                                                TeacherToken != null
-                                                    ? _showClassDialog(
-                                                        ctx: ctx,
-                                                        timetableid: e['data']
-                                                            [index]['id'],
-                                                      )
-                                                    : addAttendance(studentid,
-                                                        e['data'][index]['id']);
-                                              },
-                                              child: Text(
-                                                TeacherToken != null
-                                                    ? 'Get Code'
-                                                    : 'Enter Code',
-                                                style: Sty().largeText.copyWith(
-                                                    color: e['data'][index]
-                                                                ['status'] ==
-                                                            "0"
-                                                        ? Clr().textcolor
-                                                        : Clr().textGoldenColor,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400),
-                                              )),
-                                        ),
-                                      )
+                                    ? Container()
                                     : e['data'][index]['code_status'] == "1"
                                         ? Align(
                                             alignment: Alignment.centerRight,
@@ -980,8 +1062,8 @@ class _TimeTableState extends State<TimeTable> {
                                                                     FontWeight
                                                                         .w600,
                                                                 fontSize: 10.0,
-                                                                color:
-                                                                    Clr().white),
+                                                                color: Clr()
+                                                                    .white),
                                                       ),
                                                     ),
                                                   ),
@@ -1045,20 +1127,40 @@ class _TimeTableState extends State<TimeTable> {
                                                                       .toString(),
                                                                 ));
                                                           },
-                                                          child: Text(
-                                                              'Attendance',
-                                                              style: Sty()
-                                                                  .smallText
-                                                                  .copyWith(
-                                                                      color: Clr()
+                                                          child: Column(
+                                                            children: [
+                                                              Text('Attendance',
+                                                                  style: Sty()
+                                                                      .smallText
+                                                                      .copyWith(
+                                                                          color: Clr()
+                                                                              .white,
+                                                                          fontSize:
+                                                                              Dim().d12)),
+                                                              SizedBox(
+                                                                height:
+                                                                    Dim().d2,
+                                                                width:
+                                                                    Dim().d76,
+                                                                child:
+                                                                    DottedLine(
+                                                                  dashLength:
+                                                                      4.0,
+                                                                  lineThickness:
+                                                                      1,
+                                                                  dashColor:
+                                                                      Clr()
                                                                           .white,
-                                                                      fontSize: Dim()
-                                                                          .d12)),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         )
                                                       : Container()
                                                   : Container(),
                                               Align(
-                                                alignment: Alignment.centerRight,
+                                                alignment:
+                                                    Alignment.centerRight,
                                                 child: Text(
                                                     Lecturestatus == "2"
                                                         ? 'Cancelled'
@@ -1072,9 +1174,11 @@ class _TimeTableState extends State<TimeTable> {
                                                                     .textGoldenColor
                                                                 : Lecturestatus ==
                                                                         "2"
-                                                                    ? Clr().black
-                                                                    : Clr().white,
-                                                            fontSize: Dim().d14)),
+                                                                    ? Clr()
+                                                                        .black
+                                                                    : Color(0xffFCEBE3),
+                                                            fontSize:
+                                                                Dim().d14)),
                                               ),
                                             ],
                                           ),
@@ -1282,6 +1386,7 @@ class _TimeTableState extends State<TimeTable> {
             STM().back2Previous(ctx);
             STM().displayToast("${result['message'].toString()}");
             getTimeTable(apiname: 'get_timetable', type: 'post');
+            codeCtrl.clear();
           }
           break;
       }
@@ -1389,12 +1494,13 @@ class _TimeTableState extends State<TimeTable> {
             ),
             SizedBox(height: Dim().d14),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: Dim().d20),
+              padding: EdgeInsets.symmetric(horizontal: Dim().d20),
               child: Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Clr().textcolor,width: 0.3),
+                  border: Border.all(color: Clr().textcolor, width: 0.3),
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dim().d4),topRight: Radius.circular(Dim().d4)),
+                      topLeft: Radius.circular(Dim().d4),
+                      topRight: Radius.circular(Dim().d4)),
                 ),
                 child: Column(
                   children: [
@@ -1404,13 +1510,17 @@ class _TimeTableState extends State<TimeTable> {
                           child: Container(
                             height: Dim().d32,
                             decoration: BoxDecoration(
-                              border: Border(bottom: BorderSide(color: Clr().textcolor),right: BorderSide(color: Clr().textcolor)),
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Clr().textcolor, width: 0.3),
+                                  right: BorderSide(
+                                      color: Clr().textcolor, width: 0.3)),
                             ),
                             child: Center(
                               child: Text('Student Name',
                                   style: Sty().mediumText.copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: Dim().d16)),
+                                      fontSize: Dim().d14)),
                             ),
                           ),
                         ),
@@ -1418,20 +1528,22 @@ class _TimeTableState extends State<TimeTable> {
                           child: Container(
                             height: Dim().d32,
                             decoration: BoxDecoration(
-                              border: Border(bottom: BorderSide(color: Clr().textcolor)),
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Clr().textcolor, width: 0.3)),
                             ),
                             child: Center(
                               child: Text('Lectures Missed',
                                   style: Sty().mediumText.copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: Dim().d16)),
+                                      fontSize: Dim().d14)),
                             ),
                           ),
                         ),
                       ],
                     ),
                     ListView.builder(
-                      padding: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
                         itemCount: value['absent_students'].length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -1442,26 +1554,48 @@ class _TimeTableState extends State<TimeTable> {
                                 child: Container(
                                   height: Dim().d32,
                                   decoration: BoxDecoration(
-                                    border: Border(right: BorderSide(color: Clr().textcolor)),
+                                    border: Border(
+                                        right: BorderSide(
+                                          color: Clr().textcolor,
+                                          width: 0.3,
+                                        ),
+                                        top: index == 0
+                                            ? BorderSide()
+                                            : BorderSide(
+                                                color: Clr().textcolor,
+                                                width: 0.3,
+                                              )),
                                   ),
                                   child: Center(
                                     child: Text(
-                                        '${value['absent_students'][index]['name']}',style: TextStyle(
-                                        fontFamily: '',
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 14.0),),
+                                      '${value['absent_students'][index]['name']}',
+                                      style: TextStyle(
+                                          fontFamily: '',
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 12.0),
+                                    ),
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: Container(
                                   height: Dim().d32,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                        top: index == 0
+                                            ? BorderSide()
+                                            : BorderSide(
+                                                color: Clr().textcolor,
+                                                width: 0.3)),
+                                  ),
                                   child: Center(
                                     child: Text(
-                                        '${value['absent_students'][index]['absent_count']}',style: TextStyle(
-                                        fontFamily: '',
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 14.0),),
+                                      '${value['absent_students'][index]['absent_count']}',
+                                      style: TextStyle(
+                                          fontFamily: '',
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 12.0),
+                                    ),
                                   ),
                                 ),
                               ),

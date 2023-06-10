@@ -133,13 +133,16 @@ class _PublishNoticeState extends State<PublishNotice> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                      onTap: () {
-                        showModel();
-                      },
-                      child: SvgPicture.asset('assets/add_image.svg')),
+                  Padding(
+                    padding:  EdgeInsets.only(left: 8.0),
+                    child: InkWell(
+                        onTap: () {
+                          showModel();
+                        },
+                        child: SvgPicture.asset('assets/add_image.svg')),
+                  ),
                   SizedBox(
-                    width: 220,
+                    width: 200,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
@@ -164,7 +167,6 @@ class _PublishNoticeState extends State<PublishNotice> {
                         ),
                       ),
                     ),
-
                     // Padding(
                     //   padding: EdgeInsets.symmetric(horizontal: Dim().d14),
                     //   child: SizedBox(
@@ -193,7 +195,8 @@ class _PublishNoticeState extends State<PublishNotice> {
                     // ),
                   ),
                 ],
-              )
+              ),
+              SizedBox(height: Dim().d20),
             ],
           ),
         ),

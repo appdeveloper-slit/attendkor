@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'home.dart';
-import 'home_student.dart';
 import 'manage/static_method.dart';
 import 'values/colors.dart';
 import 'values/dimens.dart';

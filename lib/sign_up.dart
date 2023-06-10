@@ -75,6 +75,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Animation fade in
   late Animation animation;
   late AnimationController animationController;
+
   getSession() async {
     STM().checkInternet(context, widget).then((value) {
       if (value) {
@@ -198,7 +199,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                             },
                             decoration:
                                 Sty().TextFormFieldOutlineStyle.copyWith(
-                                  counterText: '',
+                                    counterText: '',
                                     hintText: 'Enter Mobile Number',
                                     hintStyle: Sty().mediumText.copyWith(
                                           color: Clr().hintColor,
@@ -320,7 +321,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                 setState(() {
                                   StateValue = v as int?;
                                   stateerror = null;
-                                  int position = stateList.indexWhere((e) => e['id'] == StateValue);
+                                  int position = stateList
+                                      .indexWhere((e) => e['id'] == StateValue);
                                   cityList = stateList[position]['cities'];
                                   CityValue = null;
                                 });
@@ -451,8 +453,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   child: InkWell(
                                     child: Icon(
                                       isHidden
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
+                                          ? Icons.visibility_off_outlined
+                                          : Icons.visibility_outlined,
                                       color: Clr().textcolor,
                                     ),
                                     onTap: () {
@@ -498,8 +500,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                                   child: InkWell(
                                     child: Icon(
                                       isHidden2
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
+                                          ? Icons.visibility_off_outlined
+                                          : Icons.visibility_outlined,
                                       color: Clr().textcolor,
                                     ),
                                     onTap: () {
@@ -519,6 +521,52 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                             }
                             return null;
                           },
+                        ),
+                      ),
+                      SizedBox(
+                        height: Dim().d28,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: "By signing up, you are agreeing to our",
+                            style: Sty().smallText.copyWith(
+                                  fontFamily: '',
+                                  fontWeight: FontWeight.w300,
+                                  // color: Color(0xff2D2D2D),
+                                ),
+                            children: [
+                              WidgetSpan(
+                                child: InkWell(onTap:(){
+                                  STM().openWeb('https://sonibro.com/attentkor/api/term_condition');
+                                },
+                                  child: Text(' terms of service',
+                                      style: Sty().smallText.copyWith(
+                                          color: Color(0xffD49A80),
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: '',
+                                          fontSize: 12.0)),
+                                ),
+                              ),
+                              // TextSpan(
+                              //   text: ' and ',
+                              //   style: Sty().smallText.copyWith(
+                              //       fontWeight: FontWeight.w400,
+                              //       fontFamily: '',
+                              //       fontSize: 14),
+                              // ),
+                              // TextSpan(
+                              //   text: 'privacy policy.',
+                              //   style: Sty().smallText.copyWith(
+                              //       color: Color(0xffD49A80),
+                              //       fontWeight: FontWeight.w400,
+                              //       fontFamily: '',
+                              //       fontSize: 14),
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -592,18 +640,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
-
   /// getCities
   void getCities() async {
-    var result = await STM().get(ctx, 'loading cities', 'get_state', '', 'student/');
+    var result =
+        await STM().get(ctx, 'loading cities', 'get_state', '', 'student/');
     var success = result['success'];
-    if(success){
+    if (success) {
       setState(() {
         stateList = result['states'];
       });
     }
   }
-
 
   // validation funtion
   _validateForm(ctx) async {

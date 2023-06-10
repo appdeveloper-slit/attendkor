@@ -1,8 +1,6 @@
-import 'package:attend_kor_teacher/stu_profile.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../attend_kor.dart';
-import '../home_student.dart';
 import '../timetable.dart';
 import '../home.dart';
 import '../manage/static_method.dart';
@@ -25,11 +23,11 @@ Widget bottomBarLayout(ctx, index,color) {
           // STM().replacePage(ctx, Home());
           break;
         case 1:
-        index == 1 ?  STM().replacePage(ctx, TimeTable()) : STM().redirect2page(ctx, TimeTable());
+        index == 1 ?  STM().replacePage(ctx, TimeTable()) : STM().redirect2page(ctx, TimeTable(loop: 'profile',));
           // STM().replacePage(ctx,  TimeTable());
           break;
         case 2:
-         index == 2 ? STM().replacePage(ctx, MyProfile()) : STM().redirect2page(ctx, MyProfile());
+         index == 2 ? STM().replacePage(ctx, MyProfile()) : STM().redirect2page(ctx, MyProfile(loop: index == 1 ? 'timetable' : '',));
           // STM().replacePage(ctx,  MyProfile());
           break;
       }
