@@ -81,9 +81,14 @@ class _FreeLecturesState extends State<FreeLectures> {
           padding: EdgeInsets.all(Dim().d16),
           child: Column(
             children: [
-              timetableList.isEmpty ? Container() : ListView.builder(
+              timetableList.isEmpty ? SizedBox(
+                height: MediaQuery.of(ctx).size.height / 1.5,
+                child: Center(
+                  child: Text('No Lectures',style: Sty().mediumBoldText),
+                ),
+              ) : ListView.builder(
                 shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: timetableList.length,
                 itemBuilder: (context, index) {
                   var color1 = Color(0xff111233);

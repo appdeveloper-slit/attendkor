@@ -341,7 +341,7 @@ class STM {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            index == 2 ?  SvgPicture.asset(iconData) : SvgPicture.asset("assets/profileunselected.svg"),
+            index == 2 ?  SvgPicture.asset(iconData,height: Dim().d20) : SvgPicture.asset("assets/profileunselected.svg",height: Dim().d20),
             Text(text, style: TextStyle(fontSize: 12, color: index == 2 ? Clr().textGoldenColor :  Clr().textcolor,)),
           ],
         ),

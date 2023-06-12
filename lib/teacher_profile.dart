@@ -79,7 +79,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: ' ',
+                      text: ' ${widget.value['college']['name'].toString()}',
                       style: Sty().smallText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,
@@ -127,7 +127,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: ' ${widget.value['bio']}',
+                      text: widget.value['bio'] == null ? '' :' ${widget.value['bio']}',
                       style: Sty().smallText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,
@@ -151,7 +151,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: ' ${widget.value['qualification']}',
+                      text: widget.value['qualification'] == null ? '' : ' ${widget.value['qualification']}',
                       style: Sty().smallText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,

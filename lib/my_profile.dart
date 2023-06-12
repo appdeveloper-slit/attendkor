@@ -562,7 +562,7 @@ class _MyProfileState extends State<MyProfile> {
                     Expanded(
                       child: RichText(
                         text: TextSpan(
-                          text: "Qualifications:-",
+                          text: "Qualification:-",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
