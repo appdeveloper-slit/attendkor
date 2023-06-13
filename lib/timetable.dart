@@ -35,6 +35,11 @@ class _TimeTableState extends State<TimeTable> {
   String? SelectedValue;
   List<dynamic> selectedList = [];
   List<dynamic> dayTimeTableList = [];
+
+  // 'Stream', 'Class', 'Subject', 'Class Room', 'Time'
+  // 'Stream','Teacher', 'Class Room', 'Time'
+  List<Map<String, dynamic>> teacherList = [];
+  List<Map<String, dynamic>> studentList = [];
   String? TeacherToken, StudentToken;
   var code, changeColor, colleagedetails, studentid;
   bool selectweek = false;
@@ -327,8 +332,8 @@ class _TimeTableState extends State<TimeTable> {
                           ),
                     )
                   : Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Dim().d12, vertical: 0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(color: Clr().textcolor)),
@@ -582,13 +587,13 @@ class _TimeTableState extends State<TimeTable> {
                     }
                     return InkWell(
                       onTap: () {
-                        TeacherToken != null
-                            ? null
-                            : STM().redirect2page(
-                                ctx,
-                                TeacherProfile(
-                                  value: e['data'][index]['teacher'],
-                                ));
+                        if(TeacherToken != null)
+                          STM().redirect2page(
+                              ctx,
+                              TeacherProfile(
+                                value: e['data'][index]['teacher'],
+                              ));
+
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: Dim().d14),
@@ -607,8 +612,7 @@ class _TimeTableState extends State<TimeTable> {
                                 color: Clr().borderColor.withOpacity(0.8),
                                 spreadRadius: 0.5,
                                 blurRadius: 4,
-                                offset:
-                                    Offset(3, 3), // changes position of shadow
+                                offset: Offset(3, 3), // changes position of shadow
                               ),
                             ],
                             borderRadius: BorderRadius.circular(10)),
@@ -624,51 +628,50 @@ class _TimeTableState extends State<TimeTable> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    StudentToken != null
-                                        ? Container()
-                                        : Expanded(
-                                            child: SizedBox(
-                                              width: Dim().d180,
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  text: "Stream :",
+                                    if(TeacherToken != null)
+                                      Expanded(
+                                        child: SizedBox(
+                                          width: Dim().d180,
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: "Stream :",
+                                              style: Sty()
+                                                  .smallText
+                                                  .copyWith(
+                                                fontFamily: '',
+                                                fontWeight:
+                                                FontWeight.w300,
+                                                color: Lecturestatus ==
+                                                    "0"
+                                                    ? Clr().textcolor
+                                                    : Clr()
+                                                    .textGoldenColor,
+                                                // color: Color(0xff2D2D2D),
+                                              ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text:
+                                                  ' ${e['data'][index]['stream']['name'].toString()}',
                                                   style: Sty()
                                                       .smallText
                                                       .copyWith(
-                                                        fontFamily: '',
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        color: Lecturestatus ==
-                                                                "0"
-                                                            ? Clr().textcolor
-                                                            : Clr()
-                                                                .textGoldenColor,
-                                                        // color: Color(0xff2D2D2D),
-                                                      ),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                      text:
-                                                          ' ${e['data'][index]['stream']['name'].toString()}',
-                                                      style: Sty()
-                                                          .smallText
-                                                          .copyWith(
-                                                              color:
-                                                                  Lecturestatus ==
-                                                                          "0"
-                                                                      ? Clr()
-                                                                          .black
-                                                                      : Color(0xffFCEBE3),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              fontFamily: '',
-                                                              fontSize: 14),
-                                                    ),
-                                                  ],
+                                                      color:
+                                                      Lecturestatus ==
+                                                          "0"
+                                                          ? Clr()
+                                                          .black
+                                                          : Color(0xffFCEBE3),
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w400,
+                                                      fontFamily: '',
+                                                      fontSize: 14),
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ),
+                                        ),
+                                      ),
                                     Wrap(
                                       crossAxisAlignment:
                                           WrapCrossAlignment.center,
@@ -713,47 +716,44 @@ class _TimeTableState extends State<TimeTable> {
                                     )
                                   ],
                                 ),
-                                TeacherToken != null
-                                    ? SizedBox(
-                                        height: Dim().d12,
-                                      )
-                                    : Container(),
-                                StudentToken != null
-                                    ? Container()
-                                    : SizedBox(
-                                        width: Dim().d220,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: "Class :",
-                                            style: Sty().smallText.copyWith(
-                                                  fontFamily: '',
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Lecturestatus == "0"
-                                                      ? Clr().textcolor
-                                                      : Clr().textGoldenColor,
-                                                  // color: Color(0xff2D2D2D),
-                                                ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    ' ${e['data'][index]['year']['year'].toString()} ${(e['data'][index]['division']['name'].toString())}',
-                                                style: Sty().smallText.copyWith(
-                                                    color: Lecturestatus == "0"
-                                                        ? Clr().black
-                                                        : Color(0xffFCEBE3),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: '',
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
+                                if(TeacherToken != null)
+                                  SizedBox(
+                                    height: Dim().d12,
+                                  ),
+                                if(TeacherToken != null)
+                                  SizedBox(
+                                    width: Dim().d220,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: "Class :",
+                                        style: Sty().smallText.copyWith(
+                                          fontFamily: '',
+                                          fontWeight: FontWeight.w300,
+                                          color: Lecturestatus == "0"
+                                              ? Clr().textcolor
+                                              : Clr().textGoldenColor,
+                                          // color: Color(0xff2D2D2D),
                                         ),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text:
+                                            ' ${e['data'][index]['year']['year'].toString()} ${(e['data'][index]['division']['name'].toString())}',
+                                            style: Sty().smallText.copyWith(
+                                                color: Lecturestatus == "0"
+                                                    ? Clr().black
+                                                    : Color(0xffFCEBE3),
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: '',
+                                                fontSize: 14),
+                                          ),
+                                        ],
                                       ),
-                                TeacherToken != null
-                                    ? SizedBox(
-                                        height: Dim().d12,
-                                      )
-                                    : Container(),
+                                    ),
+                                  ),
+                                if(TeacherToken != null)
+                                  SizedBox(
+                                    height: Dim().d12,
+                                  ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -807,55 +807,53 @@ class _TimeTableState extends State<TimeTable> {
                                 SizedBox(
                                   height: Dim().d12,
                                 ),
-                                TeacherToken != null
-                                    ? Container()
-                                    : SizedBox(
-                                        width: Dim().d220,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: "Teacher :",
-                                            style: Sty().smallText.copyWith(
-                                                  fontFamily: '',
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Lecturestatus == "0"
-                                                      ? Clr().textcolor
-                                                      : TeacherToken != null
-                                                          ? Clr()
-                                                              .textGoldenColor
-                                                          : Lecturestatus == "1"
-                                                              ? Clr()
-                                                                  .textGoldenColor
-                                                              : Color(
-                                                                  0xff32334D),
-                                                  // color: Color(0xff2D2D2D),
-                                                ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    ' ${e['data'][index]['teacher']['name'].toString()}',
-                                                style: Sty().smallText.copyWith(
-                                                    color: Lecturestatus == "0"
-                                                        ? Clr().black
-                                                        : Lecturestatus == "2"
-                                                            ? TeacherToken !=
-                                                                    null
-                                                                ? Color(0xffFCEBE3)
-                                                                : Color(
-                                                                    0xff111233)
-                                                            : Color(0xffFCEBE3),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: '',
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
+                                if(StudentToken != null)
+                                  SizedBox(
+                                    width: Dim().d220,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: "Teacher :",
+                                        style: Sty().smallText.copyWith(
+                                          fontFamily: '',
+                                          fontWeight: FontWeight.w300,
+                                          color: Lecturestatus == "0"
+                                              ? Clr().textcolor
+                                              : TeacherToken != null
+                                              ? Clr()
+                                              .textGoldenColor
+                                              : Lecturestatus == "1"
+                                              ? Clr()
+                                              .textGoldenColor
+                                              : Color(
+                                              0xff32334D),
+                                          // color: Color(0xff2D2D2D),
                                         ),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text:
+                                            ' ${e['data'][index]['teacher']['name'].toString()}',
+                                            style: Sty().smallText.copyWith(
+                                                color: Lecturestatus == "0"
+                                                    ? Clr().black
+                                                    : Lecturestatus == "2"
+                                                    ? TeacherToken !=
+                                                    null
+                                                    ? Color(0xffFCEBE3)
+                                                    : Color(
+                                                    0xff111233)
+                                                    : Color(0xffFCEBE3),
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: '',
+                                                fontSize: 14),
+                                          ),
+                                        ],
                                       ),
-                                TeacherToken != null
-                                    ? Container()
-                                    : SizedBox(
-                                        height: Dim().d12,
-                                      ),
+                                    ),
+                                  ),
+                                if(StudentToken != null)
+                                  SizedBox(
+                                    height: Dim().d12,
+                                  ),
                                 SizedBox(
                                   width: Dim().d220,
                                   child: RichText(
@@ -892,9 +890,6 @@ class _TimeTableState extends State<TimeTable> {
                                       ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: Dim().d12,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -1195,6 +1190,8 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
+
+
   /// tabbar or tabLayout
   Widget tabLayout() {
     return Container(
@@ -1340,11 +1337,17 @@ class _TimeTableState extends State<TimeTable> {
             dayTimeTableList = result['data'];
             colleagedetails = result['college_details'];
             studentid = result['student_id'];
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
         case "get_classroom":
           if (success) {
             selectedList = result['data'];
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
         case "update_actual_classroom":
@@ -1353,6 +1356,9 @@ class _TimeTableState extends State<TimeTable> {
             code = result['code'];
             _showClassDialog(
                 ctx: ctx, timetableid: value[0], classroomid: value[1]);
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
         case "active_lecture":
@@ -1363,6 +1369,9 @@ class _TimeTableState extends State<TimeTable> {
             });
             STM().displayToast("${result['message'].toString()}");
             getTimeTable(apiname: 'get_timetable', type: 'post');
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
         case "inactive_lecture":
@@ -1379,6 +1388,9 @@ class _TimeTableState extends State<TimeTable> {
               'absent_students': result['absent_students'],
               'tableid': value,
             });
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
         case "add_attendance":
@@ -1387,6 +1399,9 @@ class _TimeTableState extends State<TimeTable> {
             STM().displayToast("${result['message'].toString()}");
             getTimeTable(apiname: 'get_timetable', type: 'post');
             codeCtrl.clear();
+          } else {
+            STM().back2Previous(ctx);
+            STM().errorDialog(ctx, '${result['message']}');
           }
           break;
       }
