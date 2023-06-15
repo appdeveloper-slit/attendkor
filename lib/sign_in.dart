@@ -1,7 +1,9 @@
 import 'package:attend_kor_teacher/values/strings.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
@@ -34,10 +36,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   late Animation animation;
   late AnimationController animationController;
 
+
   @override
   void initState() {
     super.initState();
-
     animationController = AnimationController(
       duration: Duration(seconds: 2, milliseconds: 30),
       vsync: this,
@@ -249,6 +251,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 fontSize: 16,
                               ),
                             )),
+
                         // Padding(
                         //   padding: EdgeInsets.symmetric(horizontal: Dim().d14),
                         //   child: SizedBox(

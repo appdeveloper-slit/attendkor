@@ -5,6 +5,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +36,7 @@ class _TimeTableState extends State<TimeTable> {
   String? SelectedValue;
   List<dynamic> selectedList = [];
   List<dynamic> dayTimeTableList = [];
+  AwesomeDialog? dialog;
 
   // 'Stream', 'Class', 'Subject', 'Class Room', 'Time'
   // 'Stream','Teacher', 'Class Room', 'Time'
@@ -45,7 +47,9 @@ class _TimeTableState extends State<TimeTable> {
   bool selectweek = false;
   bool nextSelect = false;
   TextEditingController codeCtrl = TextEditingController();
+  var lat,lng;
 
+  var click;
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
@@ -101,8 +105,7 @@ class _TimeTableState extends State<TimeTable> {
                   : Container()
               : DefaultTabController(
                   length: dayTimeTableList.length,
-                  initialIndex: dayTimeTableList.indexWhere((e) =>
-                      e['name'] == DateFormat.E().format(DateTime.now())),
+                  initialIndex: click,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(Dim().d16),
                     child: Column(
@@ -477,10 +480,7 @@ class _TimeTableState extends State<TimeTable> {
               Center(
                 child: InkWell(
                   onTap: () {
-                    getTimeTable(
-                        value: [studentid, timetableid],
-                        type: 'post',
-                        apiname: 'add_attendance');
+                    permissionHandle(timetableid);
                   },
                   child: Container(
                       width: Dim().d200,
@@ -528,13 +528,15 @@ class _TimeTableState extends State<TimeTable> {
                     },
                     child: SvgPicture.asset('assets/free_lecture.svg')),
               ))
-          : Center(
-              child: colleagedetails != null
-                  ? Text('${colleagedetails['name']}',
-                      style: Sty().mediumText.copyWith(
-                          color: Color(0xff36393B),
-                          fontWeight: FontWeight.w300))
-                  : Container()),
+          : colleagedetails != null
+              ? Padding(
+                padding:  EdgeInsets.symmetric(horizontal: Dim().d14,vertical: Dim().d14),
+                child: Text('${colleagedetails['name']}',
+                    style: Sty().mediumText.copyWith(
+                        color: Color(0xff36393B),
+                        fontWeight: FontWeight.w300)),
+              )
+              : Container(),
       centerTitle: true,
       title: StudentToken != null
           ? Container()
@@ -1190,8 +1192,6 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
-
-
   /// tabbar or tabLayout
   Widget tabLayout() {
     return Container(
@@ -1227,6 +1227,7 @@ class _TimeTableState extends State<TimeTable> {
               getTimeTable(apiname: 'get_timetable', type: 'post');
               setState(() {
                 selectweek = false;
+                click = dayTimeTableList.indexWhere((e) => e['name'] == DateFormat.E().format(DateTime.now()));
               });
             },
             child: Align(
@@ -1251,6 +1252,7 @@ class _TimeTableState extends State<TimeTable> {
               getTimeTable(value: true, type: 'post', apiname: 'get_timetable');
               setState(() {
                 selectweek = true;
+                click = '0';
               });
             },
             child: Align(
@@ -1304,7 +1306,9 @@ class _TimeTableState extends State<TimeTable> {
         data = FormData.fromMap({
           'student_id': value[0],
           'timetable_id': value[1],
-          'code': codeCtrl.text
+          'code': codeCtrl.text,
+          'latitude': lat,
+          'longitude': lng,
         });
         break;
     }
@@ -1337,6 +1341,9 @@ class _TimeTableState extends State<TimeTable> {
             dayTimeTableList = result['data'];
             colleagedetails = result['college_details'];
             studentid = result['student_id'];
+            setState(() {
+             click = dayTimeTableList.indexWhere((e) => e['name'] == DateFormat.E().format(DateTime.now()));
+            });
           } else {
             STM().back2Previous(ctx);
             STM().errorDialog(ctx, '${result['message']}');
@@ -1677,4 +1684,41 @@ class _TimeTableState extends State<TimeTable> {
           ],
         )).show();
   }
+
+
+  Future<void> permissionHandle(timetableid) async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      getLocation(timetableid);
+    }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      STM().displayToast('Location permission is required');
+      await Geolocator.openAppSettings();
+    }
+  }
+
+  // getLocation
+  getLocation(timetableid) async {
+    dialog = STM.loadingDialog(ctx, 'add Attendance');
+    dialog!.show();
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
+      setState(() {
+        lat = position.latitude.toString();
+        lng = position.longitude.toString();
+        dialog!.dismiss();
+        getTimeTable(
+            value: [studentid, timetableid],
+            type: 'post',
+            apiname: 'add_attendance');
+      });
+    }).catchError((e){
+      dialog!.dismiss();
+    });
+  }
+
 }

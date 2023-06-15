@@ -98,11 +98,7 @@ class _MyProfileState extends State<MyProfile> {
         bottomNavigationBar: bottomBarLayout(ctx, 2, Color(0xff32334D)),
         backgroundColor: Clr().white,
         body: SingleChildScrollView(
-          child: data == null
-              ? SizedBox(
-                  height: MediaQuery.of(ctx).size.height / 1.5,
-                  child: STM().loadingPlaceHolder())
-              : TeacherToken != null
+          child:  TeacherToken != null
                   ? TeacherBoxLayout()
                   : StudentboxLayout(),
         ),
@@ -236,7 +232,11 @@ class _MyProfileState extends State<MyProfile> {
   Widget TeacherBoxLayout() {
     return Column(
       children: [
-        Container(
+        data == null
+            ? SizedBox(
+            height: MediaQuery.of(ctx).size.height / 1.5,
+            child: STM().loadingPlaceHolder())
+            : Container(
           decoration: BoxDecoration(
               color: Color(0xff20213f),
               borderRadius: BorderRadius.only(
@@ -907,7 +907,11 @@ class _MyProfileState extends State<MyProfile> {
   Widget StudentboxLayout() {
     return Column(
       children: [
-        Container(
+        data == null
+            ? SizedBox(
+            height: MediaQuery.of(ctx).size.height / 1.5,
+            child: STM().loadingPlaceHolder())
+            : Container(
           decoration: BoxDecoration(
               color: Color(0xff20213f),
               borderRadius: BorderRadius.only(
