@@ -1,4 +1,5 @@
 import 'package:attend_kor_teacher/manage/static_method.dart';
+import 'package:attend_kor_teacher/sign_in.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +10,15 @@ import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 import 'bottom_navigation/bottom_navigation.dart';
 import 'values/colors.dart';
 import 'values/dimens.dart';
 import 'values/styles.dart';
 
+
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final bool b;
+  const Home({super.key,this.b = false});
 
   @override
   State<Home> createState() => _HomeState();
@@ -44,8 +46,9 @@ class _HomeState extends State<Home> {
   String _authorized = 'Not Authorized';
   bool _isAuthenticating = false;
   bool authenticated = false;
-  bool  checkFingerPrint = false;
-  String? TeacherToken,StudentToken;
+  bool checkFingerPrint = false;
+  String? TeacherToken, StudentToken;
+
   Future<bool> _authenticateWithBiometrics() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     try {
@@ -53,17 +56,17 @@ class _HomeState extends State<Home> {
         _isAuthenticating = true;
         _authorized = 'Authenticating';
       });
-      authenticated = await auth.authenticate(
-        localizedReason:
-            'Scan your fingerprint (or face or whatever) to authenticate',
+      authenticated = await auth
+          .authenticate(
+        localizedReason: 'Scan your fingerprint or face to authentication',
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: true,
         ),
-      ).then((value) async{
-       setState(() {
-         value ? sp.setBool('checkFinger', true) : SystemNavigator.pop();
-       });
+      ).then((value) async {
+        setState(() {
+          value ? null : SystemNavigator.pop();
+        });
         return false;
       });
       setState(() {
@@ -86,9 +89,12 @@ class _HomeState extends State<Home> {
       TeacherToken = sp.getString('teacherToken') ?? null;
       StudentToken = sp.getString('studenttoken') ?? null;
     });
-    STM().checkInternet(context, widget).then((value) {
-      StudentToken != null ? checkFingerPrint ?  null : _authenticateWithBiometrics() : null;
-    });
+    if(widget.b && StudentToken !=null){
+      _authenticateWithBiometrics();
+    }
+    // STM().checkInternet(context, widget).then((value) {
+    //
+    // });
   }
 
   @override
@@ -96,6 +102,14 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     getSession();
     super.initState();
+    auth.isDeviceSupported().then(
+          (bool isSupported) {
+            setState(() {
+              _supportState = isSupported
+                  ? _SupportState.supported
+                  : _SupportState.unsupported;
+            });
+          });
   }
 
   @override
@@ -150,7 +164,8 @@ class _HomeState extends State<Home> {
                               color: Clr().borderColor.withOpacity(0.8),
                               spreadRadius: 0.5,
                               blurRadius: 4,
-                              offset: Offset(5, 3), // changes position of shadow
+                              offset:
+                                  Offset(5, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -248,20 +263,20 @@ class _HomeState extends State<Home> {
                                                 },
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child:
-                                                      dislikeList.contains(index)
-                                                          ? Lottie.asset(
-                                                              'animations/dislike_fill.json',
-                                                              height: 27,
-                                                              reverse: false,
-                                                              repeat: false,
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : SizedBox(
-                                                              height: 24,
-                                                              child: SvgPicture.asset(
-                                                                  'assets/dislike.svg'),
-                                                            ),
+                                                  child: dislikeList
+                                                          .contains(index)
+                                                      ? Lottie.asset(
+                                                          'animations/dislike_fill.json',
+                                                          height: 27,
+                                                          reverse: false,
+                                                          repeat: false,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : SizedBox(
+                                                          height: 24,
+                                                          child: SvgPicture.asset(
+                                                              'assets/dislike.svg'),
+                                                        ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -301,43 +316,58 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // showFingerPrintDialog() {
-  //   return AwesomeDialog(
-  //       context: context,
-  //       width: double.infinity,
-  //       dismissOnTouchOutside: authenticated ? true : false,
-  //       dismissOnBackKeyPress: authenticated ? true : false,
-  //       dialogType: DialogType.noHeader,
-  //       dialogBackgroundColor: Clr().background1,
-  //       animType: AnimType.scale,
-  //       alignment: Alignment.bottomCenter,
-  //       body: Padding(
-  //         padding: EdgeInsets.symmetric(horizontal: Dim().d16),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             Text('FingerPrint is required',
-  //                 style: Sty().mediumText.copyWith(
-  //                     fontWeight: FontWeight.w500, fontSize: Dim().d20)),
-  //             SizedBox(height: Dim().d20),
-  //             IconButton(
-  //                 onPressed: () {},
-  //                 color: Clr().primaryColor,
-  //                 iconSize: Dim().d56,
-  //                 icon: Icon(Icons.fingerprint)),
-  //             Text('Click here!!',
-  //                 style: Sty().mediumText.copyWith(
-  //                     fontSize: Dim().d12,
-  //                     fontWeight: FontWeight.w300,
-  //                     color: Clr().hintColor)),
-  //             SizedBox(height: Dim().d20),
-  //           ],
-  //         ),
-  //       ))
-  //     ..show();
+// showFingerPrintDialog() {
+//   return AwesomeDialog(
+//       context: context,
+//       width: double.infinity,
+//       dismissOnTouchOutside: authenticated ? true : false,
+//       dismissOnBackKeyPress: authenticated ? true : false,
+//       dialogType: DialogType.noHeader,
+//       dialogBackgroundColor: Clr().background1,
+//       animType: AnimType.scale,
+//       alignment: Alignment.bottomCenter,
+//       body: Padding(
+//         padding: EdgeInsets.symmetric(horizontal: Dim().d16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('FingerPrint is required',
+//                 style: Sty().mediumText.copyWith(
+//                     fontWeight: FontWeight.w500, fontSize: Dim().d20)),
+//             SizedBox(height: Dim().d20),
+//             IconButton(
+//                 onPressed: () {},
+//                 color: Clr().primaryColor,
+//                 iconSize: Dim().d56,
+//                 icon: Icon(Icons.fingerprint)),
+//             Text('Click here!!',
+//                 style: Sty().mediumText.copyWith(
+//                     fontSize: Dim().d12,
+//                     fontWeight: FontWeight.w300,
+//                     color: Clr().hintColor)),
+//             SizedBox(height: Dim().d20),
+//           ],
+//         ),
+//       ))
+//     ..show();
+// }
+
+
+  // Session() async {
+  //   SharedPreferences sp = await SharedPreferences.getInstance();
+  //   if (_supportState == _SupportState.supported) {
+  //     if (StudentToken != null) {
+  //       checkFingerPrint ? null : _authenticateWithBiometrics();
+  //       print('${checkFingerPrint}');
+  //     }
+  //   } else {
+  //     sp.clear();
+  //     STM().finishAffinity(ctx, SignIn());
+  //   }
   // }
 }
+
 
 enum _SupportState {
   unknown,

@@ -49,7 +49,7 @@ class _TimeTableState extends State<TimeTable> {
   TextEditingController codeCtrl = TextEditingController();
   var lat,lng;
 
-  var click;
+  int? click;
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
@@ -105,7 +105,7 @@ class _TimeTableState extends State<TimeTable> {
                   : Container()
               : DefaultTabController(
                   length: dayTimeTableList.length,
-                  initialIndex: click,
+                  initialIndex: click!,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(Dim().d16),
                     child: Column(
@@ -468,6 +468,7 @@ class _TimeTableState extends State<TimeTable> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: Dim().d32),
               TextFormField(
                 controller: codeCtrl,
                 decoration: Sty().TextFormFieldOutlineDarkStyle.copyWith(
@@ -476,11 +477,12 @@ class _TimeTableState extends State<TimeTable> {
                       hintText: 'Enter code',
                     ),
               ),
-              SizedBox(height: Dim().d12),
+              SizedBox(height: Dim().d20),
               Center(
                 child: InkWell(
                   onTap: () {
                     permissionHandle(timetableid);
+                    codeCtrl.clear();
                   },
                   child: Container(
                       width: Dim().d200,
@@ -495,7 +497,7 @@ class _TimeTableState extends State<TimeTable> {
                       ))),
                 ),
               ),
-              SizedBox(height: Dim().d12),
+              SizedBox(height: Dim().d32),
             ],
           ),
         ))
@@ -510,7 +512,7 @@ class _TimeTableState extends State<TimeTable> {
       // shadowColor: Clr().borderColor,
       toolbarHeight: 60,
       backgroundColor: Clr().white,
-      leadingWidth: StudentToken != null ? Dim().d200 : null,
+      leadingWidth: StudentToken != null ? double.infinity : null,
       leading: TeacherToken != null
           ? InkWell(
               onTap: () {
@@ -530,11 +532,11 @@ class _TimeTableState extends State<TimeTable> {
               ))
           : colleagedetails != null
               ? Padding(
-                padding:  EdgeInsets.symmetric(horizontal: Dim().d14,vertical: Dim().d14),
+                padding: EdgeInsets.symmetric(horizontal: Dim().d14,vertical: Dim().d14),
                 child: Text('${colleagedetails['name']}',
                     style: Sty().mediumText.copyWith(
-                        color: Color(0xff36393B),
-                        fontWeight: FontWeight.w300)),
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w100)),
               )
               : Container(),
       centerTitle: true,
@@ -589,7 +591,7 @@ class _TimeTableState extends State<TimeTable> {
                     }
                     return InkWell(
                       onTap: () {
-                        if(TeacherToken != null)
+                        if(StudentToken != null)
                           STM().redirect2page(
                               ctx,
                               TeacherProfile(
@@ -626,9 +628,7 @@ class _TimeTableState extends State<TimeTable> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Row(mainAxisAlignment: TeacherToken != null ?  MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
                                   children: [
                                     if(TeacherToken != null)
                                       Expanded(
@@ -893,292 +893,300 @@ class _TimeTableState extends State<TimeTable> {
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: "Time : ",
-                                            style: Sty().smallText.copyWith(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontFamily: '',
-                                                  color: Lecturestatus == "0"
-                                                      ? Clr().textcolor
-                                                      : TeacherToken != null
-                                                          ? Clr()
-                                                              .textGoldenColor
-                                                          : Lecturestatus == "1"
-                                                              ? Clr()
-                                                                  .textGoldenColor
-                                                              : Color(
-                                                                  0xff32334D),
-                                                ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    ' ${e['data'][index]['from_time'].toString()} to ${e['data'][index]['to_time'].toString()}',
-                                                style: Sty().smallText.copyWith(
-                                                    color: Lecturestatus == "0"
-                                                        ? Clr().black
-                                                        : Lecturestatus == "2"
-                                                            ? TeacherToken !=
-                                                                    null
-                                                                ? Color(0xffFCEBE3)
-                                                                : Color(
-                                                                    0xff111233)
-                                                            : Color(0xffFCEBE3),
-                                                    fontWeight: FontWeight.w400,
+                                Padding(
+                                  padding: Lecturestatus == "0"  ?  EdgeInsets.zero : EdgeInsets.only(top: Dim().d12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: SizedBox(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: "Time : ",
+                                              style: Sty().smallText.copyWith(
+                                                    fontWeight: FontWeight.w300,
                                                     fontFamily: '',
-                                                    fontSize: Dim().d14),
-                                              ),
-                                            ],
+                                                    color: Lecturestatus == "0"
+                                                        ? Clr().textcolor
+                                                        : TeacherToken != null
+                                                            ? Clr()
+                                                                .textGoldenColor
+                                                            : Lecturestatus == "1"
+                                                                ? Clr()
+                                                                    .textGoldenColor
+                                                                : Color(
+                                                                    0xff32334D),
+                                                  ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text:
+                                                      '${e['data'][index]['from_time'].toString()} to ${e['data'][index]['to_time'].toString()}',
+                                                  style: Sty().smallText.copyWith(
+                                                      color: Lecturestatus == "0"
+                                                          ? Clr().black
+                                                          : Lecturestatus == "2"
+                                                              ? TeacherToken !=
+                                                                      null
+                                                                  ? Color(0xffFCEBE3)
+                                                                  : Color(
+                                                                      0xff111233)
+                                                              : Color(0xffFCEBE3),
+                                                      fontWeight: FontWeight.w400,
+                                                      fontFamily: '',
+                                                      fontSize: Dim().d14),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    if (Lecturestatus == '0')
-                                      TeacherToken != null
-                                          ? SizedBox(
-                                              height: 35,
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          elevation: 0,
-                                                          // backgroundColor: Clr().accentColor,
-                                                          backgroundColor:
-                                                              Color(0xfffcebe3),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                                  // side: BorderSide(color: Color(0xfff4f4f5)),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              5))),
-                                                  onPressed: () {
-                                                    _showClassDialog(
-                                                      ctx: ctx,
-                                                      timetableid: e['data']
-                                                          [index]['id'],
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    'Get Code',
-                                                    style: Sty().largeText.copyWith(
-                                                        color: e['data'][index][
-                                                                    'status'] ==
-                                                                "0"
-                                                            ? Clr().textcolor
-                                                            : Clr()
-                                                                .textGoldenColor,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  )),
-                                            )
-                                          : e['data'][index]
-                                                  ['attendance_status']
-                                              ? Container()
-                                              : SizedBox(
-                                                  height: 35,
-                                                  child: ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              elevation: 0,
-                                                              // backgroundColor: Clr().accentColor,
-                                                              backgroundColor:
-                                                                  Color(
-                                                                      0xfffcebe3),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                      // side: BorderSide(color: Color(0xfff4f4f5)),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5))),
-                                                      onPressed: () {
-                                                        addAttendance(
-                                                            studentid,
-                                                            e['data'][index]
-                                                                ['id']);
-                                                      },
-                                                      child: Text(
-                                                        'Enter Code',
-                                                        style: Sty().largeText.copyWith(
-                                                            color: e['data'][
-                                                                            index]
-                                                                        [
-                                                                        'status'] ==
-                                                                    "0"
-                                                                ? Clr()
-                                                                    .textcolor
-                                                                : Clr()
-                                                                    .textGoldenColor,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      )),
-                                                ),
-                                  ],
+                                      if (Lecturestatus == '0')
+                                        TeacherToken != null
+                                            ? SizedBox(
+                                                height: 35,
+                                                child: ElevatedButton(
+                                                    style:
+                                                        ElevatedButton.styleFrom(
+                                                            elevation: 0,
+                                                            // backgroundColor: Clr().accentColor,
+                                                            backgroundColor:
+                                                                Color(0xfffcebe3),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                                    // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                5))),
+                                                    onPressed: () {
+                                                      _showClassDialog(
+                                                        ctx: ctx,
+                                                        timetableid: e['data']
+                                                            [index]['id'],
+                                                      );
+                                                    },
+                                                    child: Text(
+                                                      'Get Code',
+                                                      style: Sty().largeText.copyWith(
+                                                          color: e['data'][index][
+                                                                      'status'] ==
+                                                                  "0"
+                                                              ? Clr().textcolor
+                                                              : Clr()
+                                                                  .textGoldenColor,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    )),
+                                              )
+                                            : e['data'][index]
+                                                    ['attendance_status']
+                                                ? Container()
+                                                : SizedBox(
+                                                    height: 35,
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                elevation: 0,
+                                                                // backgroundColor: Clr().accentColor,
+                                                                backgroundColor:
+                                                                    Color(
+                                                                        0xfffcebe3),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                        // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                5))),
+                                                        onPressed: () {
+                                                          addAttendance(
+                                                              studentid,
+                                                              e['data'][index]
+                                                                  ['id']);
+                                                        },
+                                                        child: Text(
+                                                          'Enter Code',
+                                                          style: Sty().largeText.copyWith(
+                                                              color: e['data'][
+                                                                              index]
+                                                                          [
+                                                                          'status'] ==
+                                                                      "0"
+                                                                  ? Clr()
+                                                                      .textcolor
+                                                                  : Clr()
+                                                                      .textGoldenColor,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        )),
+                                                  ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(height: Dim().d12),
                                 Lecturestatus == "0"
                                     ? Container()
                                     : e['data'][index]['code_status'] == "1"
-                                        ? Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Wrap(
-                                              crossAxisAlignment:
-                                                  WrapCrossAlignment.center,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  Dim().d16))),
-                                                  width: 100.0,
-                                                  height: 30.0,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 2),
-                                                  child: DottedBorder(
-                                                    color: Clr().white,
-                                                    //color of dotted/dash line
-                                                    strokeWidth: 1,
-                                                    //thickness of dash/dots
-                                                    dashPattern: [6, 4],
-                                                    child: Center(
-                                                      child: Text(
-                                                        '${e['data'][index]['code'].toString()}',
-                                                        style: Sty()
-                                                            .largeText
-                                                            .copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 10.0,
-                                                                color: Clr()
-                                                                    .white),
+                                        ? Padding(
+                                          padding: EdgeInsets.only(top: Dim().d12),
+                                          child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    Dim().d16))),
+                                                    width: 100.0,
+                                                    height: 30.0,
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal: 2),
+                                                    child: DottedBorder(
+                                                      color: Clr().white,
+                                                      //color of dotted/dash line
+                                                      strokeWidth: 1,
+                                                      //thickness of dash/dots
+                                                      dashPattern: [6, 4],
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${e['data'][index]['code'].toString()}',
+                                                          style: Sty()
+                                                              .largeText
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 10.0,
+                                                                  color: Clr()
+                                                                      .white),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(width: Dim().d16),
+                                                  SizedBox(
+                                                    height: 35,
+                                                    width: 120,
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                elevation: 0,
+                                                                // backgroundColor: Clr().accentColor,
+                                                                backgroundColor:
+                                                                    Color(
+                                                                        0xffFCEBE3),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                        // side: BorderSide(color: Color(0xfff4f4f5)),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                5))),
+                                                        onPressed: () {
+                                                          getTimeTable(
+                                                              value: e['data']
+                                                                  [index]['id'],
+                                                              apiname:
+                                                                  'inactive_lecture',
+                                                              type: 'post');
+                                                        },
+                                                        child: Text(
+                                                          'Inactive',
+                                                          style: Sty()
+                                                              .largeText
+                                                              .copyWith(
+                                                                  color:
+                                                                      Clr().black,
+                                                                  fontSize: 14.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                        )),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                        )
+                                        : Padding(
+                                          padding:  EdgeInsets.only(top: Dim().d12),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                TeacherToken != null
+                                                    ? Lecturestatus == "1"
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              STM().redirect2page(
+                                                                  ctx,
+                                                                  Attendance(
+                                                                    id: e['data'][
+                                                                                index]
+                                                                            ['id']
+                                                                        .toString(),
+                                                                  ));
+                                                            },
+                                                            child: Column(
+                                                              children: [
+                                                                Text('Attendance',
+                                                                    style: Sty()
+                                                                        .smallText
+                                                                        .copyWith(
+                                                                            color: Clr()
+                                                                                .white,
+                                                                            fontSize:
+                                                                                Dim().d12)),
+                                                                SizedBox(
+                                                                  height:
+                                                                      Dim().d2,
+                                                                  width:
+                                                                      Dim().d76,
+                                                                  child:
+                                                                      DottedLine(
+                                                                    dashLength:
+                                                                        4.0,
+                                                                    lineThickness:
+                                                                        1,
+                                                                    dashColor:
+                                                                        Clr()
+                                                                            .white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Container()
+                                                    : Container(),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                      Lecturestatus == "2"
+                                                          ? 'Cancelled'
+                                                          : 'Completed',
+                                                      style: Sty()
+                                                          .mediumText
+                                                          .copyWith(
+                                                              color: TeacherToken !=
+                                                                      null
+                                                                  ? Clr()
+                                                                      .textGoldenColor
+                                                                  : Lecturestatus ==
+                                                                          "2"
+                                                                      ? Clr()
+                                                                          .black
+                                                                      : Color(0xffFCEBE3),
+                                                              fontSize:
+                                                                  Dim().d14)),
                                                 ),
-                                                SizedBox(width: Dim().d16),
-                                                SizedBox(
-                                                  height: 35,
-                                                  width: 120,
-                                                  child: ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              elevation: 0,
-                                                              // backgroundColor: Clr().accentColor,
-                                                              backgroundColor:
-                                                                  Color(
-                                                                      0xffFCEBE3),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                      // side: BorderSide(color: Color(0xfff4f4f5)),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5))),
-                                                      onPressed: () {
-                                                        getTimeTable(
-                                                            value: e['data']
-                                                                [index]['id'],
-                                                            apiname:
-                                                                'inactive_lecture',
-                                                            type: 'post');
-                                                      },
-                                                      child: Text(
-                                                        'Inactive',
-                                                        style: Sty()
-                                                            .largeText
-                                                            .copyWith(
-                                                                color:
-                                                                    Clr().black,
-                                                                fontSize: 14.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                      )),
-                                                )
                                               ],
                                             ),
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TeacherToken != null
-                                                  ? Lecturestatus == "1"
-                                                      ? InkWell(
-                                                          onTap: () {
-                                                            STM().redirect2page(
-                                                                ctx,
-                                                                Attendance(
-                                                                  id: e['data'][
-                                                                              index]
-                                                                          ['id']
-                                                                      .toString(),
-                                                                ));
-                                                          },
-                                                          child: Column(
-                                                            children: [
-                                                              Text('Attendance',
-                                                                  style: Sty()
-                                                                      .smallText
-                                                                      .copyWith(
-                                                                          color: Clr()
-                                                                              .white,
-                                                                          fontSize:
-                                                                              Dim().d12)),
-                                                              SizedBox(
-                                                                height:
-                                                                    Dim().d2,
-                                                                width:
-                                                                    Dim().d76,
-                                                                child:
-                                                                    DottedLine(
-                                                                  dashLength:
-                                                                      4.0,
-                                                                  lineThickness:
-                                                                      1,
-                                                                  dashColor:
-                                                                      Clr()
-                                                                          .white,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Container()
-                                                  : Container(),
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                    Lecturestatus == "2"
-                                                        ? 'Cancelled'
-                                                        : 'Completed',
-                                                    style: Sty()
-                                                        .mediumText
-                                                        .copyWith(
-                                                            color: TeacherToken !=
-                                                                    null
-                                                                ? Clr()
-                                                                    .textGoldenColor
-                                                                : Lecturestatus ==
-                                                                        "2"
-                                                                    ? Clr()
-                                                                        .black
-                                                                    : Color(0xffFCEBE3),
-                                                            fontSize:
-                                                                Dim().d14)),
-                                              ),
-                                            ],
-                                          ),
+                                        ),
                               ],
                             ),
                           ),
@@ -1249,11 +1257,10 @@ class _TimeTableState extends State<TimeTable> {
           )
         : InkWell(
             onTap: () {
-              getTimeTable(value: true, type: 'post', apiname: 'get_timetable');
               setState(() {
                 selectweek = true;
-                click = '0';
               });
+              getTimeTable(value: true, type: 'post', apiname: 'get_timetable');
             },
             child: Align(
               alignment: Alignment.centerRight,
@@ -1342,7 +1349,7 @@ class _TimeTableState extends State<TimeTable> {
             colleagedetails = result['college_details'];
             studentid = result['student_id'];
             setState(() {
-             click = dayTimeTableList.indexWhere((e) => e['name'] == DateFormat.E().format(DateTime.now()));
+             click =  dayTimeTableList.indexWhere((e) => e['name'] == DateFormat.E().format(DateTime.now()));
             });
           } else {
             STM().back2Previous(ctx);
@@ -1405,7 +1412,6 @@ class _TimeTableState extends State<TimeTable> {
             STM().back2Previous(ctx);
             STM().displayToast("${result['message'].toString()}");
             getTimeTable(apiname: 'get_timetable', type: 'post');
-            codeCtrl.clear();
           } else {
             STM().back2Previous(ctx);
             STM().errorDialog(ctx, '${result['message']}');
@@ -1643,12 +1649,20 @@ class _TimeTableState extends State<TimeTable> {
                     child: Container(
                         height: Dim().d56,
                         decoration: BoxDecoration(
-                            color: Clr().primaryColor,
+                            color: Clr().white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Clr().lightGrey,
+                                blurRadius: 1,
+                                spreadRadius: 1,
+                                offset: Offset(0, 1)
+                              )
+                            ],
                             borderRadius: BorderRadius.circular(Dim().d12)),
                         child: Center(
                           child: Text('Done',
                               style:
-                                  Sty().smallText.copyWith(color: Clr().white)),
+                                  Sty().smallText.copyWith(color: Clr().black)),
                         )),
                   ),
                 ),
@@ -1674,7 +1688,7 @@ class _TimeTableState extends State<TimeTable> {
                         child: Center(
                           child: Text('View Attendance',
                               style:
-                                  Sty().smallText.copyWith(color: Clr().white)),
+                                  Sty().smallText.copyWith(color: Color(0xffFCEBE3))),
                         )),
                   ),
                 ),

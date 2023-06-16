@@ -623,7 +623,7 @@ class _MyProfileState extends State<MyProfile> {
                 children: [
                   SvgPicture.asset(
                     'assets/reports.svg',
-                    color: Clr().white,
+                    color: Color(0xffFCEBE3),
                   ),
                   SizedBox(
                     width: Dim().d8,
@@ -634,6 +634,7 @@ class _MyProfileState extends State<MyProfile> {
                       // fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
+                      color: Color(0xffFCEBE3),
                     ),
                   ),
                 ],
@@ -1275,7 +1276,8 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                     )),
               )
-            : instistuteDetails(details: instituteData[0]),
+            : instituteData == null ?  Container() :
+        instistuteDetails(details: instituteData[0]),
         SizedBox(
           height: Dim().d40,
         ),
@@ -1534,9 +1536,9 @@ class _MyProfileState extends State<MyProfile> {
     var success = result['success'];
     var message = result['message'];
     if (success) {
-      getProfile();
       STM().back2Previous(ctx);
       STM().displayToast(message);
+      getProfile();
     } else {
       STM().back2Previous(ctx);
       STM().errorDialog(ctx, message);

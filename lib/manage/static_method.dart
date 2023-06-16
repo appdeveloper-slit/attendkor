@@ -431,13 +431,12 @@ class STM {
               width: double.infinity,
               child: ElevatedButton(
                 style: Sty().primaryButton,
-                onPressed: () {
-                  STM().checkInternet(context, widget).then((value) {
-                    if (value) {
-                      Navigator.pop(context);
-                      STM().replacePage(context, widget);
-                    }
-                  });
+                onPressed: () async {
+                  var connectivityResult = await (Connectivity().checkConnectivity());
+                  if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                    Navigator.pop(context);
+                    STM().replacePage(context, widget);
+                  }
                 },
                 child: Text(
                   "Try Again",
