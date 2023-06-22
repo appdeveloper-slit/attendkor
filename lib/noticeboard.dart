@@ -18,7 +18,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
   late BuildContext ctx;
   List<dynamic> noticeList = [];
   bool check = false;
-  String? TeacherToken,StudentToken;
+  String? TeacherToken, StudentToken;
 
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -79,91 +79,106 @@ class _NoticeBoardState extends State<NoticeBoard> {
           padding: EdgeInsets.all(Dim().d12),
           child: Column(
             children: [
-              check ? SizedBox(
-                height: MediaQuery.of(ctx).size.height/1.5,
-                child: Center(
-                  child: Text('No Notice',style: Sty().largeText,),
-                ),
-              ) : ListView.builder(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: noticeList.length,
-                itemBuilder: (context, index) {
-                  return InkWell(onTap: (){
-                    noticeList[index]['image'] != null ? STM().redirect2page(ctx, ZoomingPic(img: noticeList[index]['image'])) : null;
-                  },
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Clr().white,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Clr().borderColor),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Clr().borderColor,
-                            spreadRadius: 0.5,
-                            blurRadius: 2,
-                            offset: Offset(4, 2), // changes position of shadow
-                          ),
-                        ],
+              check
+                  ? SizedBox(
+                      height: MediaQuery.of(ctx).size.height / 1.5,
+                      child: Center(
+                        child: Text(
+                          'No Notice',
+                          style: Sty().largeText,
+                        ),
                       ),
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          elevation: 0,
-                          color: Clr().white,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: Dim().d4,
-                              vertical: Dim().d4,
-                            ),
-                            child: Column(
-                              children: [
-                                STM().imageDisplay(list: noticeList[index]['image'],url: noticeList[index]['image']),
-                                SizedBox(
-                                  height: Dim().d8,
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      'assets/pin.png',
-                                      height: 22,
-                                      width: 22,
-                                    ),
-                                    SizedBox(
-                                      width: Dim().d4,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        '${noticeList[index]['notice'].toString()}',
-                                        style: Sty().smallText.copyWith(
-                                            height: 1.3,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: Dim().d4,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    '${DateFormat('d MMM yyyy').format(DateTime.parse(noticeList[index]['created_at'].toString()))}',
-                                    style: Sty().microText.copyWith(
-                                          fontWeight: FontWeight.w300,
-                                          fontFamily: '',
-                                        ),
-                                  ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: noticeList.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            noticeList[index]['image'] != null
+                                ? STM().redirect2page(ctx,
+                                    ZoomingPic(img: noticeList[index]['image']))
+                                : null;
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Clr().white,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Clr().borderColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Clr().borderColor,
+                                  spreadRadius: 0.5,
+                                  blurRadius: 2,
+                                  offset: Offset(
+                                      4, 2), // changes position of shadow
                                 ),
                               ],
                             ),
-                          )),
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                elevation: 0,
+                                color: Clr().white,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: Dim().d4,
+                                    vertical: Dim().d4,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      noticeList[index]['image'] == ""
+                                          ? Container()
+                                          : STM().imageDisplay(
+                                              list: noticeList[index]['image'],
+                                              url: noticeList[index]['image']),
+                                      SizedBox(
+                                        height: Dim().d8,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.asset(
+                                            'assets/pin.png',
+                                            height: 22,
+                                            width: 22,
+                                          ),
+                                          SizedBox(
+                                            width: Dim().d4,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              '${noticeList[index]['notice'].toString()}',
+                                              style: Sty().smallText.copyWith(
+                                                  height: 1.3,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: Dim().d4,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '${DateFormat('d MMM yyyy').format(DateTime.parse(noticeList[index]['created_at'].toString()))}',
+                                          style: Sty().microText.copyWith(
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily: '',
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ],
           ),
         ),
@@ -172,7 +187,12 @@ class _NoticeBoardState extends State<NoticeBoard> {
   }
 
   void getNotice() async {
-    var result = await STM().get(ctx, Str().loading, 'get_notice', TeacherToken ?? StudentToken, TeacherToken != null ? 'teacher/' : 'student/');
+    var result = await STM().get(
+        ctx,
+        Str().loading,
+        'get_notice',
+        TeacherToken ?? StudentToken,
+        TeacherToken != null ? 'teacher/' : 'student/');
     var success = result['success'];
     if (success) {
       setState(() {

@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
@@ -57,7 +59,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   int? StateValue;
   List<dynamic> stateList = [];
 
-  int? CityValue;
+  String? CityValue,cityname;
   List<dynamic> cityList = [];
 
   String? sToken;
@@ -346,42 +348,30 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: Dim().d20),
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Clr().textcolor)),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              value: CityValue,
-                              isExpanded: true,
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 28,
-                                color: Clr().textcolor,
-                              ),
-                              hint: Text('Enter the city'),
-                              style: TextStyle(color: Color(0xff787882)),
-                              items: cityList.map((string) {
-                                return DropdownMenuItem(
-                                  value: string['id'],
-                                  child: Text(
-                                    string['name'].toString(),
-                                    style: TextStyle(
-                                        color: Clr().textcolor, fontSize: 14),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (p) {
-                                // STM().redirect2page(ctx, Home());
-                                setState(() {
-                                  CityValue = p as int?;
-                                  cityerror = null;
-                                });
-                              },
-                            ),
+                        child: DropdownSearch(
+                          mode: Mode.DIALOG,
+                          selectedItem: cityname,
+                          items: cityList.map((value) {
+                            return value['name'].toString();
+                          }).toList(),
+                          filterFn: (item, filter) {
+                            return item.toString().toLowerCase().startsWith(filter.toString().toLowerCase());
+                          },
+                          dropdownSearchDecoration: Sty().TextFormFieldOutlineDarkStyle.copyWith(
+                            hintText: 'Enter the city',
+                            hintStyle: Sty().mediumText.copyWith(color: Clr().hintColor),
                           ),
+                          onChanged: (p) {
+                            setState(() {
+                              int pos = cityList.indexWhere((e) => e['name'] == p.toString());
+                              cityname = p.toString();
+                              CityValue = cityList[pos]['id'].toString();
+                              cityerror = null;
+                              print(CityValue);
+                            });
+                          },
+                          showSearchBox: true,
+                          showSelectedItems: true,
                         ),
                       ),
                       cityerror == null
@@ -517,7 +507,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                               return 'Please type confirm password';
                             }
                             if (value != passwordCtrl.text) {
-                              return 'confirm Password must be same as new password';
+                              return 'Confirm Password must be same as new password';
                             }
                             return null;
                           },
@@ -674,50 +664,43 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       _isValid = false;
     }
     if (_isValid) {
-      STM().redirect2page(
-          ctx,
-          OTP(
-            value: {
-              'name': nameCtrl.text,
-              'mobile': mobileCtrl.text,
-              'email': emailCtrl.text,
-              'gender': GenderValue,
-              'state': StateValue,
-              'city': CityValue,
-              'birthdate': dobCtrl.text,
-              'password': passwordCtrl.text,
-              'confirmpassword': confirmpasswordCtrl.text,
-            },
-            type: 'register',
-          ));
+      sendOTP();
     }
   }
 //Api Method
-// void sendOTP() async {
-//   //Input
-//   FormData body = FormData.fromMap({
-//     'page_type': 'login',
-//     'mobile': mobileCtrl.text,
-//   });
-//   //Output
-//       var result = await STM().postWithToken(ctx, Str().sendingOtp, "send_otp", body, sToken);
-//       print(sToken);
-//   // if (!mounted) return;
-//   var message = result['message'];
-//   var success = result['success'];
-//   if (success) {
-//     STM().redirect2page(
-//         ctx,
-//         OTP(
-//           smobileCtrl: mobileCtrl.text,
-//           snameCtrl: '',
-//           semailCtrl: '',
-//           sType: 'login',
-//         ));
-//     STM().displayToast(message);
-//   } else {
-//     var message = result['message'];
-//     STM().errorDialog(ctx, message);
-//   }
-// }
+void sendOTP() async {
+  //Input
+  FormData body = FormData.fromMap({
+    'email': emailCtrl.text,
+    'mobile': mobileCtrl.text,
+  });
+  //Output
+      var result = await STM().postWithToken(ctx, Str().sendingOtp, "register", body, sToken,'');
+      print(sToken);
+  // if (!mounted) return;
+  var message = result['message'];
+  var success = result['success'];
+  if (success) {
+    STM().redirect2page(
+        ctx,
+        OTP(
+          value: {
+            'name': nameCtrl.text,
+            'mobile': mobileCtrl.text,
+            'email': emailCtrl.text,
+            'gender': GenderValue,
+            'state': StateValue,
+            'city': CityValue,
+            'birthdate': dobCtrl.text,
+            'password': passwordCtrl.text,
+            'confirmpassword': confirmpasswordCtrl.text,
+          },
+          type: 'register',
+        ));
+    STM().displayToast(message);
+  } else {
+    var message = result['message'];
+    STM().errorDialog(ctx, message);
+  }
+}
 }

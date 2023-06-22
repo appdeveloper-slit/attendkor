@@ -170,7 +170,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                             textInputAction: TextInputAction.done,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Email field is required';
+                                return 'Email address is required';
                               }
                               if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                                 return "Please enter a valid email address";
@@ -327,7 +327,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     SharedPreferences sp = await SharedPreferences.getInstance();
     bool isValid = formKey.currentState!.validate();
     if (sUsertype == null) {
-      setState(() => usererror = "UserType is required");
+      setState(() => usererror = "User Type is required");
       isValid = false;
     }
     if (isValid) {

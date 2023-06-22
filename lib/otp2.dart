@@ -121,6 +121,7 @@ class _OTP2State extends State<OTP2> with TickerProviderStateMixin {
     //Input
     FormData body = FormData.fromMap({
       'mobile': widget.mobilenum,
+      'type': widget.sUsertype == 'Teacher'? 'teacher' : 'student',
     });
     //Output
     var result = await STM().post(ctx, Str().verifying, "resent_otp", body,'');

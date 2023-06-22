@@ -88,16 +88,18 @@ class _PublishNoticeState extends State<PublishNotice> {
               SizedBox(height: Dim().d12),
               InkWell(
                   onTap: () {
-                    STM().canceldialog(
-                        context: ctx,
-                        message: 'Are you sure want to cancel?',
-                        funtion: () {
-                          setState(() {
-                            imageFile = null;
-                            noticeCtrl.clear();
-                            STM().back2Previous(ctx);
+                    if(noticeCtrl.text.isNotEmpty || imageFile != null)
+                      STM().canceldialog(
+                          context: ctx,
+                          message: 'Are you sure want to cancel?',
+                          funtion: () {
+                            setState(() {
+                              imageFile = null;
+                              noticeCtrl.clear();
+                              STM().back2Previous(ctx);
+                            });
                           });
-                        });
+
                   },
                   child: Align(
                       alignment: Alignment.centerRight,

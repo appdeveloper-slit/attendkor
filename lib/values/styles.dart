@@ -161,7 +161,7 @@ class Sty {
         color: Clr().black,
       ),
       borderRadius: BorderRadius.circular(
-        Dim().d12,
+        Dim().d8,
       ),
     ),
     focusedBorder: OutlineInputBorder(
@@ -169,7 +169,7 @@ class Sty {
         color: Clr().black,
       ),
       borderRadius: BorderRadius.circular(
-        Dim().d12,
+        Dim().d8,
       ),
     ),
     errorBorder: OutlineInputBorder(
@@ -177,7 +177,7 @@ class Sty {
         color: Clr().errorRed,
       ),
       borderRadius: BorderRadius.circular(
-        Dim().d12,
+        Dim().d8,
       ),
     ),
     focusedErrorBorder: OutlineInputBorder(
@@ -185,7 +185,7 @@ class Sty {
         color: Clr().errorRed,
       ),
       borderRadius: BorderRadius.circular(
-        Dim().d12,
+        Dim().d8,
       ),
     ),
     errorStyle: TextStyle(

@@ -27,7 +27,7 @@ class _ResetPasswordState extends State<ResetPassword>
   String? SelectedValue;
   List<String> selectedList = ['Teacher', 'Student'];
   String t = "0";
-  String? userToken;
+  String? userToken, gendereeror;
 
   //Animation fade in
   late Animation animation;
@@ -133,12 +133,26 @@ class _ResetPasswordState extends State<ResetPassword>
                                 // STM().redirect2page(ctx, Home());
                                 setState(() {
                                   SelectedValue = t!;
+                                  gendereeror = null;
                                 });
                               },
                             ),
                           ),
                         ),
                       ),
+                      gendereeror == null
+                          ? SizedBox.shrink()
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  left: Dim().d32, top: Dim().d12),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('${gendereeror}',
+                                    style: Sty()
+                                        .smallText
+                                        .copyWith(color: Clr().errorRed)),
+                              ),
+                            ),
                       SizedBox(
                         height: Dim().d16,
                       ),
@@ -158,8 +172,7 @@ class _ResetPasswordState extends State<ResetPassword>
                             controller: mobileCtrl,
                             cursorColor: Clr().textcolor,
                             keyboardType: TextInputType.number,
-                            decoration:
-                                Sty().TextFormFieldOutlineStyle.copyWith(
+                            decoration: Sty().TextFormFieldOutlineStyle.copyWith(
                                     counterText: '',
                                     hintText: 'Registered Mobile Number',
                                     hintStyle: Sty().mediumText.copyWith(
@@ -175,9 +188,7 @@ class _ResetPasswordState extends State<ResetPassword>
                         height: 50,
                         child: ElevatedButton(
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                resetPassOtp();
-                              }
+                              _validateForm(ctx);
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Clr().textcolor,
@@ -206,6 +217,20 @@ class _ResetPasswordState extends State<ResetPassword>
     );
   }
 
+  // validation funtion
+  _validateForm(ctx) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool _isValid = formKey.currentState!.validate();
+
+    if (SelectedValue == null) {
+      setState(() => gendereeror = "Type is required");
+      _isValid = false;
+    }
+    if (_isValid) {
+      resetPassOtp();
+    }
+  }
+
   // reset password send otp
   void resetPassOtp() async {
     FormData body = FormData.fromMap({
@@ -213,12 +238,18 @@ class _ResetPasswordState extends State<ResetPassword>
       'type': SelectedValue == 'Teacher' ? 'teacher' : 'student',
     });
     var result =
-        await STM().post(ctx, Str().sendingOtp, 'reset_password_otp', body,'');
+        await STM().post(ctx, Str().sendingOtp, 'reset_password_otp', body, '');
     var success = result['success'];
     var message = result['message'];
     if (success) {
       STM().displayToast(message);
-      STM().redirect2page(ctx, OTP2(sUsertype: SelectedValue!,mobilenum: mobileCtrl.text,type: 'reset',));
+      STM().redirect2page(
+          ctx,
+          OTP2(
+            sUsertype: SelectedValue!,
+            mobilenum: mobileCtrl.text,
+            type: 'reset',
+          ));
     } else {
       STM().errorDialog(ctx, message);
     }
