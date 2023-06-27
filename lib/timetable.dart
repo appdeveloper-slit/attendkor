@@ -120,12 +120,12 @@ class _TimeTableState extends State<TimeTable> {
                           return <Widget>[
                             SliverAppBar(
                               backgroundColor: Clr().white,
-                              expandedHeight: TeacherToken != null ? Dim().d16 : Dim().d220,
-                              collapsedHeight: TeacherToken != null ? Dim().d16 : Dim().d220,
+                              expandedHeight: TeacherToken != null ? Dim().d16 : Dim().d200,
+                              collapsedHeight: TeacherToken != null ? Dim().d16 : Dim().d200,
                               toolbarHeight: 0.0,
                               forceElevated: innerBoxIsScrolled,
                               bottom: PreferredSize(
-                                  preferredSize: Size.fromHeight(Dim().d56),
+                                  preferredSize: Size.fromHeight(Dim().d52),
                                   child: Column(
                                     children: [
                                       TeacherToken != null
@@ -332,6 +332,7 @@ class _TimeTableState extends State<TimeTable> {
                                       tabLayout(),
                                     ],
                                   )),
+                              stretch: true,
                             ),
                           ];
                         },
@@ -1300,7 +1301,6 @@ class _TimeTableState extends State<TimeTable> {
       ))),
       child: TabBar(
         isScrollable: true,
-        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: Dim().d0),
         labelColor: Color(0xffca937c),
         // labelColor: Lecturestatus == 0 ? Clr().textcolor : Clr().textGoldenColor,,
