@@ -44,7 +44,7 @@ class STM {
   }
 
   openWeb(String url) async {
-    await launchUrl(Uri.parse(url.toString()));
+    await launchUrl(Uri.parse(url.toString()),mode: LaunchMode.externalNonBrowserApplication);
   }
 
   void finishAffinity(final BuildContext context, Widget widget) {
