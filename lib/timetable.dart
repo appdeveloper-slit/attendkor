@@ -120,8 +120,10 @@ class _TimeTableState extends State<TimeTable> {
                           return <Widget>[
                             SliverAppBar(
                               backgroundColor: Clr().white,
-                              expandedHeight: TeacherToken != null ? Dim().d16 : Dim().d200,
-                              collapsedHeight: TeacherToken != null ? Dim().d16 : Dim().d200,
+                              expandedHeight:
+                                  TeacherToken != null ? Dim().d16 : Dim().d200,
+                              collapsedHeight:
+                                  TeacherToken != null ? Dim().d16 : Dim().d200,
                               toolbarHeight: 0.0,
                               forceElevated: innerBoxIsScrolled,
                               bottom: PreferredSize(
@@ -663,7 +665,8 @@ class _TimeTableState extends State<TimeTable> {
             ));
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: Dim().d14,right: Dim().d12,left: Dim().d12),
+        margin: EdgeInsets.only(
+            bottom: Dim().d14, right: Dim().d12, left: Dim().d12),
         width: double.infinity,
         decoration: BoxDecoration(
             color: status == "0"
@@ -858,36 +861,33 @@ class _TimeTableState extends State<TimeTable> {
                         ),
                       ),
                     ),
-                    studentlist['attendance_status']
-                        ? Container()
-                        : now == studentlist['date']
-                            ? SizedBox(
-                                height: Dim().d32,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        elevation: 0,
-                                        // backgroundColor: Clr().accentColor,
-                                        backgroundColor: Color(0xfffcebe3),
-                                        shape: RoundedRectangleBorder(
-                                            // side: BorderSide(color: Color(0xfff4f4f5)),
-                                            borderRadius:
-                                                BorderRadius.circular(5))),
-                                    onPressed: () {
-                                      codeCtrl.clear();
-                                      addAttendance(
-                                          studentid, studentlist['id']);
-                                    },
-                                    child: Text(
-                                      'Enter Code',
-                                      style: Sty().largeText.copyWith(
-                                          color: studentlist['status'] == "0"
-                                              ? Clr().textcolor
-                                              : Clr().textGoldenColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                    )),
-                              )
-                            : Container(),
+                    if(now == studentlist['date'])
+                    studentlist['status'] == "1" ? Container() :
+                    studentlist['attendance_status'] ? Container() : SizedBox(
+                      height: Dim().d32,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              // backgroundColor: Clr().accentColor,
+                              backgroundColor: Color(0xfffcebe3),
+                              shape: RoundedRectangleBorder(
+                                // side: BorderSide(color: Color(0xfff4f4f5)),
+                                  borderRadius:
+                                  BorderRadius.circular(5))),
+                          onPressed: () {
+                            codeCtrl.clear();
+                            addAttendance(studentid, studentlist['id']);
+                          },
+                          child: Text(
+                            'Enter Code',
+                            style: Sty().largeText.copyWith(
+                                color: studentlist['status'] == "0"
+                                    ? Clr().textcolor
+                                    : Clr().textGoldenColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          )),
+                    ),
                   ],
                 ),
                 status == "0"
@@ -912,7 +912,8 @@ class _TimeTableState extends State<TimeTable> {
   /// teacherbodyLayout
   Widget teacherLayout({teacherlist, status}) {
     return Container(
-      margin: EdgeInsets.only(bottom: Dim().d14,right: Dim().d12,left: Dim().d12),
+      margin:
+          EdgeInsets.only(bottom: Dim().d14, right: Dim().d12, left: Dim().d12),
       width: double.infinity,
       decoration: BoxDecoration(
           color: status == "0" ? Clr().white : Clr().primaryColor,

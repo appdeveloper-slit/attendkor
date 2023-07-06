@@ -135,7 +135,7 @@ class _GetReportsState extends State<GetReports> {
 
   int? stream_id,
       semester_id,
-      year_id;
+      year_id,division_id;
 
 
   String? classValue, teacherClass;
@@ -145,7 +145,8 @@ class _GetReportsState extends State<GetReports> {
   List<dynamic> semesterList = [];
 
   String? divisionValue, teacherDivision;
-  String? error1, error2, error3, error4;
+  String? error1, error2, error3, error4,error5,error6;
+  String? teachererror1, teachererror2, teachererror3, teachererror4,teachererror5,teachererror6;
   List<dynamic> divisionList = [];
 
 
@@ -230,58 +231,45 @@ class _GetReportsState extends State<GetReports> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color:  error1 != null ? Clr().errorRed : Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: streamValue,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Stream',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: streamList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (t) {
-                              setState(() {
-                                streamValue = t.toString();
-                                int position = streamList.indexWhere((e) =>
-                                e['name'].toString() == streamValue.toString());
-                                print(position);
-                                stream_id = streamList[position]['id'];
-                                semesterList =
-                                streamList[position]['semesters'];
-                                classList = streamList[position]['years'];
-                                divisionList =
-                                streamList[position]['divisions'];
-                                semestervalue = null;
-                                classValue = null;
-                                divisionValue = null;
-                                error1 = null;
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: streamValue,
+                          isExpanded: true,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          hint: Text(
+                            'Select Stream',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: streamList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (t) {
+                            setState(() {
+                              streamValue = t.toString();
+                              int position = streamList.indexWhere((e) => e['name'].toString() == streamValue.toString());
+                              print(position);
+                              stream_id = streamList[position]['id'];
+                              classList = streamList[position]['years'];
+                              semestervalue = null;
+                              error1 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -289,51 +277,47 @@ class _GetReportsState extends State<GetReports> {
                       width: Dim().d12,
                     ),
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: error2 != null ? Clr().errorRed : Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: semestervalue,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Semester',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: semesterList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (t) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                semestervalue = t.toString();
-                                int position = semesterList.indexWhere((e) =>
-                                e['name'].toString() ==
-                                    semestervalue.toString());
-                                semester_id = semesterList[position]['id'];
-                                error2 = null;
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: classValue,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Class',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: classList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['year'],
+                              child: Text(
+                                string['year'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (c) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              classValue = c.toString();
+                              int position = classList.indexWhere((e) => e['year'].toString() == classValue.toString());
+                              year_id = classList[position]['id'];
+                              semesterList = classList[position]['semesters'];
+                              divisionList = classList[position]['divisions'];
+                              semestervalue = null;
+                              divisionValue = null;
+                              error3 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -376,50 +360,45 @@ class _GetReportsState extends State<GetReports> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: error3 != null  ? Clr().errorRed :Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: classValue,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Class',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: classList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['year'],
-                                child: Text(
-                                  string['year'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (c) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                classValue = c.toString();
-                                int position = classList.indexWhere((e) =>
-                                e['year'].toString() == classValue.toString());
-                                year_id = classList[position]['id'];
-                                error3 = null;
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: semestervalue,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Semester',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: semesterList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (t) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              semestervalue = t.toString();
+                              int position = semesterList.indexWhere((e) =>
+                              e['name'].toString() ==
+                                  semestervalue.toString());
+                              semester_id = semesterList[position]['id'];
+                              error2 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -427,47 +406,43 @@ class _GetReportsState extends State<GetReports> {
                       width: Dim().d12,
                     ),
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: error4 != null  ? Clr().errorRed : Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: divisionValue,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Division',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: divisionList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (d) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                divisionValue = d.toString();
-                                error4 = null;
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: divisionValue,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Division',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: divisionList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (d) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              divisionValue = d.toString();
+                              int position = divisionList.indexWhere((e) => e['name'].toString() == divisionValue.toString());
+                              division_id = divisionList[position]['id'];
+                              error4 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -488,18 +463,18 @@ class _GetReportsState extends State<GetReports> {
                                fontSize: 14.0,
                              ))),
                    ),
-                   error4 != null ? SizedBox(height: Dim().d16) : Container(),
-                   error4 == null ? SizedBox.shrink() : Expanded(
-                     child: Padding(
-                         padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-                         child: Text('${error4}',
-                             style: TextStyle(
-                               fontFamily: 'Roboto',
-                               letterSpacing: 0.5,
-                               color: Clr().errorRed,
-                               fontSize: 14.0,
-                             ))),
-                   ),
+                   // error4 != null ? SizedBox(height: Dim().d16) : Container(),
+                   // error4 == null ? SizedBox.shrink() : Expanded(
+                   //   child: Padding(
+                   //       padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                   //       child: Text('${error4}',
+                   //           style: TextStyle(
+                   //             fontFamily: 'Roboto',
+                   //             letterSpacing: 0.5,
+                   //             color: Clr().errorRed,
+                   //             fontSize: 14.0,
+                   //           ))),
+                   // ),
                  ],
                ),
               SizedBox(
@@ -516,10 +491,10 @@ class _GetReportsState extends State<GetReports> {
                             datePicker();
                           },
                           readOnly: true,
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'This field is required';
-                            }
+                          onChanged: (v){
+                            setState(() {
+                              error5 = null;
+                            });
                           },
                           decoration: Sty().TextFormFieldOutlineStyle.copyWith(
                               suffixIcon: Padding(
@@ -548,10 +523,10 @@ class _GetReportsState extends State<GetReports> {
                             datePicker1();
                           },
                           readOnly: true,
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'This field is required';
-                            }
+                          onChanged: (v){
+                            setState(() {
+                              error6 = null;
+                            });
                           },
                           decoration: Sty().TextFormFieldOutlineStyle.copyWith(
                               suffixIcon: Padding(
@@ -574,6 +549,34 @@ class _GetReportsState extends State<GetReports> {
                   ],
                 ),
               ),
+              Row(
+                children: [
+                  error5 != null ? SizedBox(height: Dim().d16) : Container(),
+                  error5 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                        child: Text('${error5}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                  error6 != null ? SizedBox(height: Dim().d16) : Container(),
+                  error6 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                        child: Text('${error6}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                ],
+              ),
               SizedBox(height: Dim().d28),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: Dim().d12),
@@ -584,7 +587,7 @@ class _GetReportsState extends State<GetReports> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            _validateForm(ctx);
+                            _validateForm(ctx,'/student_report');
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Clr().textcolor,
@@ -609,15 +612,7 @@ class _GetReportsState extends State<GetReports> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            // _showCodeDialog(ctx);
-                            // STM().redirect2page(ctx, GetReports());
-                            // if (formKey.currentState!.validate()) {
-                            //   STM().checkInternet(context, widget).then((value) {
-                            //     if (value) {
-                            //       sendOTP();
-                            //     }
-                            //   });
-                            // }
+                            _validateForm(ctx,'/black_student_report');
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Clr().textcolor,
@@ -666,71 +661,98 @@ class _GetReportsState extends State<GetReports> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: TextFormField(
-                            controller: dobteacherCtrl,
-                            onTap: () {
-                              datePickerTeacher();
-                            },
-                            readOnly: true,
-                            decoration: Sty().TextFormFieldOutlineStyle
-                                .copyWith(
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.all(Dim().d12),
-                                  child: SvgPicture.asset(
-                                    'assets/calender.svg',
-                                    fit: BoxFit.contain,
-                                    height: 5,
-                                    width: 5,
-                                  ),
+                      child: TextFormField(
+                          controller: dobteacherCtrl,
+                          onTap: () {
+                            datePickerTeacher();
+                          },
+                          readOnly: true,onChanged: (v){
+                        setState(() {
+                          teachererror5 = null;
+                        });
+                      },
+                          decoration: Sty().TextFormFieldOutlineStyle
+                              .copyWith(
+                              suffixIcon: Padding(
+                                padding: EdgeInsets.all(Dim().d12),
+                                child: SvgPicture.asset(
+                                  'assets/calender.svg',
+                                  fit: BoxFit.contain,
+                                  height: 5,
+                                  width: 5,
                                 ),
-                                hintText: 'From Date',
-                                hintStyle: Sty().mediumText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: Dim().d16,
-                                ))),
-                      ),
+                              ),
+                              hintText: 'From Date',
+                              hintStyle: Sty().mediumText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300,
+                                fontSize: Dim().d16,
+                              ))),
                     ),
                     SizedBox(
                       width: Dim().d12,
                     ),
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: TextFormField(
-                            controller: dobteacherCtrl1,
-                            onTap: () {
-                              datePickerTeacher1();
-                            },
-                            readOnly: true,
-                            decoration: Sty().TextFormFieldOutlineStyle
-                                .copyWith(
-                                suffixIcon: Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(vertical: Dim().d12),
-                                  child: SvgPicture.asset(
-                                    'assets/calender.svg',
-                                    fit: BoxFit.contain,
-                                    height: 5,
-                                    width: 5,
-                                  ),
+                      child: TextFormField(
+                          controller: dobteacherCtrl1,
+                          onTap: () {
+                            datePickerTeacher1();
+                          },
+                          readOnly: true,
+                          onChanged: (v){
+                            setState(() {
+                              teachererror6 = null;
+                            });
+                          },
+                          decoration: Sty().TextFormFieldOutlineStyle
+                              .copyWith(
+                              suffixIcon: Padding(
+                                padding:
+                                EdgeInsets.symmetric(vertical: Dim().d12),
+                                child: SvgPicture.asset(
+                                  'assets/calender.svg',
+                                  fit: BoxFit.contain,
+                                  height: 5,
+                                  width: 5,
                                 ),
-                                hintText: 'To Date',
-                                hintStyle: Sty().mediumText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: Dim().d16,
-                                ))),
-                      ),
+                              ),
+                              hintText: 'To Date',
+                              hintStyle: Sty().mediumText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300,
+                                fontSize: Dim().d16,
+                              ))),
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  teachererror5 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror5 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                        child: Text('${teachererror5}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                  teachererror6 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror6 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                        child: Text('${teachererror6}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                ],
               ),
               SizedBox(
                 height: Dim().d16,
@@ -740,46 +762,45 @@ class _GetReportsState extends State<GetReports> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: teacherStream,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Stream',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: streamList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (t) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                teacherStream = t.toString();
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: teacherStream,
+                          isExpanded: true,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          hint: Text(
+                            'Select Stream',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: streamList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (t) {
+                            setState(() {
+                              teacherStream = t.toString();
+                              int position = streamList.indexWhere((e) => e['name'].toString() == teacherStream.toString());
+                              print(position);
+                              stream_id = streamList[position]['id'];
+                              classList = streamList[position]['years'];
+                              teacherSemester = null;
+                              teachererror1 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -787,51 +808,80 @@ class _GetReportsState extends State<GetReports> {
                       width: Dim().d12,
                     ),
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: teacherSemester,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Semester',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: semesterList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (t) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                teacherSemester = t.toString();
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: teacherClass,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Class',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: classList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['year'],
+                              child: Text(
+                                string['year'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (c) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              teacherClass = c.toString();
+                              int position = classList.indexWhere((e) => e['year'].toString() == teacherClass.toString());
+                              year_id = classList[position]['id'];
+                              semesterList = classList[position]['semesters'];
+                              divisionList = classList[position]['divisions'];
+                              teacherSemester = null;
+                              teacherDivision = null;
+                              teachererror3 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  teachererror2 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror2 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                        child: Text('${teachererror2}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                  teachererror1 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror1 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                        child: Text('${teachererror1}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                ],
               ),
               SizedBox(
                 height: Dim().d16,
@@ -841,46 +891,45 @@ class _GetReportsState extends State<GetReports> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: teacherClass,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Class',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: classList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['year'],
-                                child: Text(
-                                  string['year'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (c) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                teacherClass = c.toString();
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: teacherSemester,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Semester',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: semesterList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (t) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              teacherSemester = t.toString();
+                              int position = semesterList.indexWhere((e) =>
+                              e['name'].toString() ==
+                                  teacherSemester.toString());
+                              semester_id = semesterList[position]['id'];
+                              teachererror2 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -888,51 +937,78 @@ class _GetReportsState extends State<GetReports> {
                       width: Dim().d12,
                     ),
                     Expanded(
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Clr().textcolor)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: teacherDivision,
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Division',
-                              style: Sty().smallText.copyWith(
-                                  color: Clr().hintColor,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 2,
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 28,
-                              color: Clr().textcolor,
-                            ),
-                            style: TextStyle(color: Color(0xff787882)),
-                            items: divisionList.map((string) {
-                              return DropdownMenuItem(
-                                value: string['name'],
-                                child: Text(
-                                  string['name'],
-                                  style: TextStyle(
-                                      color: Clr().textcolor, fontSize: 14),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (d) {
-                              // STM().redirect2page(ctx, Home());
-                              setState(() {
-                                teacherDivision = d.toString();
-                              });
-                            },
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField(
+                          value: teacherDivision,
+                          decoration: Sty().TextFormFieldOutlineDarkStyle,
+                          isExpanded: true,
+                          hint: Text(
+                            'Select Division',
+                            style: Sty().smallText.copyWith(
+                                color: Clr().hintColor,
+                                fontWeight: FontWeight.w300),
+                            maxLines: 2,
                           ),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 28,
+                            color: Clr().textcolor,
+                          ),
+                          style: TextStyle(color: Color(0xff787882)),
+                          items: divisionList.map((string) {
+                            return DropdownMenuItem(
+                              value: string['name'],
+                              child: Text(
+                                string['name'],
+                                style: TextStyle(
+                                    color: Clr().textcolor, fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (d) {
+                            // STM().redirect2page(ctx, Home());
+                            setState(() {
+                              teacherDivision = d.toString();
+                              int position = divisionList.indexWhere((e) =>
+                              e['name'].toString() ==
+                                  teacherDivision.toString());
+                              division_id = divisionList[position]['id'];
+                              teachererror4 = null;
+                            });
+                          },
                         ),
                       ),
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  teachererror3 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror3 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                        child: Text('${teachererror3}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
+                  // error4 != null ? SizedBox(height: Dim().d16) : Container(),
+                  // error4 == null ? SizedBox.shrink() : Expanded(
+                  //   child: Padding(
+                  //       padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                  //       child: Text('${error4}',
+                  //           style: TextStyle(
+                  //             fontFamily: 'Roboto',
+                  //             letterSpacing: 0.5,
+                  //             color: Clr().errorRed,
+                  //             fontSize: 14.0,
+                  //           ))),
+                  // ),
+                ],
               ),
               SizedBox(
                 height: Dim().d28,
@@ -942,15 +1018,7 @@ class _GetReportsState extends State<GetReports> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // _showCodeDialog(ctx);
-                    // STM().redirect2page(ctx, GetReports());
-                    // if (formKey.currentState!.validate()) {
-                    //   STM().checkInternet(context, widget).then((value) {
-                    //     if (value) {
-                    //       sendOTP();
-                    //     }
-                    //   });
-                    // }
+                    _teacherValidateForm(ctx,'/teacher_report');
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Clr().textcolor,
@@ -990,18 +1058,31 @@ class _GetReportsState extends State<GetReports> {
   }
 
   /// api for student report
-  void getReport() async {
+  void getReport(type) async {
     FormData body = FormData.fromMap({
       'stream_id': stream_id,
       'semester_id': semester_id,
       'year_id': year_id,
+      'division_id': division_id,
+      'from_date': type == '/teacher_report'? dobteacherCtrl.text : dobCtrl.text,
+      'to_date': type == '/teacher_report'? dobteacherCtrl1.text : dobCtrl1.text,
     });
     var result = await STM().postWithToken(
-        ctx, Str().processing, '/student_report', body, TeacherToken,
+        ctx, Str().processing, type, body, TeacherToken,
         'teacher');
     var success = result['success'];
     if (success) {
       STM().openWeb('${result['path']}');
+      setState(() {
+        semestervalue = null;
+        streamValue = null;
+        classValue = null;
+        divisionValue = null;
+        dobCtrl1.clear();
+        dobCtrl.clear();
+        dobteacherCtrl1.clear();
+        dobteacherCtrl.clear();
+      });
     } else {
       STM().errorDialog(ctx, '${result['message']}');
     }
@@ -1009,7 +1090,7 @@ class _GetReportsState extends State<GetReports> {
 
 
   // validation funtion
-  _validateForm(ctx) async {
+  _validateForm(ctx,type) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     bool _isValid = formKey.currentState!.validate();
 
@@ -1029,14 +1110,70 @@ class _GetReportsState extends State<GetReports> {
       });
       _isValid = false;
     }
-    if (divisionValue == null) {
+    if (dobCtrl.text.isEmpty) {
       setState(() {
-        error4 = "This filed is required";
+        error5 = "This field is required";
       });
       _isValid = false;
     }
+    if (dobCtrl1.text.isEmpty) {
+      setState(() {
+        error6 = "This field is required";
+      });
+      _isValid = false;
+    }
+    // if (divisionValue == null) {
+    //   setState(() {
+    //     error4 = "This filed is required";
+    //   });
+    //   _isValid = false;
+    // }
     if (_isValid) {
-      getReport();
+      getReport(type);
+    }
+  }
+
+  // validation funtion
+  _teacherValidateForm(ctx,type) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool _isValid = formKey.currentState!.validate();
+
+    if (teacherStream == null) {
+      setState(() => teachererror1 = "This field is required");
+      _isValid = false;
+    }
+    if (teacherSemester == null) {
+      setState(() {
+        teachererror2 = "This field is required";
+      });
+      _isValid = false;
+    }
+    if (teacherClass == null) {
+      setState(() {
+        teachererror3 = "This field is required";
+      });
+      _isValid = false;
+    }
+    if (dobteacherCtrl.text.isEmpty) {
+      setState(() {
+        teachererror5 = "This field is required";
+      });
+      _isValid = false;
+    }
+    if (dobteacherCtrl1.text.isEmpty) {
+      setState(() {
+        teachererror6 = "This field is required";
+      });
+      _isValid = false;
+    }
+    // if (divisionValue == null) {
+    //   setState(() {
+    //     error4 = "This filed is required";
+    //   });
+    //   _isValid = false;
+    // }
+    if (_isValid) {
+      getReport(type);
     }
   }
 
