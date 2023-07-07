@@ -44,6 +44,9 @@ class _MyProfileState extends State<MyProfile> {
   bool ishidden = true;
   bool ishidden1 = true;
   bool again = false;
+  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController bioCtrl = TextEditingController();
+  TextEditingController qualCtrl = TextEditingController();
   TextEditingController newPassCtrl = TextEditingController();
   TextEditingController currentPassCtrl = TextEditingController();
   TextEditingController conPassCtrl = TextEditingController();
@@ -1120,7 +1123,8 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     InkWell(
                         onTap: () {
-                          AlertBox(i: 2);
+                          // AlertBox(i: 2);
+                          updateEmail();
                         },
                         child: SvgPicture.asset('assets/edit.svg')),
                   ],
@@ -1521,6 +1525,8 @@ class _MyProfileState extends State<MyProfile> {
     if (success) {
       setState(() {
         data = result['data'];
+        bioCtrl = TextEditingController(text: data['bio']);
+        qualCtrl = TextEditingController(text: data['qualification']);
         instituteData = result['student_college_details'];
       });
     }
@@ -1569,9 +1575,7 @@ class _MyProfileState extends State<MyProfile> {
 
   /// Alert dailog Teacher profile
   AlertBox({i}) {
-    TextEditingController nameCtrl = TextEditingController();
-    TextEditingController bioCtrl = TextEditingController();
-    TextEditingController qualCtrl = TextEditingController();
+
     return showDialog(
         context: context,
         builder: (index) {
@@ -1872,7 +1876,8 @@ class _MyProfileState extends State<MyProfile> {
                 SizedBox(
                   height: Dim().d12,
                 ),
-                Row(
+                Row(mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Stream :',
@@ -1885,12 +1890,14 @@ class _MyProfileState extends State<MyProfile> {
                     SizedBox(
                       width: Dim().d4,
                     ),
-                    Text(
-                      '  ${details['stream_name'].toString()}',
-                      style: Sty().largeText.copyWith(
-                          color: Clr().textcolor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.0),
+                    Expanded(
+                      child: Text(
+                        '  ${details['stream_name'].toString()}',
+                        style: Sty().largeText.copyWith(
+                            color: Clr().textcolor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14.0),
+                      ),
                     ),
                   ],
                 ),
@@ -2636,6 +2643,297 @@ class _MyProfileState extends State<MyProfile> {
   //   ).show();
   // }
 
+  /// update Email Layout
+  void updateEmail() {
+    bool otpsend = false;
+    TextEditingController updateUserMobileNumberController =
+    TextEditingController();
+    TextEditingController updateUserOtpController = TextEditingController();
+    AwesomeDialog(
+      dialogType: DialogType.noHeader,
+      context: ctx,
+      body: StatefulBuilder(
+        builder: (context, setState) => Padding(
+          padding: EdgeInsets.fromLTRB(
+            Dim().d12,
+            Dim().d4,
+            Dim().d12,
+            Dim().d12,
+          ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                    visible: !otpsend,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "New Email ID",
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: updateUserMobileNumberController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field is required';
+                              }
+                              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                                return "Please enter a valid email address";
+                              }
+                              return null;
+                            },
+                            decoration:
+                            Sty().TextFormFieldOutlineStyle.copyWith(
+                              counterText: "",
+                              hintText: "Enter Email ID",
+                              prefixIconConstraints: BoxConstraints(
+                                  minWidth: 50, minHeight: 0),
+                              suffixIconConstraints: BoxConstraints(
+                                  minWidth: 10, minHeight: 2),
+                              border: InputBorder.none,
+                              // prefixIcon: Icon(
+                              //   Icons.phone,
+                              //   size: iconSizeNormal(),
+                              //   color: primary(),
+                              // ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                Visibility(
+                    visible: otpsend,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "One Time Password",
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: TextFormField(
+                            controller: updateUserOtpController,
+                            keyboardType: TextInputType.number,
+                            maxLength: 4,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              hintText: "Enter OTP",
+                              prefixIconConstraints: const BoxConstraints(
+                                  minWidth: 50, minHeight: 0),
+                              suffixIconConstraints: const BoxConstraints(
+                                  minWidth: 10, minHeight: 2),
+                              border: InputBorder.none,
+                              // prefixIcon: Icon(
+                              //   Icons.lock,
+                              //   color: Color(0xff2C2C2C),
+                              // ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Visibility(
+                                  visible: !again,
+                                  child: TweenAnimationBuilder<Duration>(
+                                      duration: const Duration(seconds: 60),
+                                      tween: Tween(
+                                          begin: const Duration(seconds: 60),
+                                          end: Duration.zero),
+                                      onEnd: () {
+                                        // ignore: avoid_debugPrint
+                                        // debugPrint('Timer ended');
+                                        setState(() {
+                                          again = true;
+                                        });
+                                      },
+                                      builder: (BuildContext context,
+                                          Duration value, Widget? child) {
+                                        final minutes = value.inMinutes;
+                                        final seconds = value.inSeconds % 60;
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Text(
+                                            "Re-send code in $minutes:$seconds",
+                                            textAlign: TextAlign.center,
+                                            style: Sty().mediumText,
+                                          ),
+                                        );
+                                      }),
+                                ),
+                                // Visibility(
+                                //   visible: !isResend,
+                                //   child: Text("I didn't receive a code! ${(  sTime  )}",
+                                //       style: Sty().mediumText),
+                                // ),
+                                Visibility(
+                                  visible: again,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        again = false;
+                                      });
+                                      resendOTP(updateUserMobileNumberController.text);
+                                      // STM.checkInternet().then((value) {
+                                      //   if (value) {
+                                      //     sendOTP();
+                                      //   } else {
+                                      //     STM.internetAlert(ctx, widget);
+                                      //   }
+                                      // });
+                                    },
+                                    child: Text(
+                                      'Resend OTP',
+                                      style: Sty().mediumText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Visibility(
+                      visible: !otpsend,
+                      child: Expanded(
+                        child: InkWell(
+                          onTap: () async {
+                            // API UPDATE START
+                            if (_formKey.currentState!.validate()) {
+                              SharedPreferences sp =
+                              await SharedPreferences.getInstance();
+                              FormData body = FormData.fromMap({
+                                'email': updateUserMobileNumberController.text,
+                              });
+                              var result = await STM().postWithToken(
+                                  ctx, Str().sendingOtp, 'update_email', body,TeacherToken ?? StudentToken,
+                                  TeacherToken != null ? 'teacher/' : 'student/');
+                              var success = result['success'];
+                              var message = result['message'];
+                              if (success) {
+                                setState(() {
+                                  otpsend = true;
+                                });
+                              } else {
+                                STM().errorDialog(context, message);
+                              }
+                            }
+                            // API UPDATE END
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Clr().primaryColor,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Send OTP",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: otpsend,
+                      child: Expanded(
+                        child: InkWell(
+                            onTap: () async{
+                              // API UPDATE START
+                                otpsend = true;
+                                SharedPreferences sp =
+                                await SharedPreferences.getInstance();
+                                FormData body = FormData.fromMap({
+                                  'otp': updateUserOtpController.text,
+                                  'email':
+                                  updateUserMobileNumberController.text,
+                                });
+                                var result = await STM().postWithToken(
+                                  ctx,
+                                  Str().updating,
+                                  'verify_email_otp',
+                                  body,
+                                    TeacherToken ?? StudentToken,
+                                    TeacherToken != null ? 'teacher/' : 'student/'
+                                );
+                                var success = result['success'];
+                                var message = result['message'];
+                                if (success) {
+                                  getProfile();
+                                  STM().displayToast(message);
+                                  Navigator.pop(ctx);
+                                } else {
+                                  STM().errorDialog(context, message);
+                                }
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Clr().primaryColor,
+                                ),
+                                child: const Center(
+                                    child: Text(
+                                      "Update",
+                                      style: TextStyle(color: Colors.white),
+                                    )))),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Clr().primaryColor,
+                              ),
+                              child: const Center(
+                                  child: Text("Cancel",
+                                      style: TextStyle(color: Colors.white))))),
+                    ),
+                  ],
+                ),
+              ]),
+        ),
+      ),
+    ).show();
+  }
+
+
+
   /// update password api for Teacher
   void UpdatePassword() async {
     FormData body = FormData.fromMap({
@@ -2686,4 +2984,23 @@ class _MyProfileState extends State<MyProfile> {
       STM().errorDialog(ctx, message);
     }
   }
+
+  void resendOTP(txt) async {
+    //Input
+    FormData body = FormData.fromMap({
+      'email': txt,
+      'type': TeacherToken != null ? 'teacher' : 'student',
+    });
+    //Output
+    var result = await STM().post(ctx, Str().verifying, "resent_otp", body, '');
+    // if (!mounted) return;
+    var message = result['message'];
+    var success = result['success'];
+    if (success) {
+      STM().displayToast(message);
+    } else {
+      STM().errorDialog(ctx, message);
+    }
+  }
+
 }

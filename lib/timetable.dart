@@ -711,52 +711,49 @@ class _TimeTableState extends State<TimeTable> {
                     )
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        width: Dim().d220,
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Subject :",
-                            style: Sty().smallText.copyWith(
-                                  fontFamily: '',
-                                  fontWeight: FontWeight.w300,
-                                  color: status == "0"
-                                      ? Clr().textcolor
-                                      : status == "1"
-                                          ? Clr().textGoldenColor
-                                          : Color(0xff32334D),
-                                  // color: Color(0xff2D2D2D),
-                                ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    ' ${studentlist['subject']['name'].toString()}',
-                                style: Sty().smallText.copyWith(
-                                    color: status == "0"
-                                        ? Clr().black
-                                        : status == "2"
-                                            ? Color(0xff111233)
-                                            : Color(0xffFCEBE3),
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: '',
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
+                SizedBox(
+                  width: Dim().d300,
+                  child: RichText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    text: TextSpan(
+                      text: "Subject :",
+                      style: Sty().smallText.copyWith(
+                        fontFamily: '',
+                        fontWeight: FontWeight.w300,
+                        color: status == "0"
+                            ? Clr().textcolor
+                            : status == "1"
+                            ? Clr().textGoldenColor
+                            : Color(0xff32334D),
+                        // color: Color(0xff2D2D2D),
                       ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text:
+                          ' ${studentlist['subject']['name'].toString()}',
+                          style: Sty().smallText.copyWith(
+                              color: status == "0"
+                                  ? Clr().black
+                                  : status == "2"
+                                  ? Color(0xff111233)
+                                  : Color(0xffFCEBE3),
+                              fontWeight: FontWeight.w400,
+                              fontFamily: '',
+                              fontSize: 14),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
                 SizedBox(
                   height: Dim().d12,
                 ),
                 SizedBox(
-                  width: Dim().d220,
+                  width: Dim().d300,
                   child: RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                       text: "Teacher :",
                       style: Sty().smallText.copyWith(
@@ -790,8 +787,10 @@ class _TimeTableState extends State<TimeTable> {
                   height: Dim().d12,
                 ),
                 SizedBox(
-                  width: Dim().d220,
+                  width: Dim().d300,
                   child: RichText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     text: TextSpan(
                       text: "Class Room :",
                       style: Sty().smallText.copyWith(
@@ -861,33 +860,37 @@ class _TimeTableState extends State<TimeTable> {
                         ),
                       ),
                     ),
-                    if(now == studentlist['date'])
-                    studentlist['status'] == "1" ? Container() :
-                    studentlist['attendance_status'] ? Container() : SizedBox(
-                      height: Dim().d32,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              // backgroundColor: Clr().accentColor,
-                              backgroundColor: Color(0xfffcebe3),
-                              shape: RoundedRectangleBorder(
-                                // side: BorderSide(color: Color(0xfff4f4f5)),
-                                  borderRadius:
-                                  BorderRadius.circular(5))),
-                          onPressed: () {
-                            codeCtrl.clear();
-                            addAttendance(studentid, studentlist['id']);
-                          },
-                          child: Text(
-                            'Enter Code',
-                            style: Sty().largeText.copyWith(
-                                color: studentlist['status'] == "0"
-                                    ? Clr().textcolor
-                                    : Clr().textGoldenColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
-                          )),
-                    ),
+                    if (now == studentlist['date'])
+                      studentlist['status'] == "1"
+                          ? Container()
+                          : studentlist['attendance_status']
+                              ? Container()
+                              : SizedBox(
+                                  height: Dim().d32,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          // backgroundColor: Clr().accentColor,
+                                          backgroundColor: Color(0xfffcebe3),
+                                          shape: RoundedRectangleBorder(
+                                              // side: BorderSide(color: Color(0xfff4f4f5)),
+                                              borderRadius:
+                                                  BorderRadius.circular(5))),
+                                      onPressed: () {
+                                        codeCtrl.clear();
+                                        addAttendance(
+                                            studentid, studentlist['id']);
+                                      },
+                                      child: Text(
+                                        'Enter Code',
+                                        style: Sty().largeText.copyWith(
+                                            color: studentlist['status'] == "0"
+                                                ? Clr().textcolor
+                                                : Clr().textGoldenColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      )),
+                                ),
                   ],
                 ),
                 status == "0"
@@ -936,81 +939,83 @@ class _TimeTableState extends State<TimeTable> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: Dim().d180,
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Stream :",
-                          style: Sty().smallText.copyWith(
-                                fontFamily: '',
-                                fontWeight: FontWeight.w300,
-                                color: status == "0"
-                                    ? Clr().textcolor
-                                    : Clr().textGoldenColor,
-                                // color: Color(0xff2D2D2D),
-                              ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text:
-                                  ' ${teacherlist['stream']['name'].toString()}',
-                              style: Sty().smallText.copyWith(
-                                  color: status == "0"
-                                      ? Clr().black
-                                      : Color(0xffFCEBE3),
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: '',
-                                  fontSize: 14),
-                            ),
-                          ],
+                  Text(
+                    '${teacherlist['date'].toString()}',
+                    // timetableList[index]['date'],
+                    style: Sty().microText.copyWith(
+                          color: status == "0"
+                              ? Clr().black
+                              : Clr().textGoldenColor,
+                          fontFamily: '',
+                          fontWeight: FontWeight.w300,
+                          // color: Color(0xff2D2D2D),
                         ),
+                  ),
+                  SizedBox(
+                    width: Dim().d12,
+                  ),
+                  status == "0"
+                      ? InkWell(
+                          onTap: () {
+                            STM().canceldialog(
+                                context: ctx,
+                                funtion: () {
+                                  cancelLecture(id: teacherlist['id']);
+                                  STM().back2Previous(ctx);
+                                },
+                                message:
+                                    'Are you sure want to cancel lecture?');
+                          },
+                          child: SvgPicture.asset('assets/cancel.svg'))
+                      : Container()
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: Dim().d300,
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: "Stream :",
+                        style: Sty().smallText.copyWith(
+                              fontFamily: '',
+                              fontWeight: FontWeight.w300,
+                              color: status == "0"
+                                  ? Clr().textcolor
+                                  : Clr().textGoldenColor,
+                              // color: Color(0xff2D2D2D),
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ' ${teacherlist['stream']['name'].toString()}',
+                            style: Sty().smallText.copyWith(
+                                color: status == "0"
+                                    ? Clr().black
+                                    : Color(0xffFCEBE3),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: '',
+                                fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        '${teacherlist['date'].toString()}',
-                        // timetableList[index]['date'],
-                        style: Sty().microText.copyWith(
-                              color: status == "0"
-                                  ? Clr().black
-                                  : Clr().textGoldenColor,
-                              fontFamily: '',
-                              fontWeight: FontWeight.w300,
-                              // color: Color(0xff2D2D2D),
-                            ),
-                      ),
-                      SizedBox(
-                        width: Dim().d12,
-                      ),
-                      status == "0"
-                          ? InkWell(
-                              onTap: () {
-                                STM().canceldialog(
-                                    context: ctx,
-                                    funtion: () {
-                                      cancelLecture(id: teacherlist['id']);
-                                      STM().back2Previous(ctx);
-                                    },
-                                    message:
-                                        'Are you sure want to cancel lecture?');
-                              },
-                              child: SvgPicture.asset('assets/cancel.svg'))
-                          : Container()
-                    ],
-                  )
                 ],
               ),
               SizedBox(
                 height: Dim().d12,
               ),
               SizedBox(
-                width: Dim().d220,
+                width: Dim().d300,
                 child: RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     text: "Class :",
                     style: Sty().smallText.copyWith(
@@ -1044,8 +1049,10 @@ class _TimeTableState extends State<TimeTable> {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      width: Dim().d220,
+                      width: Dim().d300,
                       child: RichText(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                           text: "Subject :",
                           style: Sty().smallText.copyWith(
@@ -1079,8 +1086,10 @@ class _TimeTableState extends State<TimeTable> {
                 height: Dim().d12,
               ),
               SizedBox(
-                width: Dim().d220,
+                width: Dim().d300,
                 child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   text: TextSpan(
                     text: "Class Room :",
                     style: Sty().smallText.copyWith(
@@ -1224,10 +1233,18 @@ class _TimeTableState extends State<TimeTable> {
                                               borderRadius:
                                                   BorderRadius.circular(5))),
                                       onPressed: () {
-                                        getTimeTable(
-                                            value: teacherlist['id'],
-                                            apiname: 'inactive_lecture',
-                                            type: 'post');
+                                        STM().canceldialog(
+                                            context: ctx,
+                                            funtion: () {
+                                              getTimeTable(
+                                                  value: teacherlist['id'],
+                                                  apiname: 'inactive_lecture',
+                                                  type: 'post');
+                                              STM().back2Previous(ctx);
+                                            },
+                                            message:
+                                            'Are you sure want to inactive code?');
+
                                       },
                                       child: Text(
                                         'Inactive',
@@ -1811,7 +1828,7 @@ class _TimeTableState extends State<TimeTable> {
 
   // getLocation
   getLocation(timetableid) async {
-    dialog = STM.loadingDialog(ctx, 'add Attendance');
+    dialog = STM.loadingDialog(ctx, 'Adding Attendance');
     dialog!.show();
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {

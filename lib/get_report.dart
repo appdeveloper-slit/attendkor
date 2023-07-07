@@ -237,7 +237,7 @@ class _GetReportsState extends State<GetReports> {
                           isExpanded: true,
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           hint: Text(
-                            'Select Stream',
+                            'Stream',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -283,7 +283,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Class',
+                            'Class',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -366,7 +366,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Semester',
+                            'Semester',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -412,7 +412,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Division',
+                            'Division',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -768,7 +768,7 @@ class _GetReportsState extends State<GetReports> {
                           isExpanded: true,
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           hint: Text(
-                            'Select Stream',
+                            'Stream',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -814,7 +814,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Class',
+                            'Class',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -897,7 +897,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Semester',
+                            'Semester',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),
@@ -943,7 +943,7 @@ class _GetReportsState extends State<GetReports> {
                           decoration: Sty().TextFormFieldOutlineDarkStyle,
                           isExpanded: true,
                           hint: Text(
-                            'Select Division',
+                            'Division',
                             style: Sty().smallText.copyWith(
                                 color: Clr().hintColor,
                                 fontWeight: FontWeight.w300),

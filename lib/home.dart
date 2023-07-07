@@ -15,10 +15,10 @@ import 'values/colors.dart';
 import 'values/dimens.dart';
 import 'values/styles.dart';
 
-
 class Home extends StatefulWidget {
   final bool b;
-  const Home({super.key,this.b = false});
+
+  const Home({super.key, this.b = false});
 
   @override
   State<Home> createState() => _HomeState();
@@ -63,9 +63,25 @@ class _HomeState extends State<Home> {
           stickyAuth: true,
           biometricOnly: true,
         ),
-      ).then((value) async {
+      )
+          .then((value) async {
         setState(() {
-          value ? null : SystemNavigator.pop();
+          value
+              ? null
+              : AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.info,
+                  dismissOnBackKeyPress: false,
+                  dismissOnTouchOutside: false,
+                  title: 'AttendCore is lock',
+                  desc:
+                      'Authentication is required to access the attendcore app',
+                  btnOkText: 'Unlock now',
+                  btnOkColor: Clr().primaryColor,
+                  btnOkOnPress: () {
+                    _authenticateWithBiometrics();
+                  },
+                ).show();
         });
         return false;
       });
@@ -89,7 +105,7 @@ class _HomeState extends State<Home> {
       TeacherToken = sp.getString('teacherToken') ?? null;
       StudentToken = sp.getString('studenttoken') ?? null;
     });
-    if(widget.b && StudentToken !=null){
+    if (widget.b && StudentToken != null) {
       _authenticateWithBiometrics();
     }
     // STM().checkInternet(context, widget).then((value) {
@@ -102,14 +118,12 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     getSession();
     super.initState();
-    auth.isDeviceSupported().then(
-          (bool isSupported) {
-            setState(() {
-              _supportState = isSupported
-                  ? _SupportState.supported
-                  : _SupportState.unsupported;
-            });
-          });
+    auth.isDeviceSupported().then((bool isSupported) {
+      setState(() {
+        _supportState =
+            isSupported ? _SupportState.supported : _SupportState.unsupported;
+      });
+    });
   }
 
   @override
@@ -353,21 +367,19 @@ class _HomeState extends State<Home> {
 //     ..show();
 // }
 
-
-  // Session() async {
-  //   SharedPreferences sp = await SharedPreferences.getInstance();
-  //   if (_supportState == _SupportState.supported) {
-  //     if (StudentToken != null) {
-  //       checkFingerPrint ? null : _authenticateWithBiometrics();
-  //       print('${checkFingerPrint}');
-  //     }
-  //   } else {
-  //     sp.clear();
-  //     STM().finishAffinity(ctx, SignIn());
-  //   }
-  // }
+// Session() async {
+//   SharedPreferences sp = await SharedPreferences.getInstance();
+//   if (_supportState == _SupportState.supported) {
+//     if (StudentToken != null) {
+//       checkFingerPrint ? null : _authenticateWithBiometrics();
+//       print('${checkFingerPrint}');
+//     }
+//   } else {
+//     sp.clear();
+//     STM().finishAffinity(ctx, SignIn());
+//   }
+// }
 }
-
 
 enum _SupportState {
   unknown,

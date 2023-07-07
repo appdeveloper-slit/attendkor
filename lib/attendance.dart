@@ -120,138 +120,163 @@ class _AttendanceState extends State<Attendance> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            RichText(
-                              text: TextSpan(
-                                text: "Stream :",
-                                style: Sty().smallText.copyWith(
-                                      fontFamily: '',
-                                      fontWeight: FontWeight.w300,
-                                      color: Color(0xffca937c),
-                                      // color: Color(0xff2D2D2D),
-                                    ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: ' ${lectureDetails['stream']['name']}',
-                                    style: Sty().smallText.copyWith(
-                                        color: Color(0xfffcebe3),
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: '',
-                                        fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            ),
                             Text(
                               '${lectureDetails['date']}',
                               // timetableList[index]['date'],
                               style: Sty().microText.copyWith(
+                                fontFamily: '',
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xffca937c),
+                                // color: Color(0xff2D2D2D),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          width: Dim().d300,
+                          child: RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: "Stream :",
+                              style: Sty().smallText.copyWith(
+                                fontFamily: '',
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xffca937c),
+                                // color: Color(0xff2D2D2D),
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' ${lectureDetails['stream']['name']}',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: '',
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dim().d12,
+                        ),
+                        SizedBox(
+                          width: Dim().d300,
+                          child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(
+                              text: "Class :",
+                              style: Sty().smallText.copyWith(
                                     fontFamily: '',
                                     fontWeight: FontWeight.w300,
                                     color: Color(0xffca937c),
                                     // color: Color(0xff2D2D2D),
                                   ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: Dim().d12,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Class :",
-                            style: Sty().smallText.copyWith(
-                                  fontFamily: '',
-                                  fontWeight: FontWeight.w300,
-                                  color: Color(0xffca937c),
-                                  // color: Color(0xff2D2D2D),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${lectureDetails['year']['year'].toString()} ${(lectureDetails['division']['name'].toString())}',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: '',
+                                      fontSize: 14),
                                 ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    ' ${lectureDetails['year']['year'].toString()} ${(lectureDetails['division']['name'].toString())}',
-                                style: Sty().smallText.copyWith(
-                                    color: Color(0xfffcebe3),
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: '',
-                                    fontSize: 14),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: Dim().d12,
                         ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Subject :",
-                            style: Sty().smallText.copyWith(
-                                  fontFamily: '',
-                                  fontWeight: FontWeight.w300,
-                                  color: Color(0xffca937c),
-                                  // color: Color(0xff2D2D2D),
-                                ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: ' ${lectureDetails['subject']['name'].toString()}',
-                                style: Sty().smallText.copyWith(
-                                    color: Color(0xfffcebe3),
-                                    fontWeight: FontWeight.w400,
+                        SizedBox(
+                          width: Dim().d300,
+                          child: RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: "Subject :",
+                              style: Sty().smallText.copyWith(
                                     fontFamily: '',
-                                    fontSize: 14),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xffca937c),
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' ${lectureDetails['subject']['name'].toString()}',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: '',
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: Dim().d12,
                         ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Class Room :",
-                            style: Sty().smallText.copyWith(
-                                  fontFamily: '',
-                                  fontWeight: FontWeight.w300,
-                                  color: Color(0xffca937c),
-                                  // color: Color(0xff2D2D2D),
-                                ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    ' ${lectureDetails['classroom']['name'].toString()}',
-                                style: Sty().smallText.copyWith(
-                                    color: Color(0xfffcebe3),
-                                    fontWeight: FontWeight.w400,
+                        SizedBox(
+                          width: Dim().d300,
+                          child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(
+                              text: "Class Room :",
+                              style: Sty().smallText.copyWith(
                                     fontFamily: '',
-                                    fontSize: 14),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xffca937c),
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${lectureDetails['classroom']['name'].toString()}',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: '',
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: Dim().d12,
                         ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Time : ",
-                            style: Sty().smallText.copyWith(
-                                  fontFamily: '',
-                                  fontWeight: FontWeight.w300,
-                                  color: Color(0xffca937c),
-                                  // color: Color(0xff2D2D2D),
-                                ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    ' ${lectureDetails['from_time'].toString()} to ${lectureDetails['to_time'].toString()}',
-                                style: Sty().smallText.copyWith(
-                                    color: Color(0xfffcebe3),
-                                    fontWeight: FontWeight.w400,
+                        SizedBox(
+                          width: Dim().d300,
+                          child: RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: "Time : ",
+                              style: Sty().smallText.copyWith(
                                     fontFamily: '',
-                                    fontSize: 14),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xffca937c),
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${lectureDetails['from_time'].toString()} to ${lectureDetails['to_time'].toString()}',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xfffcebe3),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: '',
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

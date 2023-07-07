@@ -184,7 +184,7 @@ class STM {
 
   static AwesomeDialog loadingDialog(BuildContext context, String title) {
     AwesomeDialog dialog = AwesomeDialog(
-      width: 250,
+      width: 300,
       context: context,
       dismissOnBackKeyPress: true,
       dismissOnTouchOutside: false,
@@ -214,6 +214,7 @@ class STM {
               ),
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: Sty().mediumBoldText,
               ),
             ],

@@ -94,88 +94,90 @@ class _NoticeBoardState extends State<NoticeBoard> {
                       physics: BouncingScrollPhysics(),
                       itemCount: noticeList.length,
                       itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            noticeList[index]['image'] != null
-                                ? STM().redirect2page(ctx,
-                                    ZoomingPic(img: noticeList[index]['image']))
-                                : null;
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 16),
-                            decoration: BoxDecoration(
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Clr().white,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Clr().borderColor),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Clr().borderColor,
+                                spreadRadius: 0.5,
+                                blurRadius: 2,
+                                offset:
+                                    Offset(4, 2), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              elevation: 0,
                               color: Clr().white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Clr().borderColor),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Clr().borderColor,
-                                  spreadRadius: 0.5,
-                                  blurRadius: 2,
-                                  offset: Offset(
-                                      4, 2), // changes position of shadow
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: Dim().d4,
+                                  vertical: Dim().d4,
                                 ),
-                              ],
-                            ),
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                elevation: 0,
-                                color: Clr().white,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Dim().d4,
-                                    vertical: Dim().d4,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      noticeList[index]['image'] == ""
-                                          ? Container()
-                                          : STM().imageDisplay(
-                                              list: noticeList[index]['image'],
-                                              url: noticeList[index]['image']),
-                                      SizedBox(
-                                        height: Dim().d8,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      'assets/pin.png',
+                                      height: 22,
+                                      width: 22,
+                                    ),
+                                    SizedBox(width: Dim().d4),
+                                    Expanded(
+                                      child: Column(
                                         children: [
-                                          Image.asset(
-                                            'assets/pin.png',
-                                            height: 22,
-                                            width: 22,
+                                          noticeList[index]['image'] == ""
+                                              ? Container()
+                                              : InkWell(
+                                                  onTap: () {
+                                                    noticeList[index]['image'] != null
+                                                        ? STM().redirect2page(
+                                                            ctx,
+                                                            ZoomingPic(
+                                                                img: noticeList[index]
+                                                                    ['image']))
+                                                        : null;
+                                                  },
+                                                  child: Container(
+                                                    child: STM().imageDisplay(
+                                                        list: noticeList[index]
+                                                            ['image'],
+                                                        url: noticeList[index]
+                                                            ['image']),
+                                                  )),
+                                          SizedBox(
+                                            height: Dim().d8,
+                                          ),
+                                          Text(
+                                            '${noticeList[index]['notice'].toString()}',
+                                            style: Sty().smallText.copyWith(
+                                                height: 1.3,
+                                                fontWeight: FontWeight.w600),
                                           ),
                                           SizedBox(
-                                            width: Dim().d4,
+                                            height: Dim().d4,
                                           ),
-                                          Expanded(
+                                          Align(
+                                            alignment: Alignment.centerRight,
                                             child: Text(
-                                              '${noticeList[index]['notice'].toString()}',
-                                              style: Sty().smallText.copyWith(
-                                                  height: 1.3,
-                                                  fontWeight: FontWeight.w600),
+                                              '${DateFormat('d MMM yyyy').format(DateTime.parse(noticeList[index]['created_at'].toString()))}',
+                                              style: Sty().microText.copyWith(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontFamily: '',
+                                                  ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        height: Dim().d4,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          '${DateFormat('d MMM yyyy').format(DateTime.parse(noticeList[index]['created_at'].toString()))}',
-                                          style: Sty().microText.copyWith(
-                                                fontWeight: FontWeight.w300,
-                                                fontFamily: '',
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
+                                    ),
+                                  ],
+                                ),
+                              )),
                         );
                       },
                     ),
