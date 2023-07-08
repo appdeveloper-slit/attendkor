@@ -112,8 +112,8 @@ class _ResetPassword1State extends State<ResetPassword1> with TickerProviderStat
                               child: InkWell(
                                 child: Icon(
                                   isHidden
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
                                   color: Clr().textcolor,
                                 ),
                                 onTap: () {
@@ -158,8 +158,8 @@ class _ResetPassword1State extends State<ResetPassword1> with TickerProviderStat
                               child: InkWell(
                                 child: Icon(
                                   isHidden2
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
                                   color: Clr().textcolor,
                                 ),
                                 onTap: () {

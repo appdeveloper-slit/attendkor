@@ -116,41 +116,45 @@ class _FreeLecturesState extends State<FreeLectures> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Row(mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "Stream :",
-                                    style: Sty().smallText.copyWith(
-                                          fontFamily: '',
-                                          fontWeight: FontWeight.w300,
-                                          color: color1,
-                                          // color: Color(0xff2D2D2D),
-                                        ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: ' ${timetableList[index]['stream']['name'].toString()}',
-                                        style: Sty().smallText.copyWith(
-                                            color: color2,
-                                            fontWeight: FontWeight.w400,
-                                            fontFamily: '',
-                                            fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 Text(
                                   '${timetableList[index]['date'].toString()}',
                                   // timetableList[index]['date'],
                                   style: Sty().microText.copyWith(
+                                    fontFamily: '',
+                                    fontWeight: FontWeight.w300,
+                                    color: color1,
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: Dim().d300,
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: "Stream :",
+                                  style: Sty().smallText.copyWith(
                                         fontFamily: '',
                                         fontWeight: FontWeight.w300,
                                         color: color1,
                                         // color: Color(0xff2D2D2D),
                                       ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: ' ${timetableList[index]['stream']['name'].toString()}',
+                                      style: Sty().smallText.copyWith(
+                                          color: color2,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: '',
+                                          fontSize: 14),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                             SizedBox(
                               height: Dim().d12,

@@ -135,7 +135,7 @@ class _GetReportsState extends State<GetReports> {
 
   int? stream_id,
       semester_id,
-      year_id,division_id;
+      year_id,division_id,subject_id;
 
 
   String? classValue, teacherClass;
@@ -144,10 +144,11 @@ class _GetReportsState extends State<GetReports> {
   String? semestervalue, teacherSemester;
   List<dynamic> semesterList = [];
 
-  String? divisionValue, teacherDivision;
+  String? divisionValue, teacherDivision,teachersubject;
   String? error1, error2, error3, error4,error5,error6;
-  String? teachererror1, teachererror2, teachererror3, teachererror4,teachererror5,teachererror6;
+  String? teachererror1, teachererror2, teachererror3, teachererror4,teachererror5,teachererror6,teachererror7;
   List<dynamic> divisionList = [];
+  List<dynamic> subjectList = [];
 
 
   getSession() async {
@@ -928,6 +929,8 @@ class _GetReportsState extends State<GetReports> {
                                   teacherSemester.toString());
                               semester_id = semesterList[position]['id'];
                               teachererror2 = null;
+                              teachersubject = null;
+                              subjectList = semesterList[position]['subjects'];
                             });
                           },
                         ),
@@ -978,7 +981,7 @@ class _GetReportsState extends State<GetReports> {
                           },
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -996,11 +999,11 @@ class _GetReportsState extends State<GetReports> {
                               fontSize: 14.0,
                             ))),
                   ),
-                  // error4 != null ? SizedBox(height: Dim().d16) : Container(),
-                  // error4 == null ? SizedBox.shrink() : Expanded(
+                  // teachererror7 != null ? SizedBox(height: Dim().d16) : Container(),
+                  // teachererror7 == null ? SizedBox.shrink() : Expanded(
                   //   child: Padding(
                   //       padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-                  //       child: Text('${error4}',
+                  //       child: Text('${teachererror7}',
                   //           style: TextStyle(
                   //             fontFamily: 'Roboto',
                   //             letterSpacing: 0.5,
@@ -1008,6 +1011,83 @@ class _GetReportsState extends State<GetReports> {
                   //             fontSize: 14.0,
                   //           ))),
                   // ),
+                ],
+              ),
+              SizedBox(
+                height: Dim().d12,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButtonFormField(
+                    value: teachersubject,
+                    decoration: Sty().TextFormFieldOutlineDarkStyle,
+                    isExpanded: true,
+                    hint: Text(
+                      'Subject',
+                      style: Sty().smallText.copyWith(
+                          color: Clr().hintColor,
+                          fontWeight: FontWeight.w300),
+                      maxLines: 2,
+                    ),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 28,
+                      color: Clr().textcolor,
+                    ),
+                    style: TextStyle(color: Color(0xff787882)),
+                    items: subjectList.map((string) {
+                      return DropdownMenuItem(
+                        value: string['name'],
+                        child: Text(
+                          string['name'],
+                          style: TextStyle(
+                              color: Clr().textcolor, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (d) {
+                      // STM().redirect2page(ctx, Home());
+                      setState(() {
+                        teachersubject = d.toString();
+                        teachererror7 = null;
+                        int position = subjectList.indexWhere((e) =>
+                        e['name'].toString() ==
+                            teachersubject.toString());
+                        subject_id = subjectList[position]['id'];
+
+
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  // teachererror3 != null ? SizedBox(height: Dim().d16) : Container(),
+                  // teachererror3 == null ? SizedBox.shrink() : Expanded(
+                  //   child: Padding(
+                  //       padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                  //       child: Text('${teachererror3}',
+                  //           style: TextStyle(
+                  //             fontFamily: 'Roboto',
+                  //             letterSpacing: 0.5,
+                  //             color: Clr().errorRed,
+                  //             fontSize: 14.0,
+                  //           ))),
+                  // ),
+                  teachererror7 != null ? SizedBox(height: Dim().d16) : Container(),
+                  teachererror7 == null ? SizedBox.shrink() : Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                        child: Text('${teachererror7}',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              letterSpacing: 0.5,
+                              color: Clr().errorRed,
+                              fontSize: 14.0,
+                            ))),
+                  ),
                 ],
               ),
               SizedBox(
@@ -1064,6 +1144,7 @@ class _GetReportsState extends State<GetReports> {
       'semester_id': semester_id,
       'year_id': year_id,
       'division_id': division_id,
+      'subject_id': subject_id,
       'from_date': type == '/teacher_report'? dobteacherCtrl.text : dobCtrl.text,
       'to_date': type == '/teacher_report'? dobteacherCtrl1.text : dobCtrl1.text,
     });
@@ -1151,6 +1232,12 @@ class _GetReportsState extends State<GetReports> {
     if (teacherClass == null) {
       setState(() {
         teachererror3 = "This field is required";
+      });
+      _isValid = false;
+    }
+    if (teachersubject == null) {
+      setState(() {
+        teachererror7 = "This field is required";
       });
       _isValid = false;
     }

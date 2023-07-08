@@ -101,9 +101,7 @@ class _MyProfileState extends State<MyProfile> {
         bottomNavigationBar: bottomBarLayout(ctx, 2, Color(0xff32334D)),
         backgroundColor: Clr().white,
         body: SingleChildScrollView(
-          child:  TeacherToken != null
-                  ? TeacherBoxLayout()
-                  : StudentboxLayout(),
+          child: TeacherToken != null ? TeacherBoxLayout() : StudentboxLayout(),
         ),
       ),
     );
@@ -237,181 +235,126 @@ class _MyProfileState extends State<MyProfile> {
       children: [
         data == null
             ? SizedBox(
-            height: MediaQuery.of(ctx).size.height / 1.5,
-            child: STM().loadingPlaceHolder())
+                height: MediaQuery.of(ctx).size.height / 1.5,
+                child: STM().loadingPlaceHolder())
             : Container(
-          decoration: BoxDecoration(
-              color: Color(0xff20213f),
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
-              )),
-          child: Padding(
-            padding: EdgeInsets.all(Dim().d16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: Dim().d40,
-                ),
-                Center(
-                  child: Stack(
+                decoration: BoxDecoration(
+                    color: Color(0xff20213f),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(25),
+                    )),
+                child: Padding(
+                  padding: EdgeInsets.all(Dim().d16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: Dim().d120,
-                        width: Dim().d120,
-                        decoration: BoxDecoration(
-                          color: Clr().lightGrey,
-                          border: Border.all(
-                            color: Clr().grey,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(Dim().d100),
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: imageFile == null
-                              ? CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: data['profile_photo'] ??
-                                      'https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg',
-                                  placeholder: (context, url) =>
-                                      STM().loadingPlaceHolder(),
-                                )
-                              : Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
+                      SizedBox(
+                        height: Dim().d40,
+                      ),
+                      Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: Dim().d120,
+                              width: Dim().d120,
+                              decoration: BoxDecoration(
+                                color: Clr().lightGrey,
+                                border: Border.all(
+                                  color: Clr().grey,
                                 ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(Dim().d100),
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: imageFile == null
+                                    ? CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: data['profile_photo'] ??
+                                            'https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg',
+                                        placeholder: (context, url) =>
+                                            STM().loadingPlaceHolder(),
+                                      )
+                                    : Image.file(
+                                        imageFile!,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Clr().background1,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(
+                                                      Dim().d14),
+                                                  topRight: Radius.circular(
+                                                      Dim().d14))),
+                                          builder: (index) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: Dim().d12,
+                                                      vertical: Dim().d20),
+                                                  child: Text('Profile Photo',
+                                                      style:
+                                                          Sty().mediumBoldText),
+                                                ),
+                                                SizedBox(height: Dim().d28),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _getProfile(
+                                                            ImageSource.camera,
+                                                            CropStyle.circle);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                          'assets/camera.svg'),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _getProfile(
+                                                            ImageSource.gallery,
+                                                            CropStyle.circle);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                          'assets/gallery.svg'),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: Dim().d40),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: SvgPicture.asset('assets/cam.svg')),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    backgroundColor: Clr().background1,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(Dim().d14),
-                                            topRight:
-                                                Radius.circular(Dim().d14))),
-                                    builder: (index) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: Dim().d12,
-                                                vertical: Dim().d20),
-                                            child: Text('Profile Photo',
-                                                style: Sty().mediumBoldText),
-                                          ),
-                                          SizedBox(height: Dim().d28),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  _getProfile(
-                                                      ImageSource.camera,
-                                                      CropStyle.circle);
-                                                },
-                                                child: SvgPicture.asset(
-                                                    'assets/camera.svg'),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  _getProfile(
-                                                      ImageSource.gallery,
-                                                      CropStyle.circle);
-                                                },
-                                                child: SvgPicture.asset(
-                                                    'assets/gallery.svg'),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: Dim().d40),
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: SvgPicture.asset('assets/cam.svg')),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d20,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "Institution:- ",
-                    style: Sty().smallText.copyWith(
-                          fontFamily: '',
-                          fontWeight: FontWeight.w300,
-                          color: Clr().accentColor,
-                          // color: Color(0xff2D2D2D),
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: ' ${data['college_name'].toString()}',
-                        style: Sty().smallText.copyWith(
-                            color: Color(0xffFCEBE3),
-                            fontWeight: FontWeight.w300,
-                            fontFamily: '',
-                            fontSize: 14),
+                      SizedBox(
+                        height: Dim().d20,
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     RichText(
-                //       text: TextSpan(
-                //         text: "Stream:-",
-                //         style: Sty().smallText.copyWith(
-                //               fontFamily: '',
-                //               fontWeight: FontWeight.w300,
-                //               color: Clr().accentColor,
-                //               // color: Color(0xff2D2D2D),
-                //             ),
-                //         children: <TextSpan>[
-                //           TextSpan(
-                //             text: ' Electronics & Telecommunications',
-                //             style: Sty().smallText.copyWith(
-                //                   color: Color(0xffFCEBE3),
-                //                   fontWeight: FontWeight.w300,
-                //                   fontFamily: '',
-                //                 ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //     SvgPicture.asset('assets/edit.svg'),
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: Dim().d12,
-                // ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: RichText(
+                      RichText(
                         text: TextSpan(
-                          text: "Name:-",
+                          text: "Institution:- ",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
@@ -420,116 +363,88 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: ' ${data['name'].toString()}',
+                              text: ' ${data['college_name'].toString()}',
                               style: Sty().smallText.copyWith(
-                                    color: Color(0xffFCEBE3),
-                                    fontWeight: FontWeight.w300,
-                                    fontFamily: '',
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox(i: 0);
-                        },
-                        child: SvgPicture.asset('assets/edit.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "Email Address:-",
-                    style: Sty().smallText.copyWith(
-                          fontFamily: '',
-                          fontWeight: FontWeight.w300,
-                          color: Clr().accentColor,
-                          // color: Color(0xff2D2D2D),
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: ' ${data['email'].toString()}',
-                        style: Sty().smallText.copyWith(
-                              color: Color(0xffFCEBE3),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: '',
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "Gender:- ",
-                    style: Sty().smallText.copyWith(
-                          fontFamily: '',
-                          fontWeight: FontWeight.w300,
-                          color: Clr().accentColor,
-                          // color: Color(0xff2D2D2D),
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: ' ${data['gender'].toString()}',
-                        style: Sty().smallText.copyWith(
-                              color: Color(0xffFCEBE3),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: '',
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Password:- ",
-                        style: Sty().smallText.copyWith(
-                              fontFamily: '',
-                              fontWeight: FontWeight.w300,
-                              color: Clr().accentColor,
-                              // color: Color(0xff2D2D2D),
-                            ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' *************',
-                            style: Sty().smallText.copyWith(
                                   color: Color(0xffFCEBE3),
                                   fontWeight: FontWeight.w300,
                                   fontFamily: '',
-                                ),
+                                  fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     RichText(
+                      //       text: TextSpan(
+                      //         text: "Stream:-",
+                      //         style: Sty().smallText.copyWith(
+                      //               fontFamily: '',
+                      //               fontWeight: FontWeight.w300,
+                      //               color: Clr().accentColor,
+                      //               // color: Color(0xff2D2D2D),
+                      //             ),
+                      //         children: <TextSpan>[
+                      //           TextSpan(
+                      //             text: ' Electronics & Telecommunications',
+                      //             style: Sty().smallText.copyWith(
+                      //                   color: Color(0xffFCEBE3),
+                      //                   fontWeight: FontWeight.w300,
+                      //                   fontFamily: '',
+                      //                 ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     SvgPicture.asset('assets/edit.svg'),
+                      //   ],
+                      // ),
+                      // SizedBox(
+                      //   height: Dim().d12,
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Name:-",
+                                style: Sty().smallText.copyWith(
+                                      fontFamily: '',
+                                      fontWeight: FontWeight.w300,
+                                      color: Clr().accentColor,
+                                      // color: Color(0xff2D2D2D),
+                                    ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${data['name'].toString()}',
+                                    style: Sty().smallText.copyWith(
+                                          color: Color(0xffFCEBE3),
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: '',
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox(i: 0);
+                              },
+                              child: SvgPicture.asset('assets/edit.svg')),
                         ],
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox(i: 3);
-                        },
-                        child: SvgPicture.asset('assets/edit pencil.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: RichText(
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      RichText(
                         text: TextSpan(
-                          text: "Bio:- ",
+                          text: "Email Address:-",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
@@ -538,7 +453,7 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: ' ${data['bio'] ?? '-'}',
+                              text: ' ${data['email'].toString()}',
                               style: Sty().smallText.copyWith(
                                     color: Color(0xffFCEBE3),
                                     fontWeight: FontWeight.w300,
@@ -548,24 +463,12 @@ class _MyProfileState extends State<MyProfile> {
                           ],
                         ),
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox(i: 1);
-                        },
-                        child: SvgPicture.asset('assets/edit pencil.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: RichText(
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      RichText(
                         text: TextSpan(
-                          text: "Qualification:-",
+                          text: "Gender:- ",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
@@ -574,7 +477,7 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: ' ${data['qualification'] ?? '-'}',
+                              text: ' ${data['gender'].toString()}',
                               style: Sty().smallText.copyWith(
                                     color: Color(0xffFCEBE3),
                                     fontWeight: FontWeight.w300,
@@ -584,21 +487,122 @@ class _MyProfileState extends State<MyProfile> {
                           ],
                         ),
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox();
-                        },
-                        child: SvgPicture.asset('assets/edit pencil.svg')),
-                  ],
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: "Password:- ",
+                              style: Sty().smallText.copyWith(
+                                    fontFamily: '',
+                                    fontWeight: FontWeight.w300,
+                                    color: Clr().accentColor,
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' *************',
+                                  style: Sty().smallText.copyWith(
+                                        color: Color(0xffFCEBE3),
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: '',
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox(i: 3);
+                              },
+                              child:
+                                  SvgPicture.asset('assets/edit pencil.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Bio:- ",
+                                style: Sty().smallText.copyWith(
+                                      fontFamily: '',
+                                      fontWeight: FontWeight.w300,
+                                      color: Clr().accentColor,
+                                      // color: Color(0xff2D2D2D),
+                                    ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${data['bio'] ?? '-'}',
+                                    style: Sty().smallText.copyWith(
+                                          color: Color(0xffFCEBE3),
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: '',
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox(i: 1);
+                              },
+                              child:
+                                  SvgPicture.asset('assets/edit pencil.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Qualification:-",
+                                style: Sty().smallText.copyWith(
+                                      fontFamily: '',
+                                      fontWeight: FontWeight.w300,
+                                      color: Clr().accentColor,
+                                      // color: Color(0xff2D2D2D),
+                                    ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${data['qualification'] ?? '-'}',
+                                    style: Sty().smallText.copyWith(
+                                          color: Color(0xffFCEBE3),
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: '',
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox();
+                              },
+                              child:
+                                  SvgPicture.asset('assets/edit pencil.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
         SizedBox(
           height: Dim().d28,
         ),
@@ -723,9 +727,10 @@ class _MyProfileState extends State<MyProfile> {
         SizedBox(
           height: Dim().d8,
         ),
-        InkWell(onTap: (){
-          STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
-        },
+        InkWell(
+          onTap: () {
+            STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
+          },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Dim().d12),
             child: Card(
@@ -900,6 +905,19 @@ class _MyProfileState extends State<MyProfile> {
                 )),
           ),
         ),
+        SizedBox(height: Dim().d4),
+        InkWell(
+          onTap: () {
+            STM().canceldialog(
+                context: ctx,
+                funtion: () {
+                  deleteAccount();
+                },
+                message: 'Are you sure want delete account?');
+          },
+          child: Text('Delete Account',
+              style: Sty().mediumText.copyWith(color: Clr().errorRed)),
+        ),
         SizedBox(
           height: Dim().d40,
         ),
@@ -913,195 +931,231 @@ class _MyProfileState extends State<MyProfile> {
       children: [
         data == null
             ? SizedBox(
-            height: MediaQuery.of(ctx).size.height / 1.5,
-            child: STM().loadingPlaceHolder())
+                height: MediaQuery.of(ctx).size.height / 1.5,
+                child: STM().loadingPlaceHolder())
             : Container(
-          decoration: BoxDecoration(
-              color: Color(0xff20213f),
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25),
-              )),
-          child: Padding(
-            padding: EdgeInsets.all(Dim().d16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: Dim().d40,
-                ),
-                Center(
-                  child: Stack(
+                decoration: BoxDecoration(
+                    color: Color(0xff20213f),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(25),
+                    )),
+                child: Padding(
+                  padding: EdgeInsets.all(Dim().d16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: Dim().d120,
-                        width: Dim().d120,
-                        decoration: BoxDecoration(
-                          color: Clr().lightGrey,
-                          border: Border.all(
-                            color: Clr().grey,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(Dim().d100),
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: imageFile == null
-                              ? CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: data['profile_photo'] ??
-                                      'https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg',
-                                  placeholder: (context, url) =>
-                                      STM().loadingPlaceHolder(),
-                                )
-                              : Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
+                      SizedBox(
+                        height: Dim().d40,
+                      ),
+                      Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: Dim().d120,
+                              width: Dim().d120,
+                              decoration: BoxDecoration(
+                                color: Clr().lightGrey,
+                                border: Border.all(
+                                  color: Clr().grey,
                                 ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(Dim().d100),
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: imageFile == null
+                                    ? CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: data['profile_photo'] ??
+                                            'https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg',
+                                        placeholder: (context, url) =>
+                                            STM().loadingPlaceHolder(),
+                                      )
+                                    : Image.file(
+                                        imageFile!,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Clr().background1,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(
+                                                      Dim().d14),
+                                                  topRight: Radius.circular(
+                                                      Dim().d14))),
+                                          builder: (index) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: Dim().d12,
+                                                      vertical: Dim().d20),
+                                                  child: Text('Profile Photo',
+                                                      style:
+                                                          Sty().mediumBoldText),
+                                                ),
+                                                SizedBox(height: Dim().d28),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _getProfile(
+                                                            ImageSource.camera,
+                                                            CropStyle.circle);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                          'assets/camera.svg'),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _getProfile(
+                                                            ImageSource.gallery,
+                                                            CropStyle.circle);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                          'assets/gallery.svg'),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: Dim().d40),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: SvgPicture.asset('assets/cam.svg')),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
+                      SizedBox(
+                        height: Dim().d20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: "Name:-",
+                              style: Sty().smallText.copyWith(
+                                    fontFamily: '',
+                                    fontWeight: FontWeight.w300,
+                                    color: Clr().accentColor,
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' ${data['name'].toString()}',
+                                  style: Sty().smallText.copyWith(
+                                        color: Color(0xffFCEBE3),
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: '',
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // InkWell(
+                          //     onTap: () {
+                          //       AlertBox(i: 0);
+                          //     },
+                          //     child: SvgPicture.asset('assets/edit.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: "Mobile No.:-",
+                              style: Sty().smallText.copyWith(
+                                    fontFamily: '',
+                                    fontWeight: FontWeight.w300,
+                                    color: Clr().accentColor,
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' ${data['mobile'].toString()}',
+                                  style: Sty().smallText.copyWith(
+                                        color: Color(0xffFCEBE3),
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: '',
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
                               onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    backgroundColor: Clr().background1,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(Dim().d14),
-                                            topRight:
-                                                Radius.circular(Dim().d14))),
-                                    builder: (index) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: Dim().d12,
-                                                vertical: Dim().d20),
-                                            child: Text('Profile Photo',
-                                                style: Sty().mediumBoldText),
-                                          ),
-                                          SizedBox(height: Dim().d28),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  _getProfile(
-                                                      ImageSource.camera,
-                                                      CropStyle.circle);
-                                                },
-                                                child: SvgPicture.asset(
-                                                    'assets/camera.svg'),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  _getProfile(
-                                                      ImageSource.gallery,
-                                                      CropStyle.circle);
-                                                },
-                                                child: SvgPicture.asset(
-                                                    'assets/gallery.svg'),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: Dim().d40),
-                                        ],
-                                      );
-                                    });
+                                updateMobileNumber();
                               },
-                              child: SvgPicture.asset('assets/cam.svg')),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Name:-",
-                        style: Sty().smallText.copyWith(
-                              fontFamily: '',
-                              fontWeight: FontWeight.w300,
-                              color: Clr().accentColor,
-                              // color: Color(0xff2D2D2D),
-                            ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' ${data['name'].toString()}',
-                            style: Sty().smallText.copyWith(
-                                  color: Color(0xffFCEBE3),
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: '',
-                                ),
-                          ),
+                              child: SvgPicture.asset('assets/edit.svg')),
                         ],
                       ),
-                    ),
-                    // InkWell(
-                    //     onTap: () {
-                    //       AlertBox(i: 0);
-                    //     },
-                    //     child: SvgPicture.asset('assets/edit.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Mobile No.:-",
-                        style: Sty().smallText.copyWith(
-                              fontFamily: '',
-                              fontWeight: FontWeight.w300,
-                              color: Clr().accentColor,
-                              // color: Color(0xff2D2D2D),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Email Address:-",
+                                style: Sty().smallText.copyWith(
+                                      fontFamily: '',
+                                      fontWeight: FontWeight.w300,
+                                      color: Clr().accentColor,
+                                      // color: Color(0xff2D2D2D),
+                                    ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${data['email'].toString()}',
+                                    style: Sty().smallText.copyWith(
+                                          color: Color(0xffFCEBE3),
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: '',
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' ${data['mobile'].toString()}',
-                            style: Sty().smallText.copyWith(
-                                  color: Color(0xffFCEBE3),
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: '',
-                                ),
                           ),
+                          InkWell(
+                              onTap: () {
+                                // AlertBox(i: 2);
+                                updateEmail();
+                              },
+                              child: SvgPicture.asset('assets/edit.svg')),
                         ],
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          updateMobileNumber();
-                        },
-                        child: SvgPicture.asset('assets/edit.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: RichText(
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      RichText(
                         text: TextSpan(
-                          text: "Email Address:-",
+                          text: "Date Of Birth:- ",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
@@ -1110,7 +1164,7 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: ' ${data['email'].toString()}',
+                              text: ' ${data['dob'].toString()}',
                               style: Sty().smallText.copyWith(
                                     color: Color(0xffFCEBE3),
                                     fontWeight: FontWeight.w300,
@@ -1120,107 +1174,12 @@ class _MyProfileState extends State<MyProfile> {
                           ],
                         ),
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          // AlertBox(i: 2);
-                          updateEmail();
-                        },
-                        child: SvgPicture.asset('assets/edit.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "Date Of Birth:- ",
-                    style: Sty().smallText.copyWith(
-                          fontFamily: '',
-                          fontWeight: FontWeight.w300,
-                          color: Clr().accentColor,
-                          // color: Color(0xff2D2D2D),
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: ' ${data['dob'].toString()}',
-                        style: Sty().smallText.copyWith(
-                              color: Color(0xffFCEBE3),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: '',
-                            ),
+                      SizedBox(
+                        height: Dim().d12,
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "Gender:- ",
-                    style: Sty().smallText.copyWith(
-                          fontFamily: '',
-                          fontWeight: FontWeight.w300,
-                          color: Clr().accentColor,
-                          // color: Color(0xff2D2D2D),
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: ' ${data['gender'].toString()}',
-                        style: Sty().smallText.copyWith(
-                              color: Color(0xffFCEBE3),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: '',
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Password:- ",
-                        style: Sty().smallText.copyWith(
-                              fontFamily: '',
-                              fontWeight: FontWeight.w300,
-                              color: Clr().accentColor,
-                              // color: Color(0xff2D2D2D),
-                            ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' *************',
-                            style: Sty().smallText.copyWith(
-                                  color: Color(0xffFCEBE3),
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: '',
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox(i: 3);
-                        },
-                        child: SvgPicture.asset('assets/edit pencil.svg')),
-                  ],
-                ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: RichText(
+                      RichText(
                         text: TextSpan(
-                          text: "Bio:- ",
+                          text: "Gender:- ",
                           style: Sty().smallText.copyWith(
                                 fontFamily: '',
                                 fontWeight: FontWeight.w300,
@@ -1229,7 +1188,7 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: ' ${data['bio'] ?? '-'}',
+                              text: ' ${data['gender'].toString()}',
                               style: Sty().smallText.copyWith(
                                     color: Color(0xffFCEBE3),
                                     fontWeight: FontWeight.w300,
@@ -1239,21 +1198,85 @@ class _MyProfileState extends State<MyProfile> {
                           ],
                         ),
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          AlertBox(i: 1);
-                        },
-                        child: SvgPicture.asset('assets/edit pencil.svg')),
-                  ],
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: "Password:- ",
+                              style: Sty().smallText.copyWith(
+                                    fontFamily: '',
+                                    fontWeight: FontWeight.w300,
+                                    color: Clr().accentColor,
+                                    // color: Color(0xff2D2D2D),
+                                  ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' *************',
+                                  style: Sty().smallText.copyWith(
+                                        color: Color(0xffFCEBE3),
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: '',
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox(i: 3);
+                              },
+                              child:
+                                  SvgPicture.asset('assets/edit pencil.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Bio:- ",
+                                style: Sty().smallText.copyWith(
+                                      fontFamily: '',
+                                      fontWeight: FontWeight.w300,
+                                      color: Clr().accentColor,
+                                      // color: Color(0xff2D2D2D),
+                                    ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${data['bio'] ?? '-'}',
+                                    style: Sty().smallText.copyWith(
+                                          color: Color(0xffFCEBE3),
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: '',
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AlertBox(i: 1);
+                              },
+                              child:
+                                  SvgPicture.asset('assets/edit pencil.svg')),
+                        ],
+                      ),
+                      SizedBox(
+                        height: Dim().d12,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: Dim().d12,
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
         SizedBox(
           height: Dim().d28,
         ),
@@ -1280,14 +1303,16 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                     )),
               )
-            : instituteData == null ?  Container() :
-        instistuteDetails(details: instituteData[0]),
+            : instituteData == null
+                ? Container()
+                : instistuteDetails(details: instituteData[0]),
         SizedBox(
           height: Dim().d40,
         ),
-        InkWell(onTap: (){
-          STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
-        },
+        InkWell(
+          onTap: () {
+            STM().openWeb('https://sonibro.com/attentkor/api/privacy_policy');
+          },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Dim().d12),
             child: Card(
@@ -1330,9 +1355,10 @@ class _MyProfileState extends State<MyProfile> {
         SizedBox(
           height: Dim().d8,
         ),
-        InkWell(onTap: (){
-          STM().openWeb('https://sonibro.com/attentkor/api/term_condition');
-        },
+        InkWell(
+          onTap: () {
+            STM().openWeb('https://sonibro.com/attentkor/api/term_condition');
+          },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Dim().d12),
             child: Card(
@@ -1506,6 +1532,19 @@ class _MyProfileState extends State<MyProfile> {
                 )),
           ),
         ),
+        SizedBox(height: Dim().d4),
+        InkWell(
+          onTap: () {
+            STM().canceldialog(
+                context: ctx,
+                funtion: () {
+                  deleteAccount();
+                },
+                message: 'Are you sure want delete account?');
+          },
+          child: Text('Delete Account',
+              style: Sty().mediumText.copyWith(color: Clr().errorRed)),
+        ),
         SizedBox(
           height: Dim().d40,
         ),
@@ -1575,7 +1614,6 @@ class _MyProfileState extends State<MyProfile> {
 
   /// Alert dailog Teacher profile
   AlertBox({i}) {
-
     return showDialog(
         context: context,
         builder: (index) {
@@ -1865,7 +1903,9 @@ class _MyProfileState extends State<MyProfile> {
                       width: Dim().d4,
                     ),
                     Text(
-                        details['unique_id'] == null ? '' :  '  ${details['unique_id'].toString()}',
+                      details['unique_id'] == null
+                          ? ''
+                          : '  ${details['unique_id'].toString()}',
                       style: Sty().largeText.copyWith(
                           color: Clr().textcolor,
                           fontWeight: FontWeight.w400,
@@ -1876,7 +1916,8 @@ class _MyProfileState extends State<MyProfile> {
                 SizedBox(
                   height: Dim().d12,
                 ),
-                Row(mainAxisAlignment: MainAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -1974,7 +2015,9 @@ class _MyProfileState extends State<MyProfile> {
                             fontFamily: ''),
                         children: <TextSpan>[
                           TextSpan(
-                            text: details['lab_group'] == null ? '' : '  ${details['lab_group'].toString()}',
+                            text: details['lab_group'] == null
+                                ? ''
+                                : '  ${details['lab_group'].toString()}',
                             style: Sty().largeText.copyWith(
                                 color: Clr().textcolor,
                                 fontWeight: FontWeight.w400,
@@ -2647,7 +2690,7 @@ class _MyProfileState extends State<MyProfile> {
   void updateEmail() {
     bool otpsend = false;
     TextEditingController updateUserMobileNumberController =
-    TextEditingController();
+        TextEditingController();
     TextEditingController updateUserOtpController = TextEditingController();
     AwesomeDialog(
       dialogType: DialogType.noHeader,
@@ -2693,20 +2736,20 @@ class _MyProfileState extends State<MyProfile> {
                               return null;
                             },
                             decoration:
-                            Sty().TextFormFieldOutlineStyle.copyWith(
-                              counterText: "",
-                              hintText: "Enter Email ID",
-                              prefixIconConstraints: BoxConstraints(
-                                  minWidth: 50, minHeight: 0),
-                              suffixIconConstraints: BoxConstraints(
-                                  minWidth: 10, minHeight: 2),
-                              border: InputBorder.none,
-                              // prefixIcon: Icon(
-                              //   Icons.phone,
-                              //   size: iconSizeNormal(),
-                              //   color: primary(),
-                              // ),
-                            ),
+                                Sty().TextFormFieldOutlineStyle.copyWith(
+                                      counterText: "",
+                                      hintText: "Enter Email ID",
+                                      prefixIconConstraints: BoxConstraints(
+                                          minWidth: 50, minHeight: 0),
+                                      suffixIconConstraints: BoxConstraints(
+                                          minWidth: 10, minHeight: 2),
+                                      border: InputBorder.none,
+                                      // prefixIcon: Icon(
+                                      //   Icons.phone,
+                                      //   size: iconSizeNormal(),
+                                      //   color: primary(),
+                                      // ),
+                                    ),
                           ),
                         ),
                       ],
@@ -2795,7 +2838,8 @@ class _MyProfileState extends State<MyProfile> {
                                       setState(() {
                                         again = false;
                                       });
-                                      resendOTP(updateUserMobileNumberController.text);
+                                      resendOTP(updateUserMobileNumberController
+                                          .text);
                                       // STM.checkInternet().then((value) {
                                       //   if (value) {
                                       //     sendOTP();
@@ -2829,13 +2873,19 @@ class _MyProfileState extends State<MyProfile> {
                             // API UPDATE START
                             if (_formKey.currentState!.validate()) {
                               SharedPreferences sp =
-                              await SharedPreferences.getInstance();
+                                  await SharedPreferences.getInstance();
                               FormData body = FormData.fromMap({
                                 'email': updateUserMobileNumberController.text,
                               });
                               var result = await STM().postWithToken(
-                                  ctx, Str().sendingOtp, 'update_email', body,TeacherToken ?? StudentToken,
-                                  TeacherToken != null ? 'teacher/' : 'student/');
+                                  ctx,
+                                  Str().sendingOtp,
+                                  'update_email',
+                                  body,
+                                  TeacherToken ?? StudentToken,
+                                  TeacherToken != null
+                                      ? 'teacher/'
+                                      : 'student/');
                               var success = result['success'];
                               var message = result['message'];
                               if (success) {
@@ -2867,33 +2917,33 @@ class _MyProfileState extends State<MyProfile> {
                       visible: otpsend,
                       child: Expanded(
                         child: InkWell(
-                            onTap: () async{
+                            onTap: () async {
                               // API UPDATE START
-                                otpsend = true;
-                                SharedPreferences sp =
-                                await SharedPreferences.getInstance();
-                                FormData body = FormData.fromMap({
-                                  'otp': updateUserOtpController.text,
-                                  'email':
-                                  updateUserMobileNumberController.text,
-                                });
-                                var result = await STM().postWithToken(
+                              otpsend = true;
+                              SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
+                              FormData body = FormData.fromMap({
+                                'otp': updateUserOtpController.text,
+                                'email': updateUserMobileNumberController.text,
+                              });
+                              var result = await STM().postWithToken(
                                   ctx,
                                   Str().updating,
                                   'verify_email_otp',
                                   body,
-                                    TeacherToken ?? StudentToken,
-                                    TeacherToken != null ? 'teacher/' : 'student/'
-                                );
-                                var success = result['success'];
-                                var message = result['message'];
-                                if (success) {
-                                  getProfile();
-                                  STM().displayToast(message);
-                                  Navigator.pop(ctx);
-                                } else {
-                                  STM().errorDialog(context, message);
-                                }
+                                  TeacherToken ?? StudentToken,
+                                  TeacherToken != null
+                                      ? 'teacher/'
+                                      : 'student/');
+                              var success = result['success'];
+                              var message = result['message'];
+                              if (success) {
+                                getProfile();
+                                STM().displayToast(message);
+                                Navigator.pop(ctx);
+                              } else {
+                                STM().errorDialog(context, message);
+                              }
                             },
                             child: Container(
                                 padding: const EdgeInsets.all(15),
@@ -2902,9 +2952,9 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                                 child: const Center(
                                     child: Text(
-                                      "Update",
-                                      style: TextStyle(color: Colors.white),
-                                    )))),
+                                  "Update",
+                                  style: TextStyle(color: Colors.white),
+                                )))),
                       ),
                     ),
                     const SizedBox(
@@ -2931,8 +2981,6 @@ class _MyProfileState extends State<MyProfile> {
       ),
     ).show();
   }
-
-
 
   /// update password api for Teacher
   void UpdatePassword() async {
@@ -3003,4 +3051,21 @@ class _MyProfileState extends State<MyProfile> {
     }
   }
 
+  /// delete account
+  void deleteAccount() async {
+    var result = await STM().get(
+        ctx,
+        Str().deleting,
+        'delete_account',
+        TeacherToken ?? StudentToken,
+        TeacherToken != null ? 'teacher/' : 'student/');
+    var success = result['success'];
+    var message = result['message'];
+    if (success) {
+      STM().displayToast(message);
+      STM().finishAffinity(ctx, SignIn());
+    } else {
+      STM().errorDialog(ctx, message);
+    }
+  }
 }

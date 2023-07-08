@@ -73,9 +73,9 @@ class _HomeState extends State<Home> {
                   dialogType: DialogType.info,
                   dismissOnBackKeyPress: false,
                   dismissOnTouchOutside: false,
-                  title: 'AttendCore is lock',
+                  title: 'AttendKore is locked',
                   desc:
-                      'Authentication is required to access the attendcore app',
+                      'Authentication is required to access the attendKore app',
                   btnOkText: 'Unlock now',
                   btnOkColor: Clr().primaryColor,
                   btnOkOnPress: () {

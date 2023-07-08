@@ -480,8 +480,8 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // dialog.dismiss();
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -509,8 +509,8 @@ class STM {
         result = json.decode(response.data.toString());
       }
     } on DioError catch (e) {
-      dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // dialog.dismiss();
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -544,7 +544,7 @@ class STM {
       }
     } on DioError catch (e) {
       // dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -578,8 +578,8 @@ class STM {
         // result = json.decode(response.data.toString());
       }
     } on DioError catch (e) {
-      dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // dialog.dismiss();
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -671,7 +671,7 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      STM().errorDialog(ctx, e.message);
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -705,8 +705,8 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // dialog.dismiss();
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -740,8 +740,8 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      dialog.dismiss();
-      STM().errorDialog(ctx, e.message);
+      // dialog.dismiss();
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -771,7 +771,7 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      STM().errorDialog(ctx, e.message);
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }
@@ -801,7 +801,7 @@ class STM {
         result = response.data;
       }
     } on DioError catch (e) {
-      STM().errorDialog(ctx, e.message);
+      // STM().errorDialog(ctx, e.message);
     }
     return result;
   }

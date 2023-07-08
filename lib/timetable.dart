@@ -957,7 +957,7 @@ class _TimeTableState extends State<TimeTable> {
                     width: Dim().d12,
                   ),
                   status == "0"
-                      ? InkWell(
+                      ? now == teacherlist['date'] ? InkWell(
                           onTap: () {
                             STM().canceldialog(
                                 context: ctx,
@@ -968,7 +968,7 @@ class _TimeTableState extends State<TimeTable> {
                                 message:
                                     'Are you sure want to cancel lecture?');
                           },
-                          child: SvgPicture.asset('assets/cancel.svg'))
+                          child: SvgPicture.asset('assets/cancel.svg')) : Container()
                       : Container()
                 ],
               ),
